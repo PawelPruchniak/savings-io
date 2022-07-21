@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: savings
+  datasource:
+    url: jdbc:h2:mem:savingsdb
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+  session:
+    store-type: none
