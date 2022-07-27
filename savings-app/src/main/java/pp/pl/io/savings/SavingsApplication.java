@@ -9,8 +9,12 @@ import java.util.Map;
 public class SavingsApplication {
 
   public static void main(String[] args) {
-    final SpringApplication springApplication = new SpringApplication(SavingsApplication.class);
+    final SpringApplication springApplication = createSpringApplication();
     springApplication.setDefaultProperties(Map.of("spring.config.on-not-found", "ignore"));
     springApplication.run(args);
+  }
+
+  public static SpringApplication createSpringApplication() {
+    return new SpringApplication(SavingsApplication.class);
   }
 }

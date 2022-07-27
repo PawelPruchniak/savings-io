@@ -2,9 +2,11 @@ spring:
   application:
     name: savings
   datasource:
-    url: jdbc:h2:mem:savingsdb
-    username: sa
-    password: password
-    driverClassName: org.h2.Driver
+    url: jdbc:postgresql://localhost:5432/SAVINGS
+    username: ENC(Pt8BnCy0ztaIoxP+X0L1J9nZDLGO3+wnKYlN7IkZJ+sdzTx7bi2N5GnET7P6zlK0)
+    password: ENC(HknTM3GIxuGFAhh4E1EnMZTyNI44H18ER7e8LuiTZ8VWpL0g/tjfgsStm1tH3Lyy2J8y6f406eqFszBjqZkZ9w==)
+    driverClassName: org.postgresql.Driver
+  liquibase:
+    change-log: db/liquibase.changelog-master.xml
   session:
     store-type: none

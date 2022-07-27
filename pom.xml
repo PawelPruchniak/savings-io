@@ -33,6 +33,7 @@
     <vavr.version>0.10.4</vavr.version>
     <liquibase.version>4.13.0</liquibase.version>
     <jasypt.version>3.0.4</jasypt.version>
+    <testcontainers.version>1.17.3</testcontainers.version>
 
     <jacoco.version>0.8.8</jacoco.version>
     <failsafe.jacoco.args/>
