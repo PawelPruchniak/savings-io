@@ -22,7 +22,7 @@ jobs:
         language: [ 'java' ]
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v3
 
       - name: Set up JDK 17
@@ -30,9 +30,6 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
-
-      - run: git checkout HEAD^2
-        if: ${{ github.event_name == 'pull_request' }}
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
