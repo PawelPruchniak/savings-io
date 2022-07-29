@@ -13,22 +13,31 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import pp.pl.io.savings.handler.BasicAuthenticationSuccessHandler;
 
 @Configuration
 public class SecurityConfiguration {
 
   @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+  public AuthenticationManager authenticationManager(
+      AuthenticationConfiguration authenticationConfiguration) throws Exception {
     return authenticationConfiguration.getAuthenticationManager();
   }
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
+        .logout()
+        .invalidateHttpSession(true)
+        .deleteCookies("JSESSIONID");
+
+    http
         .authorizeRequests()
+        .mvcMatchers("/login**").permitAll()
         .anyRequest().authenticated()
         .and()
-        .httpBasic();
+        .formLogin()
+        .successHandler(new BasicAuthenticationSuccessHandler());
 
     return http.build();
   }

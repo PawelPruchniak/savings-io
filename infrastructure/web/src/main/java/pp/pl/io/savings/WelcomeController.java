@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/api/welcome", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/welcome", produces = MediaType.APPLICATION_JSON_VALUE)
 public class WelcomeController {
 
   @GetMapping
