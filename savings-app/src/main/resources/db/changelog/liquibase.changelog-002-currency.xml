@@ -6,36 +6,36 @@
 		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
   <changeSet id="002-001" author="ppruchniak">
     <comment>Currency table</comment>
-    <createTable tableName="CURRENCY" tablespace="${data-tablespace}">
-      <column name="CODE" type="VARCHAR(64)">
+    <createTable tableName="currency" tablespace="${data-tablespace}">
+      <column name="code" type="VARCHAR(64)">
         <constraints nullable="false"/>
       </column>
-      <column name="NAME" type="VARCHAR(128)">
+      <column name="name" type="VARCHAR(128)">
         <constraints nullable="false"/>
       </column>
     </createTable>
-    <createIndex tableName="CURRENCY"
-                 indexName="CURRENCY_CODE_IDX"
+    <createIndex tableName="currency"
+                 indexName="currency_code_idx"
                  tablespace="${index-tablespace}">
-      <column name="CODE"/>
+      <column name="code"/>
     </createIndex>
-    <addPrimaryKey tableName="CURRENCY"
-                   columnNames="CODE"
-                   constraintName="CURRENCY_CODE_PK"/>
+    <addPrimaryKey tableName="currency"
+                   columnNames="code"
+                   constraintName="currency_code_pk"/>
   </changeSet>
   <changeSet id="002-002" author="ppruchniak">
-    <comment>Add PLN, EUR, USD Currency</comment>
-    <insert tableName="CURRENCY">
-      <column name="CODE" value="PLN"/>
-      <column name="NAME" value="Polish złoty"/>
+    <comment>Add PLN, EUR, USD currency</comment>
+    <insert tableName="currency">
+      <column name="code" value="PLN"/>
+      <column name="name" value="Polish złoty"/>
     </insert>
-    <insert tableName="CURRENCY">
-      <column name="CODE" value="EUR"/>
-      <column name="NAME" value="Euro"/>
+    <insert tableName="currency">
+      <column name="code" value="EUR"/>
+      <column name="name" value="Euro"/>
     </insert>
-    <insert tableName="CURRENCY">
-      <column name="CODE" value="USD"/>
-      <column name="NAME" value="United States dollar"/>
+    <insert tableName="currency">
+      <column name="code" value="USD"/>
+      <column name="name" value="United States dollar"/>
     </insert>
   </changeSet>
 
