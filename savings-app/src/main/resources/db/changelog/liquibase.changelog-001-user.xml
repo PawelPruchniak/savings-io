@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+  <changeSet id="001-001" author="ppruchniak">
+    <comment>User table</comment>
+    <createTable tableName="USER" tablespace="${data-tablespace}">
+      <column name="ID" type="INT" autoIncrement="true" incrementBy="1" startWith="1">
+        <constraints nullable="false"/>
+      </column>
+      <column name="NAME" type="VARCHAR(64)"/>
+      <column name="EMAIL" type="VARCHAR(256)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <createIndex tableName="USER"
+                 indexName="USER_ID_IDX"
+                 tablespace="${index-tablespace}">
+      <column name="ID"/>
+    </createIndex>
+    <addPrimaryKey tableName="USER"
+                   columnNames="ID"
+                   constraintName="USER_ID_PK"/>
+  </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+  <changeSet id="002-001" author="ppruchniak">
+    <comment>Currency table</comment>
+    <createTable tableName="CURRENCY" tablespace="${data-tablespace}">
+      <column name="CODE" type="VARCHAR(64)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="NAME" type="VARCHAR(128)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <createIndex tableName="CURRENCY"
+                 indexName="CURRENCY_CODE_IDX"
+                 tablespace="${index-tablespace}">
+      <column name="CODE"/>
+    </createIndex>
+    <addPrimaryKey tableName="CURRENCY"
+                   columnNames="CODE"
+                   constraintName="CURRENCY_CODE_PK"/>
+  </changeSet>
+  <changeSet id="002-002" author="ppruchniak">
+    <comment>Add PLN, EUR, USD Currency</comment>
+    <insert tableName="CURRENCY">
+      <column name="CODE" value="PLN"/>
+      <column name="NAME" value="Polish złoty"/>
+    </insert>
+    <insert tableName="CURRENCY">
+      <column name="CODE" value="EUR"/>
+      <column name="NAME" value="Euro"/>
+    </insert>
+    <insert tableName="CURRENCY">
+      <column name="CODE" value="USD"/>
+      <column name="NAME" value="United States dollar"/>
+    </insert>
+  </changeSet>
+
+</databaseChangeLog>
