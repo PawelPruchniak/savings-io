@@ -8,5 +8,8 @@ spring:
     driverClassName: org.postgresql.Driver
   liquibase:
     change-log: db/liquibase.changelog-master.xml
+    parameters:
+      index-tablespace: pg_default
+      data-tablespace: pg_default
   session:
     store-type: none

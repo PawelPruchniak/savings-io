@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+  <changeSet id="003-001" author="ppruchniak">
+    <comment>User Account table</comment>
+    <createTable tableName="user_account" tablespace="${data-tablespace}">
+      <column name="user_id" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="main_currency" type="VARCHAR(64)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <createIndex tableName="user_account"
+                 indexName="user_account_id_idx"
+                 tablespace="${index-tablespace}">
+      <column name="user_id"/>
+    </createIndex>
+    <addPrimaryKey tableName="user_account"
+                   columnNames="user_id"
+                   constraintName="user_account_user_id_pk"/>
+    <addForeignKeyConstraint baseTableName="user_account"
+                             baseColumnNames="user_id"
+                             constraintName="user_account_user_id_fk"
+                             referencedTableName="user"
+                             referencedColumnNames="id"
+                             deferrable="false"
+                             initiallyDeferred="false"
+                             onDelete="RESTRICT"
+                             onUpdate="RESTRICT"
+                             validate="true"/>
+    <addForeignKeyConstraint baseTableName="user_account"
+                             baseColumnNames="main_currency"
+                             constraintName="user_account_main_currency_fk"
+                             referencedTableName="currency"
+                             referencedColumnNames="code"
+                             deferrable="false"
+                             initiallyDeferred="false"
+                             onDelete="RESTRICT"
+                             onUpdate="RESTRICT"
+                             validate="true"/>
+  </changeSet>
+
+</databaseChangeLog>
