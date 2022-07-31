@@ -3,24 +3,11 @@ package pp.pl.io.savings.utils;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-import pp.pl.io.savings.exception.Error;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static pp.pl.io.savings.AccountTestData.*;
 
 class WebControllerUtilsTest {
-
-  private static final Throwable THROWABLE = new Throwable("throwable message");
-  private static final Error ERROR_UNAUTHORIZED = new Error(Error.ErrorCategory.UNAUTHORIZED,
-      "UNAUTHORIZED ERROR", THROWABLE);
-  private static final Error ERROR_NOT_FOUND = new Error(Error.ErrorCategory.NOT_FOUND,
-      "NOT_FOUND ERROR", THROWABLE);
-  private static final Error ERROR_ILLEGAL_ARGUMENT = new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT,
-      "ILLEGAL_ARGUMENT ERROR", THROWABLE);
-  private static final Error ERROR_CONFLICT = new Error(Error.ErrorCategory.CONFLICT,
-      "CONFLICT ERROR", THROWABLE);
-  private static final Error ERROR_PROCESSING = new Error(Error.ErrorCategory.PROCESSING_ERROR,
-      "PROCESSING ERROR", THROWABLE);
-  private static final RuntimeException RUNTIME_EXCEPTION = new RuntimeException("Runtime message");
 
   @Test
   void shouldComposeUnauthorizedException() {

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static pp.pl.io.savings.mapper.AccountTestData.*;
+import static pp.pl.io.savings.AccountTestData.*;
 
 class DoubleMapperTest {
 

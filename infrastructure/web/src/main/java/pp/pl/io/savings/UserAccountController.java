@@ -24,7 +24,6 @@ public class UserAccountController {
     log.debug("Getting user account");
 
     val result = userAccountService.getUserAccount()
-        .peek(x -> log.debug("x"))
         .map(UserAccountMapper::toUserAccountDTO)
         .mapLeft(WebControllerUtils::composeException)
         .peekLeft(e -> log.warn("Failed getting user account: {}", e.getMessage()))
