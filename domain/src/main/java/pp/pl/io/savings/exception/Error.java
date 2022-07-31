@@ -12,7 +12,6 @@ public class Error {
   String message;
   Throwable cause;
 
-
   public Error(@NonNull ErrorCategory category, String message) {
     this(category, message, null);
   }
