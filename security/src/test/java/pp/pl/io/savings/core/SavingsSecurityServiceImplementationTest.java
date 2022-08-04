@@ -12,15 +12,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import pp.pl.io.savings.organisation.SavingsSecurityService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class SavingsSecurityServiceImplementationTest {
 
-  private static final SavingsSecurityService savingsSecurityService =
+  private final SavingsSecurityService savingsSecurityService =
       new SavingsSecurityServiceImplementation();
   private static final UserDetails USER_DETAILS = User.builder()
       .username("some-user-email@gmail.com")
+      .password("some-password")
       .authorities("USER_ROLE")
       .build();
 
@@ -31,10 +33,19 @@ class SavingsSecurityServiceImplementationTest {
   SecurityContext securityContext;
 
   @Test
-  void shouldReturnUsernameSuccessfully() {
-    when(SecurityContextHolder.getContext())
-        .thenReturn(securityContext);
+  void shouldReturnNullUsernameWhenMissingAuthentication() {
+    SecurityContextHolder.setContext(securityContext);
+    when(securityContext.getAuthentication())
+        .thenReturn(null);
 
+    var username = savingsSecurityService.getUsername();
+
+    assertNull(username);
+  }
+
+  @Test
+  void shouldReturnUsernameSuccessfully() {
+    SecurityContextHolder.setContext(securityContext);
     when(securityContext.getAuthentication())
         .thenReturn(USER_TOKEN);
 
