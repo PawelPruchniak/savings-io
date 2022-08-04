@@ -13,10 +13,17 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import pp.pl.io.savings.core.SavingsSecurityServiceImplementation;
 import pp.pl.io.savings.handler.BasicAuthenticationSuccessHandler;
+import pp.pl.io.savings.organisation.SavingsSecurityService;
 
 @Configuration
 public class SecurityConfiguration {
+
+  @Bean
+  public SavingsSecurityService savingsSecurityService() {
+    return new SavingsSecurityServiceImplementation();
+  }
 
   @Bean
   public AuthenticationManager authenticationManager(

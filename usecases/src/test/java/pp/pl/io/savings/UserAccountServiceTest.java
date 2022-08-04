@@ -13,6 +13,7 @@ import pp.pl.io.savings.account.UserAccountRepository;
 import pp.pl.io.savings.exception.Error;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static pp.pl.io.savings.ServiceTestData.SOME_PROCESSING_ERROR;
 import static pp.pl.io.savings.ServiceTestData.USER_ACCOUNT_PLN;
@@ -28,7 +29,7 @@ class UserAccountServiceTest {
 
   @Test
   void shouldReturnProcessingError() {
-    when(userAccountRepository.fetchUserAccount())
+    when(userAccountRepository.fetchUserAccount(any()))
         .thenThrow(SOME_PROCESSING_ERROR);
 
     val result = userAccountService.getUserAccount();
@@ -41,7 +42,7 @@ class UserAccountServiceTest {
 
   @Test
   void shouldReturnProcessingErrorWhenResultIsFailure() {
-    when(userAccountRepository.fetchUserAccount())
+    when(userAccountRepository.fetchUserAccount(any()))
         .thenReturn(Try.failure(SOME_PROCESSING_ERROR));
 
     val result = userAccountService.getUserAccount();
@@ -54,7 +55,7 @@ class UserAccountServiceTest {
 
   @Test
   void shouldReturnNotFoundErrorWhenResultIsEmpty() {
-    when(userAccountRepository.fetchUserAccount())
+    when(userAccountRepository.fetchUserAccount(any()))
         .thenReturn(Try.of(Option::none));
 
     val result = userAccountService.getUserAccount();
@@ -67,7 +68,7 @@ class UserAccountServiceTest {
 
   @Test
   void shouldReturnUserAccountSuccessfully() {
-    when(userAccountRepository.fetchUserAccount())
+    when(userAccountRepository.fetchUserAccount(any()))
         .thenReturn(Try.of(() -> Option.of(USER_ACCOUNT_PLN)));
 
     val result = userAccountService.getUserAccount();

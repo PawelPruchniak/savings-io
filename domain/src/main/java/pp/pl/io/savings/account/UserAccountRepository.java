@@ -6,5 +6,5 @@ import io.vavr.control.Try;
 
 public interface UserAccountRepository {
 
-  Try<Option<UserAccount>> fetchUserAccount();
+  Try<Option<UserAccount>> fetchUserAccount(final String userEmail);
 }
