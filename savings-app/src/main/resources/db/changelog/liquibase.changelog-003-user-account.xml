@@ -25,7 +25,7 @@
     <addForeignKeyConstraint baseTableName="user_account"
                              baseColumnNames="user_id"
                              constraintName="user_account_user_id_fk"
-                             referencedTableName="user"
+                             referencedTableName="user_profile"
                              referencedColumnNames="id"
                              deferrable="false"
                              initiallyDeferred="false"

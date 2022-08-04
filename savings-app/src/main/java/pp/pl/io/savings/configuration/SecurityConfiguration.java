@@ -60,7 +60,7 @@ public class SecurityConfiguration {
   public InMemoryUserDetailsManager userDetailsService() {
     PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     UserDetails user = User.builder()
-        .username("test_user")
+        .username("some-test-user@gmail.com")
         .password(encoder.encode("test_password"))
         .roles("USER")
         .build();

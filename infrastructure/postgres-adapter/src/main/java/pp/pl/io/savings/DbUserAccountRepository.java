@@ -19,36 +19,36 @@ public class DbUserAccountRepository implements UserAccountRepository {
 
   private final NamedParameterJdbcTemplate jdbcTemplate;
 
-  private static final String EMAIL_CODE = "email";
+  private static final String USERNAME_CODE = "username";
 
 
   @Override
-  public Try<Option<UserAccount>> fetchUserAccount(final String userEmail) {
+  public Try<Option<UserAccount>> fetchUserAccount(final String username) {
     return Try.of(() -> {
-          Validate.notBlank(userEmail);
-          log.debug("Fetching user account for username: {}", userEmail);
+      Validate.notBlank(username);
+      log.debug("Fetching user account for username: {}", username);
 
-          final Option<UserAccount> userAccount = Option.of(
-                  List.ofAll(
-                      jdbcTemplate.query(
-                          "select ua.main_currency as main_currency from user_account ua" + "\n" +
-                              "where ua.user_id = (select u.id from user u where u.email =:" + EMAIL_CODE + ")",
-                          new MapSqlParameterSource()
-                              .addValue(EMAIL_CODE, userEmail),
-                          (rs, i) -> UserAccount.builder()
-                              .currency(rs.getString("main_currency"))
-                              .totalBalance(BigDecimal.ZERO)
-                              .build()
-                      )
+      final Option<UserAccount> userAccount = Option.of(
+              List.ofAll(
+                  jdbcTemplate.query(
+                      "select main_currency as main_currency from user_account ua" + "\n" +
+                          "where ua.user_id = (select id from user_profile up where up.username =:" + USERNAME_CODE + ")",
+                      new MapSqlParameterSource()
+                          .addValue(USERNAME_CODE, username),
+                      (rs, i) -> UserAccount.builder()
+                          .currency(rs.getString("main_currency"))
+                          .totalBalance(BigDecimal.ZERO)
+                          .build()
                   )
               )
-              .getOrElse(List.empty())
-              .headOption();
+          )
+          .getOrElse(List.empty())
+          .headOption();
 
-          if (userAccount.isDefined()) {
-            // todo: get all related accounts
-            return userAccount;
-          }
+      if (userAccount.isDefined()) {
+        // todo: get all related accounts
+        return userAccount;
+      }
 
           return userAccount;
         }

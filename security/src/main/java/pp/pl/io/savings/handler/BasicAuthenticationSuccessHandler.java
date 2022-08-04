@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 @Configuration
 public class BasicAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-  private static final String MAIN_PAGE_URL = "/welcome";
+  private static final String MAIN_PAGE_URL = "/api/user-account";
 
   @Override
   public void onAuthenticationSuccess(HttpServletRequest request,
