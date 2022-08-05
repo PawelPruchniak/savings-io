@@ -1,5 +1,6 @@
 package pp.pl.io.savings;
 
+import pp.pl.io.savings.account.Currency;
 import pp.pl.io.savings.account.UserAccount;
 import pp.pl.io.savings.dto.response.UserAccountDTO;
 import pp.pl.io.savings.exception.Error;
@@ -14,7 +15,7 @@ public class AccountTestData {
   public static final BigDecimal FOUR_DECIMAL_PLACE_VALUE = BigDecimal.valueOf(3.9876);
 
   public static final UserAccount USER_ACCOUNT_PLN = UserAccount.builder()
-      .currency("PLN")
+      .currency(Currency.valueOf("PLN"))
       .totalBalance(ONE_DECIMAL_PLACE_VALUE)
       .build();
   public static final UserAccountDTO USER_ACCOUNT_PLN_DTO = UserAccountDTO.builder()
@@ -22,11 +23,11 @@ public class AccountTestData {
       .totalBalance(501.10)
       .build();
   public static final UserAccount USER_ACCOUNT_EUR = UserAccount.builder()
-      .currency("EUR")
+      .currency(Currency.valueOf("EUR"))
       .totalBalance(TWO_DECIMAL_PLACE_VALUE)
       .build();
   public static final UserAccount USER_ACCOUNT_USD = UserAccount.builder()
-      .currency("USD")
+      .currency(Currency.valueOf("USD"))
       .totalBalance(FOUR_DECIMAL_PLACE_VALUE)
       .build();
 

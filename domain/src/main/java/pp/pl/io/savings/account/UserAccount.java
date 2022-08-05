@@ -10,6 +10,6 @@ import java.math.BigDecimal;
 @Builder
 public class UserAccount {
 
-  @NonNull String currency;
+  @NonNull Currency currency;
   @NonNull BigDecimal totalBalance;
 }

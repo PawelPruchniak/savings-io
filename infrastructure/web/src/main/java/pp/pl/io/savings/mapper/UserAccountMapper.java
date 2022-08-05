@@ -11,7 +11,7 @@ public class UserAccountMapper {
 
   public static UserAccountDTO toUserAccountDTO(@NonNull final UserAccount userAccount) {
     return UserAccountDTO.builder()
-        .currency(userAccount.getCurrency())
+        .currency(userAccount.getCurrency().name())
         .totalBalance(DoubleMapper.roundDouble(userAccount.getTotalBalance()))
         .build();
   }
