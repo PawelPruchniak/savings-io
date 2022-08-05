@@ -4,9 +4,11 @@ import io.vavr.control.Either;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.lang3.StringUtils;
 import pp.pl.io.savings.account.UserAccount;
 import pp.pl.io.savings.account.UserAccountRepository;
 import pp.pl.io.savings.exception.Error;
+import pp.pl.io.savings.organisation.SavingsSecurityService;
 
 @Slf4j
 @AllArgsConstructor
@@ -14,12 +16,20 @@ public class UserAccountService {
 
   private final UserAccountRepository userAccountRepository;
 
+  private final SavingsSecurityService savingsSecurityService;
+
   public Either<Error, UserAccount> getUserAccount() {
     try {
       log.debug("Getting user account");
 
-      val userAccount = userAccountRepository.fetchUserAccount();
+      val username = savingsSecurityService.getUsername();
+      if (StringUtils.isBlank(username)) {
+        return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR,
+            "Cannot compute user")
+        );
+      }
 
+      val userAccount = userAccountRepository.fetchUserAccount(username);
       if (userAccount.isFailure()) {
         return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR,
             "Cannot get user account")

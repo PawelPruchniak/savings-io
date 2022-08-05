@@ -6,23 +6,24 @@
 		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
   <changeSet id="001-001" author="ppruchniak">
     <comment>User table</comment>
-    <createTable tableName="user" tablespace="${data-tablespace}">
+    <createTable tableName="user_profile" tablespace="${data-tablespace}">
       <column name="id" type="INT" autoIncrement="true" incrementBy="1" startWith="1">
         <constraints nullable="false"/>
       </column>
-      <column name="name" type="VARCHAR(64)"/>
-      <column name="email" type="VARCHAR(256)">
+      <column name="firstname" type="VARCHAR(128)"/>
+      <column name="lastname" type="VARCHAR(128)"/>
+      <column name="username" type="VARCHAR(256)">
         <constraints nullable="false" unique="true"/>
       </column>
     </createTable>
-    <createIndex tableName="user"
-                 indexName="user_id_idx"
+    <createIndex tableName="user_profile"
+                 indexName="user_profile_id_idx"
                  tablespace="${index-tablespace}">
       <column name="id"/>
     </createIndex>
-    <addPrimaryKey tableName="user"
+    <addPrimaryKey tableName="user_profile"
                    columnNames="id"
-                   constraintName="user_id_pl"/>
+                   constraintName="user_profile_id_pl"/>
   </changeSet>
 
 </databaseChangeLog>

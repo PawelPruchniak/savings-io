@@ -4,12 +4,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import pp.pl.io.savings.UserAccountService;
 import pp.pl.io.savings.account.UserAccountRepository;
+import pp.pl.io.savings.organisation.SavingsSecurityService;
 
 @Configuration
 public class UsecaseConfiguration {
 
   @Bean
-  UserAccountService userAccountService(UserAccountRepository userAccountRepository) {
-    return new UserAccountService(userAccountRepository);
+  UserAccountService userAccountService(UserAccountRepository userAccountRepository,
+                                        SavingsSecurityService savingsSecurityService) {
+    return new UserAccountService(userAccountRepository, savingsSecurityService);
   }
 }
