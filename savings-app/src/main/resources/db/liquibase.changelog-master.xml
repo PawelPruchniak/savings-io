@@ -8,4 +8,6 @@
   <include file="db/changelog/liquibase.changelog-001-user.xml"/>
   <include file="db/changelog/liquibase.changelog-002-currency.xml"/>
   <include file="db/changelog/liquibase.changelog-003-user-account.xml"/>
+  <include file="db/changelog/liquibase.changelog-004-account.xml"/>
+  <include file="db/changelog/liquibase.changelog-005-savings-account.xml"/>
 </databaseChangeLog>

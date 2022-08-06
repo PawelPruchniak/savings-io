@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+  <changeSet id="004-001" author="ppruchniak">
+    <comment>Account Type table</comment>
+    <createTable tableName="account_type" tablespace="${data-tablespace}">
+      <column name="code" type="VARCHAR(64)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <createIndex tableName="account_type"
+                 indexName="account_type_code_idx"
+                 tablespace="${index-tablespace}">
+      <column name="code"/>
+    </createIndex>
+    <addPrimaryKey tableName="account_type"
+                   columnNames="code"
+                   constraintName="account_type_code_pk"/>
+  </changeSet>
+  <changeSet id="004-002" author="ppruchniak">
+    <comment>Account table</comment>
+    <createTable tableName="account" tablespace="${data-tablespace}">
+      <column name="id" type="INT" autoIncrement="true" incrementBy="1" startWith="1">
+        <constraints nullable="false"/>
+      </column>
+      <column name="name" type="VARCHAR(64)"/>
+      <column name="description" type="VARCHAR(256)"/>
+      <column name="account_type" type="VARCHAR(64)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <createIndex tableName="account"
+                 indexName="account_id_idx"
+                 tablespace="${index-tablespace}">
+      <column name="id"/>
+    </createIndex>
+    <addPrimaryKey tableName="account"
+                   columnNames="id"
+                   constraintName="account_id_pk"/>
+    <addForeignKeyConstraint baseTableName="account"
+                             baseColumnNames="account_type"
+                             constraintName="account_account_type_code_fk"
+                             referencedTableName="account_type"
+                             referencedColumnNames="code"
+                             deferrable="false"
+                             initiallyDeferred="false"
+                             onDelete="RESTRICT"
+                             onUpdate="RESTRICT"
+                             validate="true"/>
+  </changeSet>
+
+</databaseChangeLog>
