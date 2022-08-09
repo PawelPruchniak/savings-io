@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
+import pp.pl.io.savings.account.AccountRepository;
 import pp.pl.io.savings.account.UserAccount;
 import pp.pl.io.savings.account.UserAccountRepository;
 import pp.pl.io.savings.exception.Error;
@@ -15,7 +16,7 @@ import pp.pl.io.savings.organisation.SavingsSecurityService;
 public class UserAccountService {
 
   private final UserAccountRepository userAccountRepository;
-
+  private final AccountRepository accountRepository;
   private final SavingsSecurityService savingsSecurityService;
 
   public Either<Error, UserAccount> getUserAccount() {
@@ -41,6 +42,10 @@ public class UserAccountService {
             "User account not found")
         );
       }
+
+      //todo: Add here fetching all account for user
+
+      //todo: Add here calculating totalBalance for user account
 
       return Either.right(userAccount.get().get());
     } catch (final Throwable t) {

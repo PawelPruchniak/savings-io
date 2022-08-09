@@ -13,8 +13,9 @@ public class UsecaseConfiguration {
 
   @Bean
   UserAccountService userAccountService(UserAccountRepository userAccountRepository,
+                                        AccountRepository accountRepository,
                                         SavingsSecurityService savingsSecurityService) {
-    return new UserAccountService(userAccountRepository, savingsSecurityService);
+    return new UserAccountService(userAccountRepository, accountRepository, savingsSecurityService);
   }
 
   @Bean
