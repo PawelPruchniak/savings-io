@@ -5,23 +5,28 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
+import pp.pl.io.savings.account.Account;
 import pp.pl.io.savings.account.AccountRepository;
-import pp.pl.io.savings.account.UserAccount;
-import pp.pl.io.savings.account.UserAccountRepository;
 import pp.pl.io.savings.exception.Error;
 import pp.pl.io.savings.organisation.SavingsSecurityService;
 
 @Slf4j
 @AllArgsConstructor
-public class UserAccountService {
+public class AccountService {
 
-  private final UserAccountRepository userAccountRepository;
   private final AccountRepository accountRepository;
+
   private final SavingsSecurityService savingsSecurityService;
 
-  public Either<Error, UserAccount> getUserAccount() {
+  public Either<Error, Account> getAccount(String accountId) {
     try {
-      log.debug("Getting user account");
+      log.debug("Getting account: {}", accountId);
+
+      if (StringUtils.isBlank(accountId)) {
+        return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR,
+            "Account id cannot be blank")
+        );
+      }
 
       val username = savingsSecurityService.getUsername();
       if (StringUtils.isBlank(username)) {
@@ -30,24 +35,20 @@ public class UserAccountService {
         );
       }
 
-      val userAccount = userAccountRepository.fetchUserAccount(username);
-      if (userAccount.isFailure()) {
+      val account = accountRepository.fetchAccount(accountId, username);
+      if (account.isFailure()) {
         return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR,
-            "Cannot get user account")
+            "Cannot get account with id: " + accountId)
         );
       }
 
-      if (userAccount.get().isEmpty()) {
+      if (account.get().isEmpty()) {
         return Either.left(new Error(Error.ErrorCategory.NOT_FOUND,
-            "User account not found")
+            "Account with id: " + accountId + " not found")
         );
       }
 
-      //todo: Add here fetching all account for user
-
-      //todo: Add here calculating totalBalance for user account
-
-      return Either.right(userAccount.get().get());
+      return Either.right(account.get().get());
     } catch (final Throwable t) {
       log.warn("Failed getting user account", t);
       return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, t));

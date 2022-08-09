@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+  <changeSet id="005-001" author="ppruchniak">
+    <comment>Savings Account table</comment>
+    <createTable tableName="savings_account" tablespace="${data-tablespace}">
+      <column name="account_id" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="currency" type="VARCHAR(64)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="balance" type="FLOAT(2)" defaultOnNull="true" defaultValueNumeric="0.00">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <createIndex tableName="savings_account"
+                 indexName="savings_account_account_id_idx"
+                 tablespace="${index-tablespace}">
+      <column name="account_id"/>
+    </createIndex>
+    <addPrimaryKey tableName="savings_account"
+                   columnNames="account_id"
+                   constraintName="savings_account_account_id_pk"/>
+    <addForeignKeyConstraint baseTableName="savings_account"
+                             baseColumnNames="currency"
+                             constraintName="savings_account_currency_fk"
+                             referencedTableName="currency"
+                             referencedColumnNames="code"
+                             deferrable="false"
+                             initiallyDeferred="false"
+                             onDelete="RESTRICT"
+                             onUpdate="RESTRICT"
+                             validate="true"/>
+  </changeSet>
+  <changeSet id="005-002" author="ppruchniak">
+    <comment>Add SAVINGS account type</comment>
+    <insert tableName="account_type">
+      <column name="code" value="SAVINGS"/>
+    </insert>
+  </changeSet>
+
+</databaseChangeLog>

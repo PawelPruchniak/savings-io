@@ -4,3 +4,7 @@ pp:
       savings:
         authentication:
           test-user: true
+
+logging:
+  level:
+    pp.pl.io.savings: DEBUG

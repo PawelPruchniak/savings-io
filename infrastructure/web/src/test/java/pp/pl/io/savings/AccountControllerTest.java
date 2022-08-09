@@ -11,49 +11,50 @@ import org.springframework.web.server.ResponseStatusException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static pp.pl.io.savings.AccountTestData.*;
 
-
 @ExtendWith(MockitoExtension.class)
-class UserAccountControllerTest {
+class AccountControllerTest {
 
   @Mock
-  UserAccountService userAccountService;
+  AccountService accountService;
   @InjectMocks
-  UserAccountController userAccountController;
+  AccountController accountController;
 
   @Test
   void shouldReturnProcessingError() {
     // given
-    when(userAccountService.getUserAccount())
+    when(accountService.getAccount(any()))
         .thenReturn(Either.left(ERROR_PROCESSING));
 
+
     // when, then
-    assertThrows(ResponseStatusException.class, () -> userAccountController.getUserAccount());
+    assertThrows(ResponseStatusException.class, () -> accountController.getUserAccount(null));
   }
 
   @Test
   void shouldReturnUnauthorizedError() {
     // given
-    when(userAccountService.getUserAccount())
+    when(accountService.getAccount(any()))
         .thenReturn(Either.left(ERROR_UNAUTHORIZED));
 
     // when, then
-    assertThrows(ResponseStatusException.class, () -> userAccountController.getUserAccount());
+    assertThrows(ResponseStatusException.class, () -> accountController.getUserAccount(ACCOUNT_ID));
   }
 
 
   @Test
-  void shouldReturnUserAccountDTOSuccessfully() {
+  void shouldReturnSavingsAccountDTOSuccessfully() {
     // given
-    when(userAccountService.getUserAccount())
-        .thenReturn(Either.right(USER_ACCOUNT_PLN));
+    when(accountService.getAccount(ACCOUNT_ID))
+        .thenReturn(Either.right(SAVINGS_ACCOUNT));
 
     // when
-    val result = userAccountController.getUserAccount();
+    val result = accountController.getUserAccount(ACCOUNT_ID);
 
     // then
-    assertThat(result).isEqualTo(USER_ACCOUNT_PLN_DTO);
+    assertThat(result).isEqualTo(SAVINGS_ACCOUNT_DTO);
   }
 }

@@ -29,7 +29,7 @@ public class DbUserAccountRepository implements UserAccountRepository {
           Validate.notBlank(username);
           log.debug("Fetching user account for username: {}", username);
 
-          final Option<UserAccount> userAccount = Option.of(
+          return Option.of(
                   List.ofAll(
                       jdbcTemplate.query(
                           "select main_currency as main_currency from user_account ua" + "\n" +
@@ -45,13 +45,6 @@ public class DbUserAccountRepository implements UserAccountRepository {
               )
               .getOrElse(List.empty())
               .headOption();
-
-          if (userAccount.isDefined()) {
-            // todo: get all related accounts
-            return userAccount;
-          }
-
-          return userAccount;
         }
     );
   }
