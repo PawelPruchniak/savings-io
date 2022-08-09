@@ -1,7 +1,8 @@
 package pp.pl.io.savings;
 
-import pp.pl.io.savings.account.Currency;
-import pp.pl.io.savings.account.UserAccount;
+import pp.pl.io.savings.account.*;
+import pp.pl.io.savings.dto.response.AccountDTO;
+import pp.pl.io.savings.dto.response.SavingsAccountDTO;
 import pp.pl.io.savings.dto.response.UserAccountDTO;
 import pp.pl.io.savings.exception.Error;
 
@@ -29,6 +30,24 @@ public class AccountTestData {
   public static final UserAccount USER_ACCOUNT_USD = UserAccount.builder()
       .currency(Currency.valueOf("USD"))
       .totalBalance(FOUR_DECIMAL_PLACE_VALUE)
+      .build();
+
+  // Account
+  public static final String ACCOUNT_ID = "1";
+  public static final Account SAVINGS_ACCOUNT = SavingsAccount.builder()
+      .accountId(ACCOUNT_ID)
+      .name("Savings account")
+      .description("Some description")
+      .currency(Currency.PLN)
+      .balance(ONE_DECIMAL_PLACE_VALUE)
+      .build();
+  public static final AccountDTO SAVINGS_ACCOUNT_DTO = SavingsAccountDTO.builder()
+      .accountId(ACCOUNT_ID)
+      .name("Savings account")
+      .description("Some description")
+      .currency(Currency.PLN.name())
+      .accountType(AccountType.SAVINGS.name())
+      .balance(501.10)
       .build();
 
   // Errors

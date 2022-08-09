@@ -9,34 +9,53 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pp.pl.io.savings.account.UserAccountRepository;
+import pp.pl.io.savings.account.AccountRepository;
 import pp.pl.io.savings.exception.Error;
 import pp.pl.io.savings.organisation.SavingsSecurityService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static pp.pl.io.savings.ServiceTestData.*;
 
 @ExtendWith(MockitoExtension.class)
-class UserAccountServiceTest {
+class AccountServiceTest {
 
   @Mock
-  UserAccountRepository userAccountRepository;
+  AccountRepository accountRepository;
   @Mock
   SavingsSecurityService savingsSecurityService;
   @InjectMocks
-  UserAccountService userAccountService;
+  AccountService accountService;
 
   @Test
   void shouldReturnProcessingError() {
     when(savingsSecurityService.getUsername())
         .thenThrow(SOME_PROCESSING_ERROR);
 
-    val result = userAccountService.getUserAccount();
+    val result = accountService.getAccount(ACCOUNT_ID);
 
     assertEquals(
         Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, SOME_PROCESSING_ERROR)),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorWhenAccountIdIsNull() {
+    val result = accountService.getAccount(null);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Account id cannot be blank")),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorWhenAccountIdIsBlank() {
+    val result = accountService.getAccount("");
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Account id cannot be blank")),
         result
     );
   }
@@ -46,7 +65,7 @@ class UserAccountServiceTest {
     when(savingsSecurityService.getUsername())
         .thenReturn(null);
 
-    val result = userAccountService.getUserAccount();
+    val result = accountService.getAccount(ACCOUNT_ID);
 
     assertEquals(
         Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot compute user")),
@@ -59,7 +78,7 @@ class UserAccountServiceTest {
     when(savingsSecurityService.getUsername())
         .thenReturn("");
 
-    val result = userAccountService.getUserAccount();
+    val result = accountService.getAccount(ACCOUNT_ID);
 
     assertEquals(
         Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot compute user")),
@@ -71,13 +90,13 @@ class UserAccountServiceTest {
   void shouldReturnProcessingErrorWhenResultIsFailure() {
     when(savingsSecurityService.getUsername())
         .thenReturn(SOME_USERNAME);
-    when(userAccountRepository.fetchUserAccount(any()))
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USERNAME))
         .thenReturn(Try.failure(SOME_PROCESSING_ERROR));
 
-    val result = userAccountService.getUserAccount();
+    val result = accountService.getAccount(ACCOUNT_ID);
 
     assertEquals(
-        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot get user account")),
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot get account with id: " + ACCOUNT_ID)),
         result
     );
   }
@@ -86,30 +105,29 @@ class UserAccountServiceTest {
   void shouldReturnNotFoundErrorWhenResultIsEmpty() {
     when(savingsSecurityService.getUsername())
         .thenReturn(SOME_USERNAME);
-    when(userAccountRepository.fetchUserAccount(any()))
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USERNAME))
         .thenReturn(Try.of(Option::none));
 
-    val result = userAccountService.getUserAccount();
+    val result = accountService.getAccount(ACCOUNT_ID);
 
     assertEquals(
-        Either.left(new Error(Error.ErrorCategory.NOT_FOUND, "User account not found")),
+        Either.left(new Error(Error.ErrorCategory.NOT_FOUND, "Account with id: " + ACCOUNT_ID + " not found")),
         result
     );
   }
 
   @Test
-  void shouldReturnUserAccountSuccessfully() {
+  void shouldReturnSavingsAccountSuccessfully() {
     when(savingsSecurityService.getUsername())
         .thenReturn(SOME_USERNAME);
-    when(userAccountRepository.fetchUserAccount(any()))
-        .thenReturn(Try.of(() -> Option.of(USER_ACCOUNT_PLN)));
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USERNAME))
+        .thenReturn(Try.of(() -> Option.of(SAVINGS_ACCOUNT)));
 
-    val result = userAccountService.getUserAccount();
+    val result = accountService.getAccount(ACCOUNT_ID);
 
     assertEquals(
-        Either.right(USER_ACCOUNT_PLN),
+        Either.right(SAVINGS_ACCOUNT),
         result
     );
   }
-
 }

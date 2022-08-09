@@ -26,7 +26,7 @@ public class UserAccountController {
     val result = userAccountService.getUserAccount()
         .map(UserAccountMapper::toUserAccountDTO)
         .mapLeft(WebControllerUtils::composeException)
-        .peekLeft(e -> log.warn("Failed getting user account: {}", e.getMessage()))
+        .peekLeft(e -> log.warn("Failed getting user account because: {}", e.getMessage()))
         .mapLeft(WebControllerUtils::normalizeError);
 
     if (result.isLeft()) {

@@ -26,6 +26,9 @@
       <column name="id" type="INT" autoIncrement="true" incrementBy="1" startWith="1">
         <constraints nullable="false"/>
       </column>
+      <column name="user_id" type="VARCHAR(64)">
+        <constraints nullable="false"/>
+      </column>
       <column name="name" type="VARCHAR(64)"/>
       <column name="description" type="VARCHAR(256)"/>
       <column name="account_type" type="VARCHAR(64)">
@@ -40,6 +43,16 @@
     <addPrimaryKey tableName="account"
                    columnNames="id"
                    constraintName="account_id_pk"/>
+    <addForeignKeyConstraint baseTableName="account"
+                             baseColumnNames="user_id"
+                             constraintName="account_user_id_fk"
+                             referencedTableName="user_profile"
+                             referencedColumnNames="id"
+                             deferrable="false"
+                             initiallyDeferred="false"
+                             onDelete="RESTRICT"
+                             onUpdate="RESTRICT"
+                             validate="true"/>
     <addForeignKeyConstraint baseTableName="account"
                              baseColumnNames="account_type"
                              constraintName="account_account_type_code_fk"
