@@ -1,5 +1,8 @@
-INSERT INTO "user_profile" (id, firstname, lastname, username)
-VALUES ('USER_1', 'Paul', 'Wąsowski', 'some-test-user@gmail.com');
+INSERT INTO "user_profile" (id, firstname, lastname, username, password, enabled)
+VALUES ('USER_1', 'Paul', 'Wąsowski', 'some-test-user@gmail.com', '', 'true');
+
+INSERT INTO "user_authorities" (username, authority)
+VALUES ('some-test-user@gmail.com', 'USER_ROLE');
 
 INSERT INTO "user_account" (user_id, main_currency)
 VALUES ('USER_1', 'PLN');

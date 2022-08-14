@@ -2,15 +2,35 @@ package pp.pl.io.savings.core;
 
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;
+import lombok.AllArgsConstructor;
+import lombok.val;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import pp.pl.io.savings.organisation.SavingsSecurityService;
+import pp.pl.io.savings.organisation.UserRepository;
 import pp.pl.io.savings.organisation.UserRole;
 
 import java.util.Optional;
 
+@AllArgsConstructor
 public class SavingsSecurityServiceImplementation implements SavingsSecurityService {
+
+  private final UserRepository userRepository;
+
+  @Override
+  public String getUserId() {
+    val username = getUsername();
+    if (StringUtils.isNotBlank(username)) {
+
+      val userId = userRepository.getUserId(getUsername());
+      if (userId.isSuccess() && userId.get().isDefined()) {
+        return userId.get().get();
+      }
+    }
+    return null;
+  }
 
   @Override
   public String getUsername() {

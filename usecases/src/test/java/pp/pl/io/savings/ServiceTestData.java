@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 public class ServiceTestData {
 
   // User
-  protected static final String SOME_USERNAME = "some-username@gmail.com";
+  protected static final String SOME_USER_ID = "USER_1";
 
   // User Account
   protected static final BigDecimal ONE_DECIMAL_PLACE_VALUE = BigDecimal.valueOf(501.1);

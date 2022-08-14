@@ -29,7 +29,7 @@ class AccountServiceTest {
 
   @Test
   void shouldReturnProcessingError() {
-    when(savingsSecurityService.getUsername())
+    when(savingsSecurityService.getUserId())
         .thenThrow(SOME_PROCESSING_ERROR);
 
     val result = accountService.getAccount(ACCOUNT_ID);
@@ -61,8 +61,8 @@ class AccountServiceTest {
   }
 
   @Test
-  void shouldReturnProcessingErrorWhenUsernameIsNull() {
-    when(savingsSecurityService.getUsername())
+  void shouldReturnProcessingErrorWhenUserIdIsNull() {
+    when(savingsSecurityService.getUserId())
         .thenReturn(null);
 
     val result = accountService.getAccount(ACCOUNT_ID);
@@ -74,8 +74,8 @@ class AccountServiceTest {
   }
 
   @Test
-  void shouldReturnProcessingErrorWhenUsernameIsBlank() {
-    when(savingsSecurityService.getUsername())
+  void shouldReturnProcessingErrorWhenUserIdIsBlank() {
+    when(savingsSecurityService.getUserId())
         .thenReturn("");
 
     val result = accountService.getAccount(ACCOUNT_ID);
@@ -88,9 +88,9 @@ class AccountServiceTest {
 
   @Test
   void shouldReturnProcessingErrorWhenResultIsFailure() {
-    when(savingsSecurityService.getUsername())
-        .thenReturn(SOME_USERNAME);
-    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USERNAME))
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
         .thenReturn(Try.failure(SOME_PROCESSING_ERROR));
 
     val result = accountService.getAccount(ACCOUNT_ID);
@@ -103,9 +103,9 @@ class AccountServiceTest {
 
   @Test
   void shouldReturnNotFoundErrorWhenResultIsEmpty() {
-    when(savingsSecurityService.getUsername())
-        .thenReturn(SOME_USERNAME);
-    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USERNAME))
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
         .thenReturn(Try.of(Option::none));
 
     val result = accountService.getAccount(ACCOUNT_ID);
@@ -118,9 +118,9 @@ class AccountServiceTest {
 
   @Test
   void shouldReturnSavingsAccountSuccessfully() {
-    when(savingsSecurityService.getUsername())
-        .thenReturn(SOME_USERNAME);
-    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USERNAME))
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
         .thenReturn(Try.of(() -> Option.of(SAVINGS_ACCOUNT)));
 
     val result = accountService.getAccount(ACCOUNT_ID);

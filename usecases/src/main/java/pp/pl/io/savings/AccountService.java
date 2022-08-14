@@ -28,14 +28,14 @@ public class AccountService {
         );
       }
 
-      val username = savingsSecurityService.getUsername();
-      if (StringUtils.isBlank(username)) {
+      val userId = savingsSecurityService.getUserId();
+      if (StringUtils.isBlank(userId)) {
         return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR,
             "Cannot compute user")
         );
       }
 
-      val account = accountRepository.fetchAccount(accountId, username);
+      val account = accountRepository.fetchAccount(accountId, userId);
       if (account.isFailure()) {
         return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR,
             "Cannot get account with id: " + accountId)

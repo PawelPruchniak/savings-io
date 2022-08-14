@@ -29,27 +29,27 @@ public class DbAccountRepository implements AccountRepository {
           "left outer join savings_account sa on a.id = sa.account_id ";
 
   private static final String ACCOUNT_ID_CODE = "accountId";
-  private static final String USERNAME_CODE = "username";
+  private static final String USER_ID_CODE = "userId";
 
   @Override
-  public Try<Option<Account>> fetchAccount(String accountId, String username) {
+  public Try<Option<Account>> fetchAccount(String accountId, String userId) {
     return Try.of(() -> {
-          Validate.notBlank(accountId);
-          Validate.notBlank(username);
-          log.debug("Fetching account with id: {} for username: {}", accountId, username);
+      Validate.notBlank(accountId);
+      Validate.notBlank(userId);
+      log.debug("Fetching account with id: {} for user with id: {}", accountId, userId);
 
-          return Option.of(
-                  List.ofAll(
-                      Objects.requireNonNull(
-                          jdbcTemplate.query(
-                              SELECT_SAVINGS_ACCOUNT + "\n" +
-                                  "where a.id =:" + ACCOUNT_ID_CODE + "\n" +
-                                  "and a.user_id = (select up.id from user_profile up where up.username =:" + USERNAME_CODE + ")",
-                              new MapSqlParameterSource()
-                                  .addValue(ACCOUNT_ID_CODE, Integer.valueOf(accountId))
-                                  .addValue(USERNAME_CODE, username),
-                              accountResultSetExtractor
-                          )
+      return Option.of(
+              List.ofAll(
+                  Objects.requireNonNull(
+                      jdbcTemplate.query(
+                          SELECT_SAVINGS_ACCOUNT + "\n" +
+                              "where a.id =:" + ACCOUNT_ID_CODE + "\n" +
+                              "and a.user_id =:" + USER_ID_CODE,
+                          new MapSqlParameterSource()
+                              .addValue(ACCOUNT_ID_CODE, Integer.valueOf(accountId))
+                              .addValue(USER_ID_CODE, userId),
+                          accountResultSetExtractor
+                      )
                       )
                   )
               )

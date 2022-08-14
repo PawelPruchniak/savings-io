@@ -1,8 +1,11 @@
 package pp.pl.io.savings.core;
 
 import io.vavr.collection.HashSet;
+import io.vavr.control.Option;
+import io.vavr.control.Try;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,19 +13,24 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import pp.pl.io.savings.organisation.SavingsSecurityService;
+import pp.pl.io.savings.organisation.UserRepository;
 import pp.pl.io.savings.organisation.UserRole;
 import pp.pl.io.savings.organisation.UserWithRoles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class SavingsSecurityServiceImplementationTest {
 
-  private final SavingsSecurityService savingsSecurityService =
-      new SavingsSecurityServiceImplementation();
+  @Mock
+  UserRepository userRepository;
+
+  @InjectMocks
+  private SavingsSecurityServiceImplementation savingsSecurityService;
+
   private static final UserDetails USER_DETAILS = User.builder()
       .username("some-user-email@gmail.com")
       .password("some-password")
@@ -31,6 +39,8 @@ class SavingsSecurityServiceImplementationTest {
 
   private static final UsernamePasswordAuthenticationToken USER_TOKEN =
       new UsernamePasswordAuthenticationToken(USER_DETAILS, null);
+
+  protected static final RuntimeException SOME_PROCESSING_ERROR = new RuntimeException("Some processing error");
 
   @Mock
   SecurityContext securityContext;
@@ -97,5 +107,47 @@ class SavingsSecurityServiceImplementationTest {
             .build(),
         userWithRoles
     );
+  }
+
+  @Test
+  void shouldReturnNullUserIdWhenUsernameIsNull() {
+    SecurityContextHolder.setContext(securityContext);
+    when(securityContext.getAuthentication())
+        .thenReturn(null);
+
+    assertNull(savingsSecurityService.getUserId());
+  }
+
+  @Test
+  void shouldReturnNullUserIdWhenFetchUserIdIsFailure() {
+    SecurityContextHolder.setContext(securityContext);
+    when(securityContext.getAuthentication())
+        .thenReturn(USER_TOKEN);
+    when(userRepository.getUserId(any()))
+        .thenReturn(Try.failure(SOME_PROCESSING_ERROR));
+
+    assertNull(savingsSecurityService.getUserId());
+  }
+
+  @Test
+  void shouldReturnNullUserIdWhenFetchUserIdIsEmpty() {
+    SecurityContextHolder.setContext(securityContext);
+    when(securityContext.getAuthentication())
+        .thenReturn(USER_TOKEN);
+    when(userRepository.getUserId(any()))
+        .thenReturn(Try.of(Option::none));
+
+    assertNull(savingsSecurityService.getUserId());
+  }
+
+  @Test
+  void shouldReturnUserIdSuccessfully() {
+    SecurityContextHolder.setContext(securityContext);
+    when(securityContext.getAuthentication())
+        .thenReturn(USER_TOKEN);
+    when(userRepository.getUserId(any()))
+        .thenReturn(Try.of(() -> Option.of("USER_1")));
+
+    assertEquals("USER_1", savingsSecurityService.getUserId());
   }
 }
