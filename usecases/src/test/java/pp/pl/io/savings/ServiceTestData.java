@@ -1,5 +1,6 @@
 package pp.pl.io.savings;
 
+import io.vavr.collection.List;
 import pp.pl.io.savings.account.Account;
 import pp.pl.io.savings.account.Currency;
 import pp.pl.io.savings.account.SavingsAccount;
@@ -12,14 +13,9 @@ public class ServiceTestData {
   // User
   protected static final String SOME_USER_ID = "USER_1";
 
-  // User Account
-  protected static final BigDecimal ONE_DECIMAL_PLACE_VALUE = BigDecimal.valueOf(501.1);
-  protected static final UserAccount USER_ACCOUNT_PLN = UserAccount.builder()
-      .currency(Currency.valueOf("PLN"))
-      .totalBalance(ONE_DECIMAL_PLACE_VALUE)
-      .build();
 
   // Account
+  protected static final BigDecimal ONE_DECIMAL_PLACE_VALUE = BigDecimal.valueOf(501.1);
   public static final String ACCOUNT_ID = "1";
   public static final Account SAVINGS_ACCOUNT = SavingsAccount.builder()
       .accountId(ACCOUNT_ID)
@@ -28,6 +24,23 @@ public class ServiceTestData {
       .currency(Currency.PLN)
       .balance(ONE_DECIMAL_PLACE_VALUE)
       .build();
+
+
+  // User Account
+  protected static final BigDecimal ZERO_VALUE = BigDecimal.ZERO;
+  protected static final UserAccount USER_ACCOUNT_PLN_WITHOUT_ACCOUNTS = UserAccount.builder()
+      .accounts(List.empty())
+      .currency(Currency.valueOf("PLN"))
+      .totalBalance(ZERO_VALUE)
+      .build();
+
+  protected static final List<Account> ACCOUNTS = List.of(SAVINGS_ACCOUNT);
+  protected static final UserAccount USER_ACCOUNT_PLN = UserAccount.builder()
+      .accounts(ACCOUNTS)
+      .currency(Currency.valueOf("PLN"))
+      .totalBalance(ZERO_VALUE)
+      .build();
+
 
   // Errors
   protected static final RuntimeException SOME_PROCESSING_ERROR = new RuntimeException("Some processing error");

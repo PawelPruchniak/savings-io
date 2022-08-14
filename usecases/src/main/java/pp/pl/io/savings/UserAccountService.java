@@ -1,15 +1,19 @@
 package pp.pl.io.savings;
 
+import io.vavr.collection.List;
 import io.vavr.control.Either;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
+import pp.pl.io.savings.account.Account;
 import pp.pl.io.savings.account.AccountRepository;
 import pp.pl.io.savings.account.UserAccount;
 import pp.pl.io.savings.account.UserAccountRepository;
 import pp.pl.io.savings.exception.Error;
 import pp.pl.io.savings.organisation.SavingsSecurityService;
+
+import java.math.BigDecimal;
 
 @Slf4j
 @AllArgsConstructor
@@ -30,27 +34,40 @@ public class UserAccountService {
         );
       }
 
-      val userAccount = userAccountRepository.fetchUserAccount(userId);
-      if (userAccount.isFailure()) {
+      var optionUserAccount = userAccountRepository.fetchUserAccount(userId);
+      if (optionUserAccount.isFailure()) {
         return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR,
             "Cannot get user account")
         );
       }
 
-      if (userAccount.get().isEmpty()) {
+      if (optionUserAccount.get().isEmpty()) {
         return Either.left(new Error(Error.ErrorCategory.NOT_FOUND,
             "User account not found")
         );
       }
 
-      //todo: Add here fetching all account for user
+      val accounts = accountRepository.fetchAccounts(userId);
+      if (accounts.isFailure()) {
+        return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR,
+            "Cannot get related accounts")
+        );
+      }
 
-      //todo: Add here calculating totalBalance for user account
+      val userAccount = mapToUserAccount(optionUserAccount.get().get(), accounts.get());
 
-      return Either.right(userAccount.get().get());
+      return Either.right(userAccount);
     } catch (final Throwable t) {
       log.warn("Failed getting user account", t);
       return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, t));
     }
+  }
+
+  private UserAccount mapToUserAccount(final UserAccount userAccount, final List<Account> accounts) {
+    return userAccount.toBuilder()
+        .accounts(accounts)
+        .currency(userAccount.getCurrency())
+        .totalBalance(BigDecimal.ZERO) //todo: Add here balance service for calculations
+        .build();
   }
 }
