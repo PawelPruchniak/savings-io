@@ -1,34 +1,54 @@
 package pp.pl.io.savings.configuration;
 
+import lombok.AllArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import pp.pl.io.savings.core.DbUserRepository;
+import pp.pl.io.savings.core.SavingsJdbcUserDetailsManager;
 import pp.pl.io.savings.core.SavingsSecurityServiceImplementation;
 import pp.pl.io.savings.handler.BasicAuthenticationSuccessHandler;
 import pp.pl.io.savings.organisation.SavingsSecurityService;
+import pp.pl.io.savings.organisation.UserRepository;
+
+import javax.sql.DataSource;
 
 @Configuration
+@EnableWebSecurity
+@AllArgsConstructor
 public class SecurityConfiguration {
 
   @Bean
-  public SavingsSecurityService savingsSecurityService() {
-    return new SavingsSecurityServiceImplementation();
+  public UserDetailsService userDetailsService(DataSource dataSource) {
+    return new SavingsJdbcUserDetailsManager(dataSource);
   }
 
   @Bean
-  public AuthenticationManager authenticationManager(
-      AuthenticationConfiguration authenticationConfiguration) throws Exception {
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
     return authenticationConfiguration.getAuthenticationManager();
+  }
+
+  @Bean
+  UserRepository userRepository(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    return new DbUserRepository(namedParameterJdbcTemplate);
+  }
+
+  @Bean
+  public SavingsSecurityService savingsSecurityService(UserRepository userRepository) {
+    return new SavingsSecurityServiceImplementation(userRepository);
   }
 
   @Bean

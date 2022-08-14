@@ -4,6 +4,8 @@ import io.vavr.collection.Set;
 
 public interface SavingsSecurityService {
 
+  String getUserId();
+
   String getUsername();
 
   Set<UserRole> getUserRoles();

@@ -30,7 +30,7 @@ class UserAccountServiceTest {
 
   @Test
   void shouldReturnProcessingError() {
-    when(savingsSecurityService.getUsername())
+    when(savingsSecurityService.getUserId())
         .thenThrow(SOME_PROCESSING_ERROR);
 
     val result = userAccountService.getUserAccount();
@@ -42,8 +42,8 @@ class UserAccountServiceTest {
   }
 
   @Test
-  void shouldReturnProcessingErrorWhenUsernameIsNull() {
-    when(savingsSecurityService.getUsername())
+  void shouldReturnProcessingErrorWhenUserIdIsNull() {
+    when(savingsSecurityService.getUserId())
         .thenReturn(null);
 
     val result = userAccountService.getUserAccount();
@@ -56,7 +56,7 @@ class UserAccountServiceTest {
 
   @Test
   void shouldReturnProcessingErrorWhenUsernameIsBlank() {
-    when(savingsSecurityService.getUsername())
+    when(savingsSecurityService.getUserId())
         .thenReturn("");
 
     val result = userAccountService.getUserAccount();
@@ -69,8 +69,8 @@ class UserAccountServiceTest {
 
   @Test
   void shouldReturnProcessingErrorWhenResultIsFailure() {
-    when(savingsSecurityService.getUsername())
-        .thenReturn(SOME_USERNAME);
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
     when(userAccountRepository.fetchUserAccount(any()))
         .thenReturn(Try.failure(SOME_PROCESSING_ERROR));
 
@@ -84,8 +84,8 @@ class UserAccountServiceTest {
 
   @Test
   void shouldReturnNotFoundErrorWhenResultIsEmpty() {
-    when(savingsSecurityService.getUsername())
-        .thenReturn(SOME_USERNAME);
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
     when(userAccountRepository.fetchUserAccount(any()))
         .thenReturn(Try.of(Option::none));
 
@@ -99,8 +99,8 @@ class UserAccountServiceTest {
 
   @Test
   void shouldReturnUserAccountSuccessfully() {
-    when(savingsSecurityService.getUsername())
-        .thenReturn(SOME_USERNAME);
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
     when(userAccountRepository.fetchUserAccount(any()))
         .thenReturn(Try.of(() -> Option.of(USER_ACCOUNT_PLN)));
 

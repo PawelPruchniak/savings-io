@@ -20,27 +20,26 @@ public class DbUserAccountRepository implements UserAccountRepository {
 
   private final NamedParameterJdbcTemplate jdbcTemplate;
 
-  private static final String USERNAME_CODE = "username";
-
+  private static final String USER_ID_CODE = "userId";
 
   @Override
-  public Try<Option<UserAccount>> fetchUserAccount(final String username) {
+  public Try<Option<UserAccount>> fetchUserAccount(final String userId) {
     return Try.of(() -> {
-          Validate.notBlank(username);
-          log.debug("Fetching user account for username: {}", username);
+      Validate.notBlank(userId);
+      log.debug("Fetching user account for user with id: {}", userId);
 
-          return Option.of(
-                  List.ofAll(
-                      jdbcTemplate.query(
-                          "select main_currency as main_currency from user_account ua" + "\n" +
-                              "where ua.user_id = (select id from user_profile up where up.username =:" + USERNAME_CODE + ")",
-                          new MapSqlParameterSource()
-                              .addValue(USERNAME_CODE, username),
-                          (rs, i) -> UserAccount.builder()
-                              .currency(Currency.valueOf(rs.getString("main_currency")))
-                              .totalBalance(BigDecimal.ZERO)
-                              .build()
-                      )
+      return Option.of(
+              List.ofAll(
+                  jdbcTemplate.query(
+                      "select main_currency as main_currency from user_account ua" + "\n" +
+                          "where ua.user_id =:" + USER_ID_CODE,
+                      new MapSqlParameterSource()
+                          .addValue(USER_ID_CODE, userId),
+                      (rs, i) -> UserAccount.builder()
+                          .currency(Currency.valueOf(rs.getString("main_currency")))
+                          .totalBalance(BigDecimal.ZERO)
+                          .build()
+                  )
                   )
               )
               .getOrElse(List.empty())

@@ -7,7 +7,6 @@
   <changeSet id="001-001" author="ppruchniak">
     <comment>User table</comment>
     <createTable tableName="user_profile" tablespace="${data-tablespace}">
-      <!-- todo: migrate user.id from autoIncremented INT to VARCHAR -->
       <column name="id" type="VARCHAR(64)">
         <constraints nullable="false"/>
       </column>
@@ -15,6 +14,12 @@
       <column name="lastname" type="VARCHAR(128)"/>
       <column name="username" type="VARCHAR(256)">
         <constraints nullable="false" unique="true"/>
+      </column>
+      <column name="password" type="VARCHAR(512)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="enabled" type="boolean">
+        <constraints nullable="false"/>
       </column>
     </createTable>
     <createIndex tableName="user_profile"
@@ -25,6 +30,33 @@
     <addPrimaryKey tableName="user_profile"
                    columnNames="id"
                    constraintName="user_profile_id_pk"/>
+  </changeSet>
+  <changeSet id="001-002" author="ppruchniak">
+    <comment>User Authorities table</comment>
+    <createTable tableName="user_authorities" tablespace="${data-tablespace}">
+      <column name="username" type="VARCHAR(64)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="authority" type="VARCHAR(64)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <createIndex tableName="user_authorities"
+                 indexName="user_authorities_idx"
+                 tablespace="${index-tablespace}">
+      <column name="username"/>
+      <column name="authority"/>
+    </createIndex>
+    <addForeignKeyConstraint baseTableName="user_authorities"
+                             baseColumnNames="username"
+                             constraintName="user_authorities_username_fk"
+                             referencedTableName="user_profile"
+                             referencedColumnNames="username"
+                             deferrable="false"
+                             initiallyDeferred="false"
+                             onDelete="RESTRICT"
+                             onUpdate="RESTRICT"
+                             validate="true"/>
   </changeSet>
 
 </databaseChangeLog>

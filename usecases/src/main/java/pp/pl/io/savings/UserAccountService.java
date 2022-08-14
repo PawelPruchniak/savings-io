@@ -23,14 +23,14 @@ public class UserAccountService {
     try {
       log.debug("Getting user account");
 
-      val username = savingsSecurityService.getUsername();
-      if (StringUtils.isBlank(username)) {
+      val userId = savingsSecurityService.getUserId();
+      if (StringUtils.isBlank(userId)) {
         return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR,
             "Cannot compute user")
         );
       }
 
-      val userAccount = userAccountRepository.fetchUserAccount(username);
+      val userAccount = userAccountRepository.fetchUserAccount(userId);
       if (userAccount.isFailure()) {
         return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR,
             "Cannot get user account")
