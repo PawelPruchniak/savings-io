@@ -37,7 +37,7 @@ public class ServiceTestData {
       .accountId(ACCOUNT_ID)
       .name("Savings account")
       .description("Some description")
-      .currency(Currency.PLN)
+      .currency(Currency.USD)
       .balance(SAVINGS_ACCOUNT_USD_VALUE)
       .build();
 
@@ -54,7 +54,7 @@ public class ServiceTestData {
   public static final UserAccount USER_ACCOUNT_PLN = UserAccount.builder()
       .accounts(ACCOUNTS)
       .currency(Currency.valueOf("PLN"))
-      .totalBalance(ZERO_VALUE)
+      .totalBalance(ONE_DECIMAL_PLACE_VALUE)
       .build();
 
 

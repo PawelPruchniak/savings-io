@@ -9,7 +9,7 @@ import static pp.pl.io.savings.ServiceTestData.*;
 
 class BalanceServiceTest {
 
-  private final BalanceService balanceService = new BalanceService();
+  private final BalanceService balanceService = new BalanceService(new CurrencyService());
 
   @Test
   void shouldCalculatePLNBalanceWithOnePLNSavingsAccount() {
@@ -22,7 +22,7 @@ class BalanceServiceTest {
   @Test
   void shouldCalculatePLNBalanceWithOneUSDSavingsAccount() {
     assertEquals(
-        SAVINGS_ACCOUNT_PLN_VALUE,
+        SAVINGS_ACCOUNT_USD_VALUE.multiply(CurrencyService.ExchangeRatePicker.USD_PLN.exchangeRate),
         balanceService.calculateTotalBalance(List.of(SAVINGS_ACCOUNT_USD), Currency.PLN)
     );
   }
@@ -38,7 +38,7 @@ class BalanceServiceTest {
   @Test
   void shouldCalculateUSDBalanceWithOnePLNSavingsAccount() {
     assertEquals(
-        SAVINGS_ACCOUNT_USD_VALUE,
+        SAVINGS_ACCOUNT_PLN_VALUE.multiply(CurrencyService.ExchangeRatePicker.PLN_USD.exchangeRate),
         balanceService.calculateTotalBalance(List.of(SAVINGS_ACCOUNT_PLN), Currency.USD)
     );
   }
@@ -46,7 +46,8 @@ class BalanceServiceTest {
   @Test
   void shouldCalculatePLNBalanceWithFewSavingsAccounts() {
     assertEquals(
-        SAVINGS_ACCOUNT_PLN_VALUE,
+        SAVINGS_ACCOUNT_PLN_VALUE.add(
+            SAVINGS_ACCOUNT_USD_VALUE.multiply(CurrencyService.ExchangeRatePicker.USD_PLN.exchangeRate)),
         balanceService.calculateTotalBalance(List.of(SAVINGS_ACCOUNT_PLN, SAVINGS_ACCOUNT_USD), Currency.PLN)
     );
   }

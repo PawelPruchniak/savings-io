@@ -7,14 +7,20 @@ import pp.pl.io.savings.account.AccountService;
 import pp.pl.io.savings.account.UserAccountRepository;
 import pp.pl.io.savings.account.UserAccountService;
 import pp.pl.io.savings.account.balance.BalanceService;
+import pp.pl.io.savings.account.balance.CurrencyService;
 import pp.pl.io.savings.organisation.SavingsSecurityService;
 
 @Configuration
 public class UsecaseConfiguration {
 
   @Bean
-  BalanceService balanceService() {
-    return new BalanceService();
+  CurrencyService currencyService() {
+    return new CurrencyService();
+  }
+
+  @Bean
+  BalanceService balanceService(CurrencyService currencyService) {
+    return new BalanceService(currencyService);
   }
 
   @Bean
