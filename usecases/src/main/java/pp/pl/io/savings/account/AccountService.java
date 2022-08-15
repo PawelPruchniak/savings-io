@@ -1,12 +1,10 @@
-package pp.pl.io.savings;
+package pp.pl.io.savings.account;
 
 import io.vavr.control.Either;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
-import pp.pl.io.savings.account.Account;
-import pp.pl.io.savings.account.AccountRepository;
 import pp.pl.io.savings.exception.Error;
 import pp.pl.io.savings.organisation.SavingsSecurityService;
 

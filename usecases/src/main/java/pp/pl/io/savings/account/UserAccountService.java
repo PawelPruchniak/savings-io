@@ -1,4 +1,4 @@
-package pp.pl.io.savings;
+package pp.pl.io.savings.account;
 
 import io.vavr.collection.List;
 import io.vavr.control.Either;
@@ -6,10 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
-import pp.pl.io.savings.account.Account;
-import pp.pl.io.savings.account.AccountRepository;
-import pp.pl.io.savings.account.UserAccount;
-import pp.pl.io.savings.account.UserAccountRepository;
+import pp.pl.io.savings.account.balance.BalanceService;
 import pp.pl.io.savings.exception.Error;
 import pp.pl.io.savings.organisation.SavingsSecurityService;
 
@@ -21,6 +18,7 @@ public class UserAccountService {
 
   private final UserAccountRepository userAccountRepository;
   private final AccountRepository accountRepository;
+  private final BalanceService balanceService;
   private final SavingsSecurityService savingsSecurityService;
 
   public Either<Error, UserAccount> getUserAccount() {
