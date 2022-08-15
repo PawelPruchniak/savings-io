@@ -10,8 +10,6 @@ import pp.pl.io.savings.account.balance.BalanceService;
 import pp.pl.io.savings.exception.Error;
 import pp.pl.io.savings.organisation.SavingsSecurityService;
 
-import java.math.BigDecimal;
-
 @Slf4j
 @AllArgsConstructor
 public class UserAccountService {
@@ -65,7 +63,7 @@ public class UserAccountService {
     return userAccount.toBuilder()
         .accounts(accounts)
         .currency(userAccount.getCurrency())
-        .totalBalance(BigDecimal.ZERO) //todo: Add here balance service for calculations
+        .totalBalance(balanceService.calculateTotalBalance(accounts, userAccount.getCurrency()))
         .build();
   }
 }

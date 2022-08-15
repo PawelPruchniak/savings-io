@@ -16,6 +16,8 @@ public class ServiceTestData {
 
   // Account
   private static final BigDecimal ONE_DECIMAL_PLACE_VALUE = BigDecimal.valueOf(501.1);
+  public static final BigDecimal SAVINGS_ACCOUNT_PLN_VALUE = BigDecimal.valueOf(111.11);
+  public static final BigDecimal SAVINGS_ACCOUNT_USD_VALUE = BigDecimal.valueOf(100.00);
   public static final String ACCOUNT_ID = "1";
   public static final Account SAVINGS_ACCOUNT = SavingsAccount.builder()
       .accountId(ACCOUNT_ID)
@@ -23,6 +25,20 @@ public class ServiceTestData {
       .description("Some description")
       .currency(Currency.PLN)
       .balance(ONE_DECIMAL_PLACE_VALUE)
+      .build();
+  public static final Account SAVINGS_ACCOUNT_PLN = SavingsAccount.builder()
+      .accountId(ACCOUNT_ID)
+      .name("Savings account")
+      .description("Some description")
+      .currency(Currency.PLN)
+      .balance(SAVINGS_ACCOUNT_PLN_VALUE)
+      .build();
+  public static final Account SAVINGS_ACCOUNT_USD = SavingsAccount.builder()
+      .accountId(ACCOUNT_ID)
+      .name("Savings account")
+      .description("Some description")
+      .currency(Currency.PLN)
+      .balance(SAVINGS_ACCOUNT_USD_VALUE)
       .build();
 
 
