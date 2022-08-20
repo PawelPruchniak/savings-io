@@ -1,0 +1,6 @@
+spring:
+  liquibase:
+    change-log: db/liquibase.changelog-master-it.xml
+    parameters:
+      index-tablespace: pg_default
+      data-tablespace: pg_default

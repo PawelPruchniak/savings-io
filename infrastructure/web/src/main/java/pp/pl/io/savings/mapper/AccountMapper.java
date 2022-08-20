@@ -26,7 +26,6 @@ public class AccountMapper {
         .description(savingsAccount.getDescription())
         .currency(savingsAccount.getCurrency().name())
         .balance(DoubleMapper.roundDouble(savingsAccount.getBalance()))
-        .accountType(savingsAccount.getAccountType().name())
         .build();
   }
 }

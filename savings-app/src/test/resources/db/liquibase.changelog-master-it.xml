@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+  <include file="classpath:db/liquibase.changelog-master.xml"/>
+
+  <changeSet id="user-profile-create.sql" author="savings-integration-tests">
+    <sqlFile path="db/scripts/user-profile-create.sql"/>
+  </changeSet>
+
+  <changeSet id="user-account-create.sql" author="savings-integration-tests">
+    <sqlFile path="db/scripts/user-account-create.sql"/>
+  </changeSet>
+
+  <changeSet id="savings-account-create.sql" author="savings-integration-tests">
+    <sqlFile path="db/scripts/savings-account-create.sql"/>
+  </changeSet>
+</databaseChangeLog>

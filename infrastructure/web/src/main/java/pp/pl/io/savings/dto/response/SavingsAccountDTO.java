@@ -2,6 +2,7 @@ package pp.pl.io.savings.dto.response;
 
 import lombok.Builder;
 import lombok.Value;
+import pp.pl.io.savings.account.AccountType;
 
 @Value
 @Builder
@@ -12,5 +13,5 @@ public class SavingsAccountDTO implements AccountDTO {
   String description;
   String currency;
   Double balance;
-  String accountType;
+  String accountType = AccountType.SAVINGS.name();
 }
