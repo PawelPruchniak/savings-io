@@ -1,6 +1,9 @@
 package pp.pl.io.savings;
 
-import pp.pl.io.savings.account.*;
+import pp.pl.io.savings.account.Account;
+import pp.pl.io.savings.account.Currency;
+import pp.pl.io.savings.account.SavingsAccount;
+import pp.pl.io.savings.account.UserAccount;
 import pp.pl.io.savings.dto.response.AccountDTO;
 import pp.pl.io.savings.dto.response.SavingsAccountDTO;
 import pp.pl.io.savings.dto.response.UserAccountDTO;
@@ -46,7 +49,6 @@ public class AccountTestData {
       .name("Savings account")
       .description("Some description")
       .currency(Currency.PLN.name())
-      .accountType(AccountType.SAVINGS.name())
       .balance(501.10)
       .build();
 
