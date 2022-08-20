@@ -1,4 +1,4 @@
-package pp.pl.io.savings;
+package pp.pl.io.savings.account;
 
 import io.vavr.control.Either;
 import io.vavr.control.Option;
@@ -9,7 +9,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pp.pl.io.savings.account.AccountRepository;
 import pp.pl.io.savings.exception.Error;
 import pp.pl.io.savings.organisation.SavingsSecurityService;
 

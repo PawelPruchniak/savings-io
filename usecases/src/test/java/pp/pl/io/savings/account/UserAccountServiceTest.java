@@ -1,5 +1,6 @@
-package pp.pl.io.savings;
+package pp.pl.io.savings.account;
 
+import io.vavr.collection.List;
 import io.vavr.control.Either;
 import io.vavr.control.Option;
 import io.vavr.control.Try;
@@ -8,8 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pp.pl.io.savings.account.UserAccountRepository;
+import pp.pl.io.savings.account.balance.BalanceService;
+import pp.pl.io.savings.account.balance.CurrencyService;
 import pp.pl.io.savings.exception.Error;
 import pp.pl.io.savings.organisation.SavingsSecurityService;
 
@@ -23,6 +26,11 @@ class UserAccountServiceTest {
 
   @Mock
   UserAccountRepository userAccountRepository;
+  @Mock
+  AccountRepository accountRepository;
+  private final CurrencyService currencyService = new CurrencyService();
+  @Spy
+  private final BalanceService balanceService = new BalanceService(currencyService);
   @Mock
   SavingsSecurityService savingsSecurityService;
   @InjectMocks
@@ -68,7 +76,7 @@ class UserAccountServiceTest {
   }
 
   @Test
-  void shouldReturnProcessingErrorWhenResultIsFailure() {
+  void shouldReturnProcessingErrorWhenFetchUserAccountIsFailure() {
     when(savingsSecurityService.getUserId())
         .thenReturn(SOME_USER_ID);
     when(userAccountRepository.fetchUserAccount(any()))
@@ -83,7 +91,7 @@ class UserAccountServiceTest {
   }
 
   @Test
-  void shouldReturnNotFoundErrorWhenResultIsEmpty() {
+  void shouldReturnNotFoundErrorWhenFetchUserAccountIsEmpty() {
     when(savingsSecurityService.getUserId())
         .thenReturn(SOME_USER_ID);
     when(userAccountRepository.fetchUserAccount(any()))
@@ -98,11 +106,47 @@ class UserAccountServiceTest {
   }
 
   @Test
+  void shouldReturnProcessingErrorWhenFetchAccountsIsFailure() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(userAccountRepository.fetchUserAccount(any()))
+        .thenReturn(Try.of(() -> Option.of(USER_ACCOUNT_PLN_WITHOUT_ACCOUNTS)));
+    when(accountRepository.fetchAccounts(any()))
+        .thenReturn(Try.failure(SOME_PROCESSING_ERROR));
+
+    val result = userAccountService.getUserAccount();
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot get related accounts")),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnUserAccountWithEmptyAccountListSuccessfully() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(userAccountRepository.fetchUserAccount(any()))
+        .thenReturn(Try.of(() -> Option.of(USER_ACCOUNT_PLN_WITHOUT_ACCOUNTS)));
+    when(accountRepository.fetchAccounts(any()))
+        .thenReturn(Try.of(List::empty));
+
+    val result = userAccountService.getUserAccount();
+
+    assertEquals(
+        Either.right(USER_ACCOUNT_PLN_WITHOUT_ACCOUNTS),
+        result
+    );
+  }
+
+  @Test
   void shouldReturnUserAccountSuccessfully() {
     when(savingsSecurityService.getUserId())
         .thenReturn(SOME_USER_ID);
     when(userAccountRepository.fetchUserAccount(any()))
-        .thenReturn(Try.of(() -> Option.of(USER_ACCOUNT_PLN)));
+        .thenReturn(Try.of(() -> Option.of(USER_ACCOUNT_PLN_WITHOUT_ACCOUNTS)));
+    when(accountRepository.fetchAccounts(any()))
+        .thenReturn(Try.of(() -> ACCOUNTS));
 
     val result = userAccountService.getUserAccount();
 

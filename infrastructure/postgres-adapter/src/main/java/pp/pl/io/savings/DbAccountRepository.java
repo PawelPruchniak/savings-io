@@ -34,27 +34,50 @@ public class DbAccountRepository implements AccountRepository {
   @Override
   public Try<Option<Account>> fetchAccount(String accountId, String userId) {
     return Try.of(() -> {
-      Validate.notBlank(accountId);
-      Validate.notBlank(userId);
-      log.debug("Fetching account with id: {} for user with id: {}", accountId, userId);
+          Validate.notBlank(accountId);
+          Validate.notBlank(userId);
+          log.debug("Fetching account with id: {} for user with id: {}", accountId, userId);
 
-      return Option.of(
-              List.ofAll(
-                  Objects.requireNonNull(
-                      jdbcTemplate.query(
-                          SELECT_SAVINGS_ACCOUNT + "\n" +
-                              "where a.id =:" + ACCOUNT_ID_CODE + "\n" +
-                              "and a.user_id =:" + USER_ID_CODE,
-                          new MapSqlParameterSource()
-                              .addValue(ACCOUNT_ID_CODE, Integer.valueOf(accountId))
-                              .addValue(USER_ID_CODE, userId),
-                          accountResultSetExtractor
-                      )
+          return Option.of(
+                  List.ofAll(
+                      Objects.requireNonNull(
+                          jdbcTemplate.query(
+                              SELECT_SAVINGS_ACCOUNT + "\n" +
+                                  "where a.id =:" + ACCOUNT_ID_CODE + "\n" +
+                                  "and a.user_id =:" + USER_ID_CODE,
+                              new MapSqlParameterSource()
+                                  .addValue(ACCOUNT_ID_CODE, Integer.valueOf(accountId))
+                                  .addValue(USER_ID_CODE, userId),
+                              accountResultSetExtractor
+                          )
                       )
                   )
               )
               .getOrElse(List.empty())
               .headOption();
+        }
+    );
+  }
+
+  @Override
+  public Try<List<Account>> fetchAccounts(String userId) {
+    return Try.of(() -> {
+          Validate.notBlank(userId);
+          log.debug("Fetching all accounts for user with id: {}", userId);
+
+          return Option.of(
+              List.ofAll(
+                  Objects.requireNonNull(
+                      jdbcTemplate.query(
+                          SELECT_SAVINGS_ACCOUNT + "\n" +
+                              "where a.user_id =:" + USER_ID_CODE,
+                          new MapSqlParameterSource()
+                              .addValue(USER_ID_CODE, userId),
+                          accountResultSetExtractor
+                      )
+                  )
+              )
+          ).getOrElse(List.empty());
         }
     );
   }
