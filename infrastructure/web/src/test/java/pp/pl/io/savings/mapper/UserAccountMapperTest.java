@@ -3,6 +3,8 @@ package pp.pl.io.savings.mapper;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static pp.pl.io.savings.AccountTestData.*;
@@ -20,7 +22,8 @@ class UserAccountMapperTest {
 
     assertThat(userAccountDTO)
         .hasFieldOrPropertyWithValue("currency", "PLN")
-        .hasFieldOrPropertyWithValue("totalBalance", 501.10);
+        .hasFieldOrPropertyWithValue("totalBalance", 501.10)
+        .hasFieldOrPropertyWithValue("subAccountsIds", List.of(SAVINGS_ACCOUNT_ID));
   }
 
   @Test
@@ -38,7 +41,8 @@ class UserAccountMapperTest {
 
     assertThat(userAccountDTO)
         .hasFieldOrPropertyWithValue("currency", "USD")
-        .hasFieldOrPropertyWithValue("totalBalance", 3.99);
+        .hasFieldOrPropertyWithValue("totalBalance", 3.99)
+        .hasFieldOrPropertyWithValue("subAccountsIds", List.of(SAVINGS_ACCOUNT_ID));
   }
 
 }
