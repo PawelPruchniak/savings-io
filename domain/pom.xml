@@ -11,6 +11,10 @@
 
   <artifactId>domain</artifactId>
 
+  <properties>
+    <sonar.coverage.jacoco.xmlReportPaths>../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+  </properties>
+
   <dependencies>
 
     <dependency>
