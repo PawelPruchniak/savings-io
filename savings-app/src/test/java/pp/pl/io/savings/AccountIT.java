@@ -15,6 +15,7 @@ import pp.pl.io.savings.dto.response.UserAccountDTO;
 import pp.pl.io.savings.organisation.SavingsSecurityService;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -52,6 +53,7 @@ class AccountIT extends CommonIT {
     final UserAccountDTO expectedResult = UserAccountDTO.builder()
         .currency(Currency.PLN.name())
         .totalBalance(2433.07)
+        .subAccountsIds(List.of(SAVINGS_ACCOUNT_ID_1))
         .build();
 
 

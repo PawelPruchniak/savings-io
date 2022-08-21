@@ -6,8 +6,8 @@ import pp.pl.io.savings.account.Currency;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static pp.pl.io.savings.AccountTestData.ACCOUNT_ID;
 import static pp.pl.io.savings.AccountTestData.SAVINGS_ACCOUNT;
+import static pp.pl.io.savings.AccountTestData.SAVINGS_ACCOUNT_ID;
 
 class AccountMapperTest {
 
@@ -21,7 +21,7 @@ class AccountMapperTest {
     val accountDTO = AccountMapper.toAccountDTO(SAVINGS_ACCOUNT);
 
     assertThat(accountDTO)
-        .hasFieldOrPropertyWithValue("accountId", ACCOUNT_ID)
+        .hasFieldOrPropertyWithValue("accountId", SAVINGS_ACCOUNT_ID)
         .hasFieldOrPropertyWithValue("name", "Savings account")
         .hasFieldOrPropertyWithValue("description", "Some description")
         .hasFieldOrPropertyWithValue("currency", Currency.PLN.name())

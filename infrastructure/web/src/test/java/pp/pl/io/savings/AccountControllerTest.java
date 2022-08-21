@@ -42,18 +42,18 @@ class AccountControllerTest {
         .thenReturn(Either.left(ERROR_UNAUTHORIZED));
 
     // when, then
-    assertThrows(ResponseStatusException.class, () -> accountController.getUserAccount(ACCOUNT_ID));
+    assertThrows(ResponseStatusException.class, () -> accountController.getUserAccount(SAVINGS_ACCOUNT_ID));
   }
 
 
   @Test
   void shouldReturnSavingsAccountDTOSuccessfully() {
     // given
-    when(accountService.getAccount(ACCOUNT_ID))
+    when(accountService.getAccount(SAVINGS_ACCOUNT_ID))
         .thenReturn(Either.right(SAVINGS_ACCOUNT));
 
     // when
-    val result = accountController.getUserAccount(ACCOUNT_ID);
+    val result = accountController.getUserAccount(SAVINGS_ACCOUNT_ID);
 
     // then
     assertThat(result).isEqualTo(SAVINGS_ACCOUNT_DTO);
