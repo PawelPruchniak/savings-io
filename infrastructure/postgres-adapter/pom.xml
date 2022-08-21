@@ -12,6 +12,10 @@
 
   <artifactId>postgres-adapter</artifactId>
 
+  <properties>
+    <sonar.coverage.jacoco.xmlReportPaths>../../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+  </properties>
+
   <dependencies>
 
     <!-- Modules dependencies -->

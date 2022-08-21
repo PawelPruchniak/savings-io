@@ -36,6 +36,7 @@
     <testcontainers.version>1.17.3</testcontainers.version>
 
     <jacoco.version>0.8.8</jacoco.version>
+    <aggregate.report.dir>coverage-report/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
     <failsafe.jacoco.args/>
 
     <sonar.organization>pawelpruchniak</sonar.organization>
