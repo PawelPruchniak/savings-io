@@ -21,7 +21,7 @@ public class AccountMapper {
 
   private static AccountDTO mapSavingsAccountToAccountDTO(final SavingsAccount savingsAccount) {
     return SavingsAccountDTO.builder()
-        .accountId(savingsAccount.getAccountId())
+        .accountId(savingsAccount.getAccountId().code)
         .name(savingsAccount.getName())
         .description(savingsAccount.getDescription())
         .currency(savingsAccount.getCurrency().name())

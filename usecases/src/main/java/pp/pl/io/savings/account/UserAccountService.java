@@ -5,7 +5,6 @@ import io.vavr.control.Either;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.apache.commons.lang3.StringUtils;
 import pp.pl.io.savings.account.balance.BalanceService;
 import pp.pl.io.savings.exception.Error;
 import pp.pl.io.savings.organisation.SavingsSecurityService;
@@ -24,7 +23,7 @@ public class UserAccountService {
       log.debug("Getting user account");
 
       val userId = savingsSecurityService.getUserId();
-      if (StringUtils.isBlank(userId)) {
+      if (userId == null) {
         return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR,
             "Cannot compute user")
         );

@@ -23,6 +23,7 @@ public class UserAccountMapper {
   private static List<String> getAccountIds(@NonNull final UserAccount userAccount) {
     return userAccount.getAccounts()
         .map(Account::getAccountId)
+        .map(accountId -> accountId.code)
         .toJavaList();
   }
 

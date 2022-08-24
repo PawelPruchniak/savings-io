@@ -1,24 +1,22 @@
 package pp.pl.io.savings;
 
 import io.vavr.collection.List;
-import pp.pl.io.savings.account.Account;
-import pp.pl.io.savings.account.Currency;
-import pp.pl.io.savings.account.SavingsAccount;
-import pp.pl.io.savings.account.UserAccount;
+import pp.pl.io.savings.account.*;
+import pp.pl.io.savings.organisation.UserId;
 
 import java.math.BigDecimal;
 
 public class ServiceTestData {
 
   // User
-  public static final String SOME_USER_ID = "USER_1";
+  public static final UserId SOME_USER_ID = UserId.of("USER_1");
 
 
   // Account
   private static final BigDecimal ONE_DECIMAL_PLACE_VALUE = BigDecimal.valueOf(501.1);
   public static final BigDecimal SAVINGS_ACCOUNT_PLN_VALUE = BigDecimal.valueOf(111.11);
   public static final BigDecimal SAVINGS_ACCOUNT_USD_VALUE = BigDecimal.valueOf(100.00);
-  public static final String ACCOUNT_ID = "1";
+  public static final AccountId ACCOUNT_ID = AccountId.of("1");
   public static final Account SAVINGS_ACCOUNT = SavingsAccount.builder()
       .accountId(ACCOUNT_ID)
       .name("Savings account")

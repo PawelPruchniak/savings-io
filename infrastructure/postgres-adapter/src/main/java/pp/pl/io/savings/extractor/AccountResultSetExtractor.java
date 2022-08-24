@@ -5,10 +5,7 @@ import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
-import pp.pl.io.savings.account.Account;
-import pp.pl.io.savings.account.AccountType;
-import pp.pl.io.savings.account.Currency;
-import pp.pl.io.savings.account.SavingsAccount;
+import pp.pl.io.savings.account.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -41,7 +38,7 @@ public class AccountResultSetExtractor implements ResultSetExtractor<List<Accoun
   @SneakyThrows
   private SavingsAccount extractSavingsAccount(ResultSet rs) {
     return SavingsAccount.builder()
-        .accountId(rs.getString("a_account_id"))
+        .accountId(AccountId.of(rs.getString("a_account_id")))
         .name(rs.getString("a_name"))
         .description(rs.getString("a_description"))
         .currency(Currency.valueOf(rs.getString("sa_currency")))

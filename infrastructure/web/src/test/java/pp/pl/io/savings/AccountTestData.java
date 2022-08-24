@@ -1,10 +1,7 @@
 package pp.pl.io.savings;
 
 import io.vavr.collection.List;
-import pp.pl.io.savings.account.Account;
-import pp.pl.io.savings.account.Currency;
-import pp.pl.io.savings.account.SavingsAccount;
-import pp.pl.io.savings.account.UserAccount;
+import pp.pl.io.savings.account.*;
 import pp.pl.io.savings.dto.response.AccountDTO;
 import pp.pl.io.savings.dto.response.SavingsAccountDTO;
 import pp.pl.io.savings.dto.response.UserAccountDTO;
@@ -18,7 +15,7 @@ public class AccountTestData {
   public static final BigDecimal ONE_DECIMAL_PLACE_VALUE = BigDecimal.valueOf(501.1);
   public static final BigDecimal TWO_DECIMAL_PLACE_VALUE = BigDecimal.valueOf(2870.82);
   public static final BigDecimal FOUR_DECIMAL_PLACE_VALUE = BigDecimal.valueOf(3.9876);
-  public static final String SAVINGS_ACCOUNT_ID = "1";
+  public static final AccountId SAVINGS_ACCOUNT_ID = AccountId.of("1");
   public static final Account SAVINGS_ACCOUNT = SavingsAccount.builder()
       .accountId(SAVINGS_ACCOUNT_ID)
       .name("Savings account")
@@ -27,7 +24,7 @@ public class AccountTestData {
       .balance(ONE_DECIMAL_PLACE_VALUE)
       .build();
   public static final AccountDTO SAVINGS_ACCOUNT_DTO = SavingsAccountDTO.builder()
-      .accountId(SAVINGS_ACCOUNT_ID)
+      .accountId(SAVINGS_ACCOUNT_ID.code)
       .name("Savings account")
       .description("Some description")
       .currency(Currency.PLN.name())
@@ -43,7 +40,7 @@ public class AccountTestData {
   public static final UserAccountDTO USER_ACCOUNT_PLN_DTO = UserAccountDTO.builder()
       .currency("PLN")
       .totalBalance(501.10)
-      .subAccountsIds(List.of(SAVINGS_ACCOUNT.getAccountId()).toJavaList())
+      .subAccountsIds(List.of(SAVINGS_ACCOUNT.getAccountId().code).toJavaList())
       .build();
   public static final UserAccount USER_ACCOUNT_EUR = UserAccount.builder()
       .currency(Currency.valueOf("EUR"))

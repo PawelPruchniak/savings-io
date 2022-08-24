@@ -21,7 +21,7 @@ class AccountMapperTest {
     val accountDTO = AccountMapper.toAccountDTO(SAVINGS_ACCOUNT);
 
     assertThat(accountDTO)
-        .hasFieldOrPropertyWithValue("accountId", SAVINGS_ACCOUNT_ID)
+        .hasFieldOrPropertyWithValue("accountId", SAVINGS_ACCOUNT_ID.code)
         .hasFieldOrPropertyWithValue("name", "Savings account")
         .hasFieldOrPropertyWithValue("description", "Some description")
         .hasFieldOrPropertyWithValue("currency", Currency.PLN.name())

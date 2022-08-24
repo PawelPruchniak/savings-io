@@ -4,7 +4,7 @@ import io.vavr.collection.Set;
 
 public interface SavingsSecurityService {
 
-  String getUserId();
+  UserId getUserId();
 
   String getUsername();
 
