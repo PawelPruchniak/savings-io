@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import pp.pl.io.savings.organisation.SavingsSecurityService;
+import pp.pl.io.savings.organisation.UserId;
 import pp.pl.io.savings.organisation.UserRepository;
 import pp.pl.io.savings.organisation.UserRole;
 
@@ -20,13 +21,13 @@ public class SavingsSecurityServiceImplementation implements SavingsSecurityServ
   private final UserRepository userRepository;
 
   @Override
-  public String getUserId() {
+  public UserId getUserId() {
     val username = getUsername();
     if (StringUtils.isNotBlank(username)) {
 
       val userId = userRepository.getUserId(getUsername());
-      if (userId.isSuccess() && userId.get().isDefined()) {
-        return userId.get().get();
+      if (userId.isSuccess() && userId.get().isDefined() && StringUtils.isNotBlank(userId.get().get())) {
+        return UserId.of(userId.get().get());
       }
     }
     return null;

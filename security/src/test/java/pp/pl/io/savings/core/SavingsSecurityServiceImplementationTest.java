@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import pp.pl.io.savings.organisation.UserId;
 import pp.pl.io.savings.organisation.UserRepository;
 import pp.pl.io.savings.organisation.UserRole;
 import pp.pl.io.savings.organisation.UserWithRoles;
@@ -141,6 +142,17 @@ class SavingsSecurityServiceImplementationTest {
   }
 
   @Test
+  void shouldReturnNullUserIdWhenFetchUserIdIsBlank() {
+    SecurityContextHolder.setContext(securityContext);
+    when(securityContext.getAuthentication())
+        .thenReturn(USER_TOKEN);
+    when(userRepository.getUserId(any()))
+        .thenReturn(Try.of(() -> Option.of("")));
+
+    assertNull(savingsSecurityService.getUserId());
+  }
+
+  @Test
   void shouldReturnUserIdSuccessfully() {
     SecurityContextHolder.setContext(securityContext);
     when(securityContext.getAuthentication())
@@ -148,6 +160,6 @@ class SavingsSecurityServiceImplementationTest {
     when(userRepository.getUserId(any()))
         .thenReturn(Try.of(() -> Option.of("USER_1")));
 
-    assertEquals("USER_1", savingsSecurityService.getUserId());
+    assertEquals(UserId.of("USER_1"), savingsSecurityService.getUserId());
   }
 }

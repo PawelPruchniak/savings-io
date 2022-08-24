@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 
 public interface Account {
 
-  String getAccountId();
+  AccountId getAccountId();
 
   String getName();
 

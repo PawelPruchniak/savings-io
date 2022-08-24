@@ -31,7 +31,7 @@ class AccountServiceTest {
     when(savingsSecurityService.getUserId())
         .thenThrow(SOME_PROCESSING_ERROR);
 
-    val result = accountService.getAccount(ACCOUNT_ID);
+    val result = accountService.getAccount(ACCOUNT_ID.code);
 
     assertEquals(
         Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, SOME_PROCESSING_ERROR)),
@@ -64,20 +64,7 @@ class AccountServiceTest {
     when(savingsSecurityService.getUserId())
         .thenReturn(null);
 
-    val result = accountService.getAccount(ACCOUNT_ID);
-
-    assertEquals(
-        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot compute user")),
-        result
-    );
-  }
-
-  @Test
-  void shouldReturnProcessingErrorWhenUserIdIsBlank() {
-    when(savingsSecurityService.getUserId())
-        .thenReturn("");
-
-    val result = accountService.getAccount(ACCOUNT_ID);
+    val result = accountService.getAccount(ACCOUNT_ID.code);
 
     assertEquals(
         Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot compute user")),
@@ -92,7 +79,7 @@ class AccountServiceTest {
     when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
         .thenReturn(Try.failure(SOME_PROCESSING_ERROR));
 
-    val result = accountService.getAccount(ACCOUNT_ID);
+    val result = accountService.getAccount(ACCOUNT_ID.code);
 
     assertEquals(
         Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot get account with id: " + ACCOUNT_ID)),
@@ -107,7 +94,7 @@ class AccountServiceTest {
     when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
         .thenReturn(Try.of(Option::none));
 
-    val result = accountService.getAccount(ACCOUNT_ID);
+    val result = accountService.getAccount(ACCOUNT_ID.code);
 
     assertEquals(
         Either.left(new Error(Error.ErrorCategory.NOT_FOUND, "Account with id: " + ACCOUNT_ID + " not found")),
@@ -122,7 +109,7 @@ class AccountServiceTest {
     when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
         .thenReturn(Try.of(() -> Option.of(SAVINGS_ACCOUNT)));
 
-    val result = accountService.getAccount(ACCOUNT_ID);
+    val result = accountService.getAccount(ACCOUNT_ID.code);
 
     assertEquals(
         Either.right(SAVINGS_ACCOUNT),

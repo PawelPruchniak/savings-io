@@ -63,19 +63,6 @@ class UserAccountServiceTest {
   }
 
   @Test
-  void shouldReturnProcessingErrorWhenUsernameIsBlank() {
-    when(savingsSecurityService.getUserId())
-        .thenReturn("");
-
-    val result = userAccountService.getUserAccount();
-
-    assertEquals(
-        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot compute user")),
-        result
-    );
-  }
-
-  @Test
   void shouldReturnProcessingErrorWhenFetchUserAccountIsFailure() {
     when(savingsSecurityService.getUserId())
         .thenReturn(SOME_USER_ID);

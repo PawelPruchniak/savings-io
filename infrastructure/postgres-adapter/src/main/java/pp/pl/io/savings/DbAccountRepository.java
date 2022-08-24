@@ -9,8 +9,10 @@ import org.apache.commons.lang3.Validate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import pp.pl.io.savings.account.Account;
+import pp.pl.io.savings.account.AccountId;
 import pp.pl.io.savings.account.AccountRepository;
 import pp.pl.io.savings.extractor.AccountResultSetExtractor;
+import pp.pl.io.savings.organisation.UserId;
 
 import java.util.Objects;
 
@@ -32,24 +34,24 @@ public class DbAccountRepository implements AccountRepository {
   private static final String USER_ID_CODE = "userId";
 
   @Override
-  public Try<Option<Account>> fetchAccount(String accountId, String userId) {
+  public Try<Option<Account>> fetchAccount(AccountId accountId, UserId userId) {
     return Try.of(() -> {
-          Validate.notBlank(accountId);
-          Validate.notBlank(userId);
-          log.debug("Fetching account with id: {} for user with id: {}", accountId, userId);
+      log.debug("Fetching account with id: {} for user with id: {}", accountId, userId);
+      Validate.notNull(accountId);
+      Validate.notNull(userId);
 
-          return Option.of(
-                  List.ofAll(
-                      Objects.requireNonNull(
-                          jdbcTemplate.query(
-                              SELECT_SAVINGS_ACCOUNT + "\n" +
-                                  "where a.id =:" + ACCOUNT_ID_CODE + "\n" +
-                                  "and a.user_id =:" + USER_ID_CODE,
-                              new MapSqlParameterSource()
-                                  .addValue(ACCOUNT_ID_CODE, Integer.valueOf(accountId))
-                                  .addValue(USER_ID_CODE, userId),
-                              accountResultSetExtractor
-                          )
+      return Option.of(
+              List.ofAll(
+                  Objects.requireNonNull(
+                      jdbcTemplate.query(
+                          SELECT_SAVINGS_ACCOUNT + "\n" +
+                              "where a.id =:" + ACCOUNT_ID_CODE + "\n" +
+                              "and a.user_id =:" + USER_ID_CODE,
+                          new MapSqlParameterSource()
+                              .addValue(ACCOUNT_ID_CODE, Integer.valueOf(accountId.code))
+                              .addValue(USER_ID_CODE, userId.code),
+                          accountResultSetExtractor
+                      )
                       )
                   )
               )
@@ -60,21 +62,21 @@ public class DbAccountRepository implements AccountRepository {
   }
 
   @Override
-  public Try<List<Account>> fetchAccounts(String userId) {
+  public Try<List<Account>> fetchAccounts(UserId userId) {
     return Try.of(() -> {
-          Validate.notBlank(userId);
-          log.debug("Fetching all accounts for user with id: {}", userId);
+      log.debug("Fetching all accounts for user with id: {}", userId);
+      Validate.notNull(userId);
 
-          return Option.of(
-              List.ofAll(
-                  Objects.requireNonNull(
-                      jdbcTemplate.query(
-                          SELECT_SAVINGS_ACCOUNT + "\n" +
-                              "where a.user_id =:" + USER_ID_CODE,
-                          new MapSqlParameterSource()
-                              .addValue(USER_ID_CODE, userId),
-                          accountResultSetExtractor
-                      )
+      return Option.of(
+          List.ofAll(
+              Objects.requireNonNull(
+                  jdbcTemplate.query(
+                      SELECT_SAVINGS_ACCOUNT + "\n" +
+                          "where a.user_id =:" + USER_ID_CODE,
+                      new MapSqlParameterSource()
+                          .addValue(USER_ID_CODE, userId.code),
+                      accountResultSetExtractor
+                  )
                   )
               )
           ).getOrElse(List.empty());

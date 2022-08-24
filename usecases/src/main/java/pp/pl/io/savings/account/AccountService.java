@@ -16,18 +16,19 @@ public class AccountService {
 
   private final SavingsSecurityService savingsSecurityService;
 
-  public Either<Error, Account> getAccount(String accountId) {
+  public Either<Error, Account> getAccount(String accountIdCode) {
     try {
-      log.debug("Getting account: {}", accountId);
+      log.debug("Getting account: {}", accountIdCode);
 
-      if (StringUtils.isBlank(accountId)) {
+      if (StringUtils.isBlank(accountIdCode)) {
         return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR,
             "Account id cannot be blank")
         );
       }
+      val accountId = AccountId.of(accountIdCode);
 
       val userId = savingsSecurityService.getUserId();
-      if (StringUtils.isBlank(userId)) {
+      if (userId == null) {
         return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR,
             "Cannot compute user")
         );

@@ -23,7 +23,7 @@ class UserAccountMapperTest {
     assertThat(userAccountDTO)
         .hasFieldOrPropertyWithValue("currency", "PLN")
         .hasFieldOrPropertyWithValue("totalBalance", 501.10)
-        .hasFieldOrPropertyWithValue("subAccountsIds", List.of(SAVINGS_ACCOUNT_ID));
+        .hasFieldOrPropertyWithValue("subAccountsIds", List.of(SAVINGS_ACCOUNT_ID.code));
   }
 
   @Test
@@ -42,7 +42,7 @@ class UserAccountMapperTest {
     assertThat(userAccountDTO)
         .hasFieldOrPropertyWithValue("currency", "USD")
         .hasFieldOrPropertyWithValue("totalBalance", 3.99)
-        .hasFieldOrPropertyWithValue("subAccountsIds", List.of(SAVINGS_ACCOUNT_ID));
+        .hasFieldOrPropertyWithValue("subAccountsIds", List.of(SAVINGS_ACCOUNT_ID.code));
   }
 
 }

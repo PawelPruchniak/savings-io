@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Builder
 public class SavingsAccount implements Account {
 
-  @NonNull String accountId;
+  @NonNull AccountId accountId;
 
   @NonNull String name;
 
