@@ -75,7 +75,7 @@ class WebControllerUtilsTest {
 
     assertEquals(
         new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, RUNTIME_EXCEPTION.getMessage(),
-            RUNTIME_EXCEPTION).toString(),
+            RUNTIME_EXCEPTION.getCause()).toString(),
         exception.toString()
     );
   }

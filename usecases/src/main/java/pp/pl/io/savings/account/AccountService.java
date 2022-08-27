@@ -13,7 +13,6 @@ import pp.pl.io.savings.organisation.SavingsSecurityService;
 public class AccountService {
 
   private final AccountRepository accountRepository;
-
   private final SavingsSecurityService savingsSecurityService;
 
   public Either<Error, Account> getAccount(String accountIdCode) {
@@ -50,6 +49,19 @@ public class AccountService {
       return Either.right(account.get().get());
     } catch (final Throwable t) {
       log.warn("Failed getting user account", t);
+      return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, t));
+    }
+  }
+
+  public Either<Error, Void> deleteAccount(String accountIdCode) {
+    try {
+      log.debug("Deleting account: {}", accountIdCode);
+
+      //todo: complete this
+
+      return Either.right(null);
+    } catch (final Throwable t) {
+      log.warn("Failed deleting user account", t);
       return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, t));
     }
   }
