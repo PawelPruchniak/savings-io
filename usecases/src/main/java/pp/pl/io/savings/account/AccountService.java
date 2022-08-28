@@ -48,7 +48,7 @@ public class AccountService {
 
       return Either.right(account.get().get());
     } catch (final Throwable t) {
-      log.warn("Failed getting user account", t);
+      log.warn("Failed getting account", t);
       return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, t));
     }
   }
@@ -57,7 +57,20 @@ public class AccountService {
     try {
       log.debug("Deleting account: {}", accountIdCode);
 
-      //todo: complete this
+      val getAccountResult = getAccount(accountIdCode);
+      if (getAccountResult.isLeft()) {
+        return Either.left(getAccountResult.getLeft());
+      }
+
+      val account = getAccountResult.get();
+
+      val deleteAccountResult = accountRepository.deleteAccount(account);
+
+      if (deleteAccountResult.isFailure()) {
+        return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR,
+            "Cannot delete account with id: " + account.getAccountId())
+        );
+      }
 
       return Either.right(null);
     } catch (final Throwable t) {

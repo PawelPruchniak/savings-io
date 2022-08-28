@@ -10,4 +10,6 @@ public interface AccountRepository {
   Try<Option<Account>> fetchAccount(AccountId accountId, UserId userId);
 
   Try<List<Account>> fetchAccounts(UserId userId);
+
+  Try<Void> deleteAccount(Account account);
 }

@@ -18,4 +18,9 @@
   <changeSet id="savings-account-create.sql" author="savings-integration-tests">
     <sqlFile path="db/scripts/savings-account-create.sql"/>
   </changeSet>
+
+  <changeSet id="savings-account-for-delete-create.sql" author="savings-integration-tests">
+    <sqlFile path="db/scripts/savings-account-for-delete-create.sql"/>
+  </changeSet>
+
 </databaseChangeLog>

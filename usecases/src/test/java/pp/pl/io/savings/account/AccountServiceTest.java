@@ -27,7 +27,7 @@ class AccountServiceTest {
   AccountService accountService;
 
   @Test
-  void shouldReturnProcessingError() {
+  void shouldReturnProcessingErrorForGetAccount() {
     when(savingsSecurityService.getUserId())
         .thenThrow(SOME_PROCESSING_ERROR);
 
@@ -40,7 +40,7 @@ class AccountServiceTest {
   }
 
   @Test
-  void shouldReturnProcessingErrorWhenAccountIdIsNull() {
+  void shouldReturnProcessingErrorWhenAccountIdIsNullForGetAccount() {
     val result = accountService.getAccount(null);
 
     assertEquals(
@@ -50,7 +50,7 @@ class AccountServiceTest {
   }
 
   @Test
-  void shouldReturnProcessingErrorWhenAccountIdIsBlank() {
+  void shouldReturnProcessingErrorWhenAccountIdIsBlankForGetAccount() {
     val result = accountService.getAccount("");
 
     assertEquals(
@@ -60,7 +60,7 @@ class AccountServiceTest {
   }
 
   @Test
-  void shouldReturnProcessingErrorWhenUserIdIsNull() {
+  void shouldReturnProcessingErrorWhenUserIdIsNullForGetAccount() {
     when(savingsSecurityService.getUserId())
         .thenReturn(null);
 
@@ -73,7 +73,7 @@ class AccountServiceTest {
   }
 
   @Test
-  void shouldReturnProcessingErrorWhenResultIsFailure() {
+  void shouldReturnProcessingErrorWhenResultIsFailureForGetAccount() {
     when(savingsSecurityService.getUserId())
         .thenReturn(SOME_USER_ID);
     when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
@@ -88,7 +88,7 @@ class AccountServiceTest {
   }
 
   @Test
-  void shouldReturnNotFoundErrorWhenResultIsEmpty() {
+  void shouldReturnNotFoundErrorWhenResultIsEmptyForGetAccount() {
     when(savingsSecurityService.getUserId())
         .thenReturn(SOME_USER_ID);
     when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
@@ -113,6 +113,120 @@ class AccountServiceTest {
 
     assertEquals(
         Either.right(SAVINGS_ACCOUNT),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorForDeleteAccount() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
+        .thenReturn(Try.of(() -> Option.of(SAVINGS_ACCOUNT)));
+    when(accountRepository.deleteAccount(SAVINGS_ACCOUNT))
+        .thenThrow(SOME_PROCESSING_ERROR);
+
+    val result = accountService.deleteAccount(ACCOUNT_ID.code);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, SOME_PROCESSING_ERROR)),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorWhenAccountIdIsNullForDeleteAccount() {
+    val result = accountService.deleteAccount(null);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Account id cannot be blank")),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorWhenAccountIdIsBlankForDeleteAccount() {
+    val result = accountService.deleteAccount("");
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Account id cannot be blank")),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorWhenUserIdIsNullForDeleteAccount() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(null);
+
+    val result = accountService.deleteAccount(ACCOUNT_ID.code);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot compute user")),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorWhenGetAccountIsFailureForDeleteAccount() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
+        .thenReturn(Try.failure(SOME_PROCESSING_ERROR));
+
+    val result = accountService.deleteAccount(ACCOUNT_ID.code);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot get account with id: " + ACCOUNT_ID)),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnNotFoundErrorWhenAccountIsEmptyForDeleteAccount() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
+        .thenReturn(Try.of(Option::none));
+
+    val result = accountService.deleteAccount(ACCOUNT_ID.code);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.NOT_FOUND, "Account with id: " + ACCOUNT_ID + " not found")),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorWhenDeleteResultIsFailureForDeleteAccount() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
+        .thenReturn(Try.of(() -> Option.of(SAVINGS_ACCOUNT)));
+    when(accountRepository.deleteAccount(SAVINGS_ACCOUNT))
+        .thenReturn(Try.failure(SOME_PROCESSING_ERROR));
+
+    val result = accountService.deleteAccount(ACCOUNT_ID.code);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot delete account with id: " + ACCOUNT_ID)),
+        result
+    );
+  }
+
+  @Test
+  void shouldDeleteSavingsAccountSuccessfully() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
+        .thenReturn(Try.of(() -> Option.of(SAVINGS_ACCOUNT)));
+    when(accountRepository.deleteAccount(SAVINGS_ACCOUNT))
+        .thenReturn(Try.success(null));
+
+    val result = accountService.deleteAccount(ACCOUNT_ID.code);
+
+    assertEquals(
+        Either.right(null),
         result
     );
   }
