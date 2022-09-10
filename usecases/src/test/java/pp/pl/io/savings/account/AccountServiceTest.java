@@ -9,6 +9,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import pp.pl.io.savings.account.create.NewAccount;
+import pp.pl.io.savings.account.id.UuidService;
 import pp.pl.io.savings.exception.Error;
 import pp.pl.io.savings.organisation.SavingsSecurityService;
 
@@ -20,11 +22,13 @@ import static pp.pl.io.savings.ServiceTestData.*;
 class AccountServiceTest {
 
   @Mock
-  AccountRepository accountRepository;
+  private AccountRepository accountRepository;
   @Mock
-  SavingsSecurityService savingsSecurityService;
+  private SavingsSecurityService savingsSecurityService;
+  @Mock
+  private UuidService uuidService;
   @InjectMocks
-  AccountService accountService;
+  private AccountService accountService;
 
   @Test
   void shouldReturnProcessingErrorForGetAccount() {
@@ -40,21 +44,21 @@ class AccountServiceTest {
   }
 
   @Test
-  void shouldReturnProcessingErrorWhenAccountIdIsNullForGetAccount() {
+  void shouldReturnIllegalArgumentErrorWhenAccountIdIsNullForGetAccount() {
     val result = accountService.getAccount(null);
 
     assertEquals(
-        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Account id cannot be blank")),
+        Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT, "Account id cannot be blank")),
         result
     );
   }
 
   @Test
-  void shouldReturnProcessingErrorWhenAccountIdIsBlankForGetAccount() {
+  void shouldReturnIllegalArgumentErrorWhenAccountIdIsBlankForGetAccount() {
     val result = accountService.getAccount("");
 
     assertEquals(
-        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Account id cannot be blank")),
+        Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT, "Account id cannot be blank")),
         result
     );
   }
@@ -73,7 +77,7 @@ class AccountServiceTest {
   }
 
   @Test
-  void shouldReturnProcessingErrorWhenResultIsFailureForGetAccount() {
+  void shouldReturnProcessingErrorWhenFetchResultIsFailure() {
     when(savingsSecurityService.getUserId())
         .thenReturn(SOME_USER_ID);
     when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
@@ -135,21 +139,21 @@ class AccountServiceTest {
   }
 
   @Test
-  void shouldReturnProcessingErrorWhenAccountIdIsNullForDeleteAccount() {
+  void shouldReturnIllegalArgumentErrorWhenAccountIdIsNullForDeleteAccount() {
     val result = accountService.deleteAccount(null);
 
     assertEquals(
-        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Account id cannot be blank")),
+        Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT, "Account id cannot be blank")),
         result
     );
   }
 
   @Test
-  void shouldReturnProcessingErrorWhenAccountIdIsBlankForDeleteAccount() {
+  void shouldReturnIllegalArgumentErrorWhenAccountIdIsBlankForDeleteAccount() {
     val result = accountService.deleteAccount("");
 
     assertEquals(
-        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Account id cannot be blank")),
+        Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT, "Account id cannot be blank")),
         result
     );
   }
@@ -198,7 +202,7 @@ class AccountServiceTest {
   }
 
   @Test
-  void shouldReturnProcessingErrorWhenDeleteResultIsFailureForDeleteAccount() {
+  void shouldReturnProcessingErrorWhenDeleteResultIsFailure() {
     when(savingsSecurityService.getUserId())
         .thenReturn(SOME_USER_ID);
     when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
@@ -227,6 +231,76 @@ class AccountServiceTest {
 
     assertEquals(
         Either.right(null),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnIllegalArgumentErrorWhenAccountCommandIsNullForCreateAccount() {
+    val result = accountService.createAccount(null);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT, "Account command cannot be null")),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorForCreateAccount() {
+    when(savingsSecurityService.getUserId())
+        .thenThrow(SOME_PROCESSING_ERROR);
+
+    val result = accountService.createAccount(SAVINGS_ACCOUNT_COMMAND);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, SOME_PROCESSING_ERROR)),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorWhenUserIdIsNullForCreateAccount() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(null);
+
+    val result = accountService.createAccount(SAVINGS_ACCOUNT_COMMAND);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot compute user")),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorWhenCreateResultIsFailure() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(uuidService.createRandomAccountId())
+        .thenReturn(ACCOUNT_ID);
+    when(accountRepository.createAccount(new NewAccount(SOME_USER_ID, ACCOUNT_ID, SAVINGS_ACCOUNT_COMMAND)))
+        .thenReturn(Try.failure(SOME_PROCESSING_ERROR));
+
+    val result = accountService.createAccount(SAVINGS_ACCOUNT_COMMAND);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot create account with command: " + SAVINGS_ACCOUNT_COMMAND)),
+        result
+    );
+  }
+
+  @Test
+  void shouldCreateSavingsAccountSuccessfully() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(uuidService.createRandomAccountId())
+        .thenReturn(ACCOUNT_ID);
+    when(accountRepository.createAccount(new NewAccount(SOME_USER_ID, ACCOUNT_ID, SAVINGS_ACCOUNT_COMMAND)))
+        .thenReturn(Try.success(null));
+
+    val result = accountService.createAccount(SAVINGS_ACCOUNT_COMMAND);
+
+    assertEquals(
+        Either.right(ACCOUNT_ID),
         result
     );
   }

@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
+import pp.pl.io.savings.account.command.AccountCommand;
+import pp.pl.io.savings.account.create.NewAccount;
+import pp.pl.io.savings.account.id.UuidService;
 import pp.pl.io.savings.exception.Error;
 import pp.pl.io.savings.organisation.SavingsSecurityService;
 
@@ -14,13 +17,14 @@ public class AccountService {
 
   private final AccountRepository accountRepository;
   private final SavingsSecurityService savingsSecurityService;
+  private final UuidService uuidService;
 
-  public Either<Error, Account> getAccount(String accountIdCode) {
+  public Either<Error, Account> getAccount(final String accountIdCode) {
     try {
       log.debug("Getting account: {}", accountIdCode);
 
       if (StringUtils.isBlank(accountIdCode)) {
-        return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR,
+        return Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT,
             "Account id cannot be blank")
         );
       }
@@ -53,7 +57,7 @@ public class AccountService {
     }
   }
 
-  public Either<Error, Void> deleteAccount(String accountIdCode) {
+  public Either<Error, Void> deleteAccount(final String accountIdCode) {
     try {
       log.debug("Deleting account: {}", accountIdCode);
 
@@ -74,7 +78,41 @@ public class AccountService {
 
       return Either.right(null);
     } catch (final Throwable t) {
-      log.warn("Failed deleting user account", t);
+      log.warn("Failed deleting account", t);
+      return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, t));
+    }
+  }
+
+  public Either<Error, AccountId> createAccount(final AccountCommand accountCommand) {
+    try {
+      log.debug("Creating account: {}", accountCommand);
+
+      if (accountCommand == null) {
+        return Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT,
+            "Account command cannot be null")
+        );
+      }
+
+      val userId = savingsSecurityService.getUserId();
+      if (userId == null) {
+        return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR,
+            "Cannot compute user")
+        );
+      }
+
+      val newAccountId = uuidService.createRandomAccountId();
+      val newAccount = new NewAccount(userId, newAccountId, accountCommand);
+
+      val result = accountRepository.createAccount(newAccount);
+      if (result.isFailure()) {
+        return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR,
+            "Cannot create account with command: " + accountCommand)
+        );
+      }
+
+      return Either.right(newAccountId);
+    } catch (final Throwable t) {
+      log.warn("Failed creating account", t);
       return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, t));
     }
   }

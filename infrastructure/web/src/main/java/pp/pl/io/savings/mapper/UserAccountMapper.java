@@ -20,11 +20,11 @@ public class UserAccountMapper {
         .build();
   }
 
-  private static List<String> getAccountIds(@NonNull final UserAccount userAccount) {
+  private static List<String> getAccountIds(final UserAccount userAccount) {
     return userAccount.getAccounts()
-        .map(Account::getAccountId)
-        .map(accountId -> accountId.code)
-        .toJavaList();
+            .map(Account::getAccountId)
+            .map(accountId -> accountId.code)
+            .toJavaList();
   }
 
 }

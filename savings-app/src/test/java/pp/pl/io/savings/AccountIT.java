@@ -1,6 +1,7 @@
 package pp.pl.io.savings;
 
 
+import lombok.val;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,10 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static pp.pl.io.savings.utils.TestFileReader.fromFile;
 
 class AccountIT extends CommonIT {
 
@@ -32,8 +33,9 @@ class AccountIT extends CommonIT {
   @Autowired
   private SavingsSecurityService savingsSecurityService;
 
-  public static final String SAVINGS_ACCOUNT_ID_1 = "1";
-  public static final String SAVINGS_ACCOUNT_TO_DELETE_ID = "2";
+  public static final String SAVINGS_ACCOUNT_ID_1 = "00000001-e89b-42d3-a456-556642440000";
+  public static final String SAVINGS_ACCOUNT_TO_DELETE_ID = "00000002-e89b-42d3-a456-556642440000";
+  private static final String CREATE_SAVINGS_ACCOUNT_REQUEST_FILE = "create-savings.account.json";
 
   @Test
   @Order(1)
@@ -101,5 +103,41 @@ class AccountIT extends CommonIT {
 
     assertThat(result.getResponse().getContentAsString(StandardCharsets.UTF_8))
         .isEqualToIgnoringWhitespace(expectedResult);
+  }
+
+  @Test
+  @Order(4)
+  void createSavingsAccountTest() throws Exception {
+    final ResultActions createResultActions = mockMvc.perform(
+        post("/api/account")
+            .content(fromFile(CREATE_SAVINGS_ACCOUNT_REQUEST_FILE))
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+    );
+    final MvcResult createResult = createResultActions
+        .andExpect(status().isCreated())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+        .andReturn();
+
+    val createdAccountId = createResult.getResponse().getContentAsString();
+
+
+    final ResultActions getResultActions = mockMvc.perform(get("/api/account/" + createdAccountId));
+    final MvcResult getResult = getResultActions
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+        .andReturn();
+
+    final AccountDTO getExpectedResult = SavingsAccountDTO.builder()
+        .accountId(createdAccountId)
+        .name("Savings account")
+        .description("Savings account description")
+        .currency(Currency.PLN.name())
+        .balance(250.55)
+        .build();
+
+    assertThat(createResult.getResponse().getContentAsString(StandardCharsets.UTF_8))
+        .isNotBlank();
+    assertThat(getResult.getResponse().getContentAsString(StandardCharsets.UTF_8))
+        .isEqualToIgnoringWhitespace(OBJECT_MAPPER.writeValueAsString(getExpectedResult));
   }
 }

@@ -10,16 +10,16 @@ import pp.pl.io.savings.dto.response.AccountDTO;
 import pp.pl.io.savings.dto.response.SavingsAccountDTO;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class AccountMapper {
+public class AccountDtoMapper {
 
   public static AccountDTO toAccountDTO(@NonNull final Account account) {
     if (account.getAccountType() == AccountType.SAVINGS) {
-      return mapSavingsAccountToAccountDTO((SavingsAccount) account);
+      return mapToSavingsAccountDTO((SavingsAccount) account);
     }
     throw new IllegalArgumentException("This account type: " + account.getAccountType() + " is not supported");
   }
 
-  private static AccountDTO mapSavingsAccountToAccountDTO(final SavingsAccount savingsAccount) {
+  private static SavingsAccountDTO mapToSavingsAccountDTO(final SavingsAccount savingsAccount) {
     return SavingsAccountDTO.builder()
         .accountId(savingsAccount.getAccountId().code)
         .name(savingsAccount.getName())

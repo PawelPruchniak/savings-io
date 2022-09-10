@@ -8,6 +8,7 @@ import pp.pl.io.savings.account.UserAccountRepository;
 import pp.pl.io.savings.account.UserAccountService;
 import pp.pl.io.savings.account.balance.BalanceService;
 import pp.pl.io.savings.account.balance.CurrencyService;
+import pp.pl.io.savings.account.id.UuidService;
 import pp.pl.io.savings.organisation.SavingsSecurityService;
 
 @Configuration
@@ -32,8 +33,14 @@ public class UsecaseConfiguration {
   }
 
   @Bean
+  UuidService uuidService() {
+    return new UuidService();
+  }
+
+  @Bean
   AccountService accountService(AccountRepository accountRepository,
-                                SavingsSecurityService savingsSecurityService) {
-    return new AccountService(accountRepository, savingsSecurityService);
+                                SavingsSecurityService savingsSecurityService,
+                                UuidService uuidService) {
+    return new AccountService(accountRepository, savingsSecurityService, uuidService);
   }
 }

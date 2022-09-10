@@ -2,6 +2,8 @@ package pp.pl.io.savings;
 
 import io.vavr.collection.List;
 import pp.pl.io.savings.account.*;
+import pp.pl.io.savings.dto.request.AccountRequest;
+import pp.pl.io.savings.dto.request.SavingsAccountRequest;
 import pp.pl.io.savings.dto.response.AccountDTO;
 import pp.pl.io.savings.dto.response.SavingsAccountDTO;
 import pp.pl.io.savings.dto.response.UserAccountDTO;
@@ -15,7 +17,8 @@ public class AccountTestData {
   public static final BigDecimal ONE_DECIMAL_PLACE_VALUE = BigDecimal.valueOf(501.1);
   public static final BigDecimal TWO_DECIMAL_PLACE_VALUE = BigDecimal.valueOf(2870.82);
   public static final BigDecimal FOUR_DECIMAL_PLACE_VALUE = BigDecimal.valueOf(3.9876);
-  public static final AccountId SAVINGS_ACCOUNT_ID = AccountId.of("1");
+  public static final AccountId SAVINGS_ACCOUNT_ID = AccountId.of("00000001-e89b-42d3-a456-556642440000");
+  public static final AccountId CREATED_SAVINGS_ACCOUNT_ID = AccountId.of("00000002-e89b-42d3-a456-556642440000");
   public static final Account SAVINGS_ACCOUNT = SavingsAccount.builder()
       .accountId(SAVINGS_ACCOUNT_ID)
       .name("Savings account")
@@ -29,6 +32,17 @@ public class AccountTestData {
       .description("Some description")
       .currency(Currency.PLN.name())
       .balance(501.10)
+      .build();
+
+  public static final AccountRequest SAVINGS_ACCOUNT_REQUEST = SavingsAccountRequest.builder()
+      .name("Savings account")
+      .description("Savings account description")
+      .currency("EUR")
+      .balance(500.76)
+      .build();
+
+  public static final AccountRequest SAVINGS_ACCOUNT_MINIMUM_REQUEST = SavingsAccountRequest.builder()
+      .currency("USD")
       .build();
 
   // User Account

@@ -28,7 +28,7 @@ class AccountControllerTest {
   AccountController accountController;
 
   @Test
-  void shouldReturnProcessingErrorWhenGettingAccount() {
+  void shouldReturnProcessingErrorForGetAccount() {
     // given
     when(accountService.getAccount(any()))
         .thenReturn(Either.left(ERROR_PROCESSING));
@@ -42,21 +42,21 @@ class AccountControllerTest {
   }
 
   @Test
-  void shouldReturnUnauthorizedErrorWhenGettingAccount() {
+  void shouldReturnIllegalArgumentErrorForGetAccount() {
     // given
     when(accountService.getAccount(any()))
-        .thenReturn(Either.left(ERROR_UNAUTHORIZED));
+        .thenReturn(Either.left(ERROR_ILLEGAL_ARGUMENT));
 
     // when, then
     var exception =
         assertThrows(ResponseStatusException.class, () -> accountController.getAccount(SAVINGS_ACCOUNT_ID.code));
-    assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatus());
-    assertEquals(ERROR_UNAUTHORIZED.getMessage(), exception.getReason());
-    assertEquals(ERROR_UNAUTHORIZED.getCause(), exception.getCause());
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+    assertEquals(ERROR_ILLEGAL_ARGUMENT.getMessage(), exception.getReason());
+    assertEquals(ERROR_ILLEGAL_ARGUMENT.getCause(), exception.getCause());
   }
 
   @Test
-  void shouldReturnNotFoundErrorWhenGettingAccount() {
+  void shouldReturnNotFoundErrorForGetAccount() {
     // given
     when(accountService.getAccount(any()))
         .thenReturn(Either.left(ERROR_NOT_FOUND));
@@ -83,7 +83,7 @@ class AccountControllerTest {
   }
 
   @Test
-  void shouldReturnProcessingErrorWhenDeletingAccount() {
+  void shouldReturnProcessingErrorForDeleteAccount() {
     // given
     when(accountService.deleteAccount(any()))
         .thenReturn(Either.left(ERROR_PROCESSING));
@@ -97,21 +97,21 @@ class AccountControllerTest {
   }
 
   @Test
-  void shouldReturnUnauthorizedErrorWhenDeletingAccount() {
+  void shouldReturnIllegalArgumentErrorForDeleteAccount() {
     // given
     when(accountService.deleteAccount(any()))
-        .thenReturn(Either.left(ERROR_UNAUTHORIZED));
+        .thenReturn(Either.left(ERROR_ILLEGAL_ARGUMENT));
 
     // when, then
     var exception =
         assertThrows(ResponseStatusException.class, () -> accountController.deleteAccount(SAVINGS_ACCOUNT_ID.code));
-    assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatus());
-    assertEquals(ERROR_UNAUTHORIZED.getMessage(), exception.getReason());
-    assertEquals(ERROR_UNAUTHORIZED.getCause(), exception.getCause());
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+    assertEquals(ERROR_ILLEGAL_ARGUMENT.getMessage(), exception.getReason());
+    assertEquals(ERROR_ILLEGAL_ARGUMENT.getCause(), exception.getCause());
   }
 
   @Test
-  void shouldReturnNotFoundErrorWhenDeletingAccount() {
+  void shouldReturnNotFoundErrorForDeleteAccount() {
     // given
     when(accountService.deleteAccount(any()))
         .thenReturn(Either.left(ERROR_NOT_FOUND));
@@ -125,7 +125,7 @@ class AccountControllerTest {
   }
 
   @Test
-  void shouldReturnNoContentWhenDeletingAccountSuccessfully() {
+  void shouldReturnNoContentForDeleteAccountSuccessfully() {
     // given
     when(accountService.deleteAccount(SAVINGS_ACCOUNT_ID.code))
         .thenReturn(Either.right(null));
@@ -137,5 +137,52 @@ class AccountControllerTest {
     assertThat(result)
         .isEqualTo(new ResponseEntity<>("Account with id: " + SAVINGS_ACCOUNT_ID.code + " was successfully deleted",
             HttpStatus.NO_CONTENT));
+  }
+
+  @Test
+  void shouldReturnProcessingErrorWhenAccountRequestIsNullForCreateAccount() {
+    assertThrows(NullPointerException.class, () -> accountController.createAccount(null));
+  }
+
+  @Test
+  void shouldReturnProcessingErrorForCreateAccount() {
+    // given
+    when(accountService.createAccount(any()))
+        .thenReturn(Either.left(ERROR_PROCESSING));
+
+    // when, then
+    var exception =
+        assertThrows(ResponseStatusException.class, () -> accountController.createAccount(SAVINGS_ACCOUNT_REQUEST));
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatus());
+    assertEquals(ERROR_PROCESSING.getMessage(), exception.getReason());
+    assertEquals(ERROR_PROCESSING.getCause(), exception.getCause());
+  }
+
+  @Test
+  void shouldReturnIllegalArgumentErrorForCreateAccount() {
+    // given
+    when(accountService.createAccount(any()))
+        .thenReturn(Either.left(ERROR_ILLEGAL_ARGUMENT));
+
+    // when, then
+    var exception =
+        assertThrows(ResponseStatusException.class, () -> accountController.createAccount(SAVINGS_ACCOUNT_REQUEST));
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+    assertEquals(ERROR_ILLEGAL_ARGUMENT.getMessage(), exception.getReason());
+    assertEquals(ERROR_ILLEGAL_ARGUMENT.getCause(), exception.getCause());
+  }
+
+  @Test
+  void shouldReturnCreatedForCreateAccountSuccessfully() {
+    // given
+    when(accountService.createAccount(any()))
+        .thenReturn(Either.right(CREATED_SAVINGS_ACCOUNT_ID));
+
+    // when
+    val result = accountController.createAccount(SAVINGS_ACCOUNT_REQUEST);
+
+    // then
+    assertThat(result)
+        .isEqualTo(new ResponseEntity<>(CREATED_SAVINGS_ACCOUNT_ID.code, HttpStatus.CREATED));
   }
 }

@@ -2,6 +2,8 @@ package pp.pl.io.savings;
 
 import io.vavr.collection.List;
 import pp.pl.io.savings.account.*;
+import pp.pl.io.savings.account.command.AccountCommand;
+import pp.pl.io.savings.account.command.SavingsAccountCommand;
 import pp.pl.io.savings.organisation.UserId;
 
 import java.math.BigDecimal;
@@ -16,7 +18,8 @@ public class ServiceTestData {
   private static final BigDecimal ONE_DECIMAL_PLACE_VALUE = BigDecimal.valueOf(501.1);
   public static final BigDecimal SAVINGS_ACCOUNT_PLN_VALUE = BigDecimal.valueOf(111.11);
   public static final BigDecimal SAVINGS_ACCOUNT_USD_VALUE = BigDecimal.valueOf(100.00);
-  public static final AccountId ACCOUNT_ID = AccountId.of("1");
+  public static final BigDecimal SAVINGS_ACCOUNT_EUR_VALUE = BigDecimal.valueOf(176.22);
+  public static final AccountId ACCOUNT_ID = AccountId.of("00000001-e89b-42d3-a456-556642440000");
   public static final Account SAVINGS_ACCOUNT = SavingsAccount.builder()
       .accountId(ACCOUNT_ID)
       .name("Savings account")
@@ -37,6 +40,13 @@ public class ServiceTestData {
       .description("Some description")
       .currency(Currency.USD)
       .balance(SAVINGS_ACCOUNT_USD_VALUE)
+      .build();
+
+  public static final AccountCommand SAVINGS_ACCOUNT_COMMAND = SavingsAccountCommand.builder()
+      .name("Savings account")
+      .description("Savings account description")
+      .currency(Currency.EUR)
+      .balance(SAVINGS_ACCOUNT_EUR_VALUE.doubleValue())
       .build();
 
 
