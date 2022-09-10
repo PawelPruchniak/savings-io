@@ -20,15 +20,15 @@ public class UsecaseConfiguration {
   }
 
   @Bean
-  BalanceService balanceService(CurrencyService currencyService) {
+  BalanceService balanceService(final CurrencyService currencyService) {
     return new BalanceService(currencyService);
   }
 
   @Bean
-  UserAccountService userAccountService(UserAccountRepository userAccountRepository,
-                                        AccountRepository accountRepository,
-                                        BalanceService balanceService,
-                                        SavingsSecurityService savingsSecurityService) {
+  UserAccountService userAccountService(final UserAccountRepository userAccountRepository,
+                                        final AccountRepository accountRepository,
+                                        final BalanceService balanceService,
+                                        final SavingsSecurityService savingsSecurityService) {
     return new UserAccountService(userAccountRepository, accountRepository, balanceService, savingsSecurityService);
   }
 
@@ -38,9 +38,9 @@ public class UsecaseConfiguration {
   }
 
   @Bean
-  AccountService accountService(AccountRepository accountRepository,
-                                SavingsSecurityService savingsSecurityService,
-                                UuidService uuidService) {
+  AccountService accountService(final AccountRepository accountRepository,
+                                final SavingsSecurityService savingsSecurityService,
+                                final UuidService uuidService) {
     return new AccountService(accountRepository, savingsSecurityService, uuidService);
   }
 }
