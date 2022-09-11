@@ -1,0 +1,7 @@
+{
+  "name": "Savings account",
+  "description": "Savings account description",
+  "currency": "PLN",
+  "balance": "250.55",
+  "accountType": "SAVINGS"
+}

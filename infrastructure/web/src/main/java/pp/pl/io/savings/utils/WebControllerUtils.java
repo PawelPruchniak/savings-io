@@ -13,7 +13,7 @@ public class WebControllerUtils {
     if (throwable instanceof ResponseStatusException responseStatusException) {
       return responseStatusException;
     } else {
-      return new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, throwable.getMessage(), throwable);
+      return new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, throwable.getMessage(), throwable.getCause());
     }
   }
 

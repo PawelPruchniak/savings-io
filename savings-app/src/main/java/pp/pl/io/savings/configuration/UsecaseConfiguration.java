@@ -8,6 +8,7 @@ import pp.pl.io.savings.account.UserAccountRepository;
 import pp.pl.io.savings.account.UserAccountService;
 import pp.pl.io.savings.account.balance.BalanceService;
 import pp.pl.io.savings.account.balance.CurrencyService;
+import pp.pl.io.savings.account.id.UuidService;
 import pp.pl.io.savings.organisation.SavingsSecurityService;
 
 @Configuration
@@ -19,21 +20,27 @@ public class UsecaseConfiguration {
   }
 
   @Bean
-  BalanceService balanceService(CurrencyService currencyService) {
+  BalanceService balanceService(final CurrencyService currencyService) {
     return new BalanceService(currencyService);
   }
 
   @Bean
-  UserAccountService userAccountService(UserAccountRepository userAccountRepository,
-                                        AccountRepository accountRepository,
-                                        BalanceService balanceService,
-                                        SavingsSecurityService savingsSecurityService) {
+  UserAccountService userAccountService(final UserAccountRepository userAccountRepository,
+                                        final AccountRepository accountRepository,
+                                        final BalanceService balanceService,
+                                        final SavingsSecurityService savingsSecurityService) {
     return new UserAccountService(userAccountRepository, accountRepository, balanceService, savingsSecurityService);
   }
 
   @Bean
-  AccountService accountService(AccountRepository accountRepository,
-                                SavingsSecurityService savingsSecurityService) {
-    return new AccountService(accountRepository, savingsSecurityService);
+  UuidService uuidService() {
+    return new UuidService();
+  }
+
+  @Bean
+  AccountService accountService(final AccountRepository accountRepository,
+                                final SavingsSecurityService savingsSecurityService,
+                                final UuidService uuidService) {
+    return new AccountService(accountRepository, savingsSecurityService, uuidService);
   }
 }

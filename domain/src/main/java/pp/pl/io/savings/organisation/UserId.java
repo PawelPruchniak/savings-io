@@ -1,7 +1,6 @@
 package pp.pl.io.savings.organisation;
 
 import lombok.EqualsAndHashCode;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,7 +18,7 @@ public class UserId {
     return new UserId(userId);
   }
 
-  private UserId(@NonNull final String userId) {
+  private UserId(final String userId) {
     this.code = userId;
   }
 

@@ -9,24 +9,24 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static pp.pl.io.savings.AccountTestData.SAVINGS_ACCOUNT;
 import static pp.pl.io.savings.AccountTestData.SAVINGS_ACCOUNT_ID;
 
-class AccountMapperTest {
+class AccountDtoMapperTest {
 
   @Test
   void shouldThrowWhenAccountIsNull() {
-    assertThrows(NullPointerException.class, () -> AccountMapper.toAccountDTO(null));
+    assertThrows(NullPointerException.class, () -> AccountDtoMapper.toAccountDTO(null));
   }
 
   @Test
   void shouldMapSavingsAccountPlnCorrectly() {
-    val accountDTO = AccountMapper.toAccountDTO(SAVINGS_ACCOUNT);
+    val accountDTO = AccountDtoMapper.toAccountDTO(SAVINGS_ACCOUNT);
 
     assertThat(accountDTO)
         .hasFieldOrPropertyWithValue("accountId", SAVINGS_ACCOUNT_ID.code)
         .hasFieldOrPropertyWithValue("name", "Savings account")
         .hasFieldOrPropertyWithValue("description", "Some description")
         .hasFieldOrPropertyWithValue("currency", Currency.PLN.name())
-        .hasFieldOrPropertyWithValue("accountType", "SAVINGS")
-        .hasFieldOrPropertyWithValue("balance", 501.10);
+        .hasFieldOrPropertyWithValue("balance", 501.10)
+        .hasFieldOrPropertyWithValue("accountType", "SAVINGS");
   }
 
 }

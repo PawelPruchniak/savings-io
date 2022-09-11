@@ -7,7 +7,7 @@
   <changeSet id="005-001" author="ppruchniak">
     <comment>Savings Account table</comment>
     <createTable tableName="savings_account" tablespace="${data-tablespace}">
-      <column name="account_id" type="INT">
+      <column name="account_id" type="VARCHAR(256)">
         <constraints nullable="false"/>
       </column>
       <column name="currency" type="VARCHAR(64)">

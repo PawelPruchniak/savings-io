@@ -18,4 +18,17 @@
   <changeSet id="savings-account-create.sql" author="savings-integration-tests">
     <sqlFile path="db/scripts/savings-account-create.sql"/>
   </changeSet>
+
+  <changeSet id="savings-account-for-delete.sql" author="savings-integration-tests">
+    <sqlFile path="db/scripts/savings-account-for-delete.sql"/>
+  </changeSet>
+
+  <changeSet id="savings-account-for-update.sql" author="savings-integration-tests">
+    <sqlFile path="db/scripts/savings-account-for-update.sql"/>
+  </changeSet>
+
+  <changeSet id="savings-account-for-min-update.sql" author="savings-integration-tests">
+    <sqlFile path="db/scripts/savings-account-for-min-update.sql"/>
+  </changeSet>
+
 </databaseChangeLog>

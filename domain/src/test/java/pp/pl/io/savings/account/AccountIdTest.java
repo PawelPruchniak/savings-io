@@ -6,7 +6,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AccountIdTest {
 
-  private static final String SOME_ACCOUNT_ID = "SOME_ID";
+  private static final String SOME_ACCOUNT_ID = "123e4567-e89b-42d3-a456-556642440000";
+  private static final String SOME_OTHER_ACCOUNT_ID = "123e4567-e89b-42d3-a456-556642440001";
+  private static final String SOME_INVALID_ACCOUNT_ID = "SOME_ID";
 
   @Test
   void shouldThrowIllegalArgumentExceptionWhenAccountIdIsNull() {
@@ -19,6 +21,11 @@ class AccountIdTest {
   }
 
   @Test
+  void shouldThrowIllegalArgumentExceptionWhenAccountIdIsInvalid() {
+    assertThrows(IllegalArgumentException.class, () -> AccountId.of(SOME_INVALID_ACCOUNT_ID));
+  }
+
+  @Test
   void shouldCreateAccountIdSuccessfully() {
     var accountId = AccountId.of(SOME_ACCOUNT_ID);
 
@@ -27,7 +34,7 @@ class AccountIdTest {
 
   @Test
   void shouldNotEqualsWhenAccountIdCodeIsDifferent() {
-    assertNotEquals(AccountId.of(SOME_ACCOUNT_ID), AccountId.of(SOME_ACCOUNT_ID + "1"));
+    assertNotEquals(AccountId.of(SOME_ACCOUNT_ID), AccountId.of(SOME_OTHER_ACCOUNT_ID));
   }
 
   @Test

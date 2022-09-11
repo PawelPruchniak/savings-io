@@ -4,3 +4,7 @@ spring:
     parameters:
       index-tablespace: pg_default
       data-tablespace: pg_default
+
+logging:
+  level:
+    pp.pl.io.savings: DEBUG

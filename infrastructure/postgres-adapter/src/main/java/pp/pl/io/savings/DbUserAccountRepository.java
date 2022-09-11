@@ -21,7 +21,7 @@ public class DbUserAccountRepository implements UserAccountRepository {
 
   private final NamedParameterJdbcTemplate jdbcTemplate;
 
-  private static final String USER_ID_CODE = "userId";
+  protected static final String USER_ID_CODE = "userId";
 
   @Override
   public Try<Option<UserAccount>> fetchUserAccount(final UserId userId) {

@@ -9,6 +9,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import pp.pl.io.savings.account.create.NewAccount;
+import pp.pl.io.savings.account.id.UuidService;
 import pp.pl.io.savings.exception.Error;
 import pp.pl.io.savings.organisation.SavingsSecurityService;
 
@@ -20,14 +22,16 @@ import static pp.pl.io.savings.ServiceTestData.*;
 class AccountServiceTest {
 
   @Mock
-  AccountRepository accountRepository;
+  private AccountRepository accountRepository;
   @Mock
-  SavingsSecurityService savingsSecurityService;
+  private SavingsSecurityService savingsSecurityService;
+  @Mock
+  private UuidService uuidService;
   @InjectMocks
-  AccountService accountService;
+  private AccountService accountService;
 
   @Test
-  void shouldReturnProcessingError() {
+  void shouldReturnProcessingErrorForGetAccount() {
     when(savingsSecurityService.getUserId())
         .thenThrow(SOME_PROCESSING_ERROR);
 
@@ -40,27 +44,27 @@ class AccountServiceTest {
   }
 
   @Test
-  void shouldReturnProcessingErrorWhenAccountIdIsNull() {
+  void shouldReturnIllegalArgumentErrorWhenAccountIdIsNullForGetAccount() {
     val result = accountService.getAccount(null);
 
     assertEquals(
-        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Account id cannot be blank")),
+        Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT, "Account id cannot be blank")),
         result
     );
   }
 
   @Test
-  void shouldReturnProcessingErrorWhenAccountIdIsBlank() {
+  void shouldReturnIllegalArgumentErrorWhenAccountIdIsBlankForGetAccount() {
     val result = accountService.getAccount("");
 
     assertEquals(
-        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Account id cannot be blank")),
+        Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT, "Account id cannot be blank")),
         result
     );
   }
 
   @Test
-  void shouldReturnProcessingErrorWhenUserIdIsNull() {
+  void shouldReturnProcessingErrorWhenUserIdIsNullForGetAccount() {
     when(savingsSecurityService.getUserId())
         .thenReturn(null);
 
@@ -73,7 +77,7 @@ class AccountServiceTest {
   }
 
   @Test
-  void shouldReturnProcessingErrorWhenResultIsFailure() {
+  void shouldReturnProcessingErrorWhenFetchResultIsFailure() {
     when(savingsSecurityService.getUserId())
         .thenReturn(SOME_USER_ID);
     when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
@@ -88,7 +92,7 @@ class AccountServiceTest {
   }
 
   @Test
-  void shouldReturnNotFoundErrorWhenResultIsEmpty() {
+  void shouldReturnNotFoundErrorWhenResultIsEmptyForGetAccount() {
     when(savingsSecurityService.getUserId())
         .thenReturn(SOME_USER_ID);
     when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
@@ -113,6 +117,295 @@ class AccountServiceTest {
 
     assertEquals(
         Either.right(SAVINGS_ACCOUNT),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorForDeleteAccount() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
+        .thenReturn(Try.of(() -> Option.of(SAVINGS_ACCOUNT)));
+    when(accountRepository.deleteAccount(SAVINGS_ACCOUNT))
+        .thenThrow(SOME_PROCESSING_ERROR);
+
+    val result = accountService.deleteAccount(ACCOUNT_ID.code);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, SOME_PROCESSING_ERROR)),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnIllegalArgumentErrorWhenAccountIdIsNullForDeleteAccount() {
+    val result = accountService.deleteAccount(null);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT, "Account id cannot be blank")),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnIllegalArgumentErrorWhenAccountIdIsBlankForDeleteAccount() {
+    val result = accountService.deleteAccount("");
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT, "Account id cannot be blank")),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorWhenUserIdIsNullForDeleteAccount() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(null);
+
+    val result = accountService.deleteAccount(ACCOUNT_ID.code);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot compute user")),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorWhenGetAccountIsFailureForDeleteAccount() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
+        .thenReturn(Try.failure(SOME_PROCESSING_ERROR));
+
+    val result = accountService.deleteAccount(ACCOUNT_ID.code);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot get account with id: " + ACCOUNT_ID)),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnNotFoundErrorWhenAccountIsEmptyForDeleteAccount() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
+        .thenReturn(Try.of(Option::none));
+
+    val result = accountService.deleteAccount(ACCOUNT_ID.code);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.NOT_FOUND, "Account with id: " + ACCOUNT_ID + " not found")),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorWhenDeleteResultIsFailure() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
+        .thenReturn(Try.of(() -> Option.of(SAVINGS_ACCOUNT)));
+    when(accountRepository.deleteAccount(SAVINGS_ACCOUNT))
+        .thenReturn(Try.failure(SOME_PROCESSING_ERROR));
+
+    val result = accountService.deleteAccount(ACCOUNT_ID.code);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot delete account with id: " + ACCOUNT_ID)),
+        result
+    );
+  }
+
+  @Test
+  void shouldDeleteSavingsAccountSuccessfully() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
+        .thenReturn(Try.of(() -> Option.of(SAVINGS_ACCOUNT)));
+    when(accountRepository.deleteAccount(SAVINGS_ACCOUNT))
+        .thenReturn(Try.success(null));
+
+    val result = accountService.deleteAccount(ACCOUNT_ID.code);
+
+    assertEquals(
+        Either.right(null),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnIllegalArgumentErrorWhenAccountCommandIsNullForCreateAccount() {
+    val result = accountService.createAccount(null);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT, "Account command cannot be null")),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorForCreateAccount() {
+    when(savingsSecurityService.getUserId())
+        .thenThrow(SOME_PROCESSING_ERROR);
+
+    val result = accountService.createAccount(SAVINGS_ACCOUNT_COMMAND);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, SOME_PROCESSING_ERROR)),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorWhenUserIdIsNullForCreateAccount() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(null);
+
+    val result = accountService.createAccount(SAVINGS_ACCOUNT_COMMAND);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot compute user")),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorWhenCreateResultIsFailure() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(uuidService.createRandomAccountId())
+        .thenReturn(ACCOUNT_ID);
+    when(accountRepository.createAccount(new NewAccount(SOME_USER_ID, ACCOUNT_ID, SAVINGS_ACCOUNT_COMMAND)))
+        .thenReturn(Try.failure(SOME_PROCESSING_ERROR));
+
+    val result = accountService.createAccount(SAVINGS_ACCOUNT_COMMAND);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot create account with command: " + SAVINGS_ACCOUNT_COMMAND)),
+        result
+    );
+  }
+
+  @Test
+  void shouldCreateSavingsAccountSuccessfully() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(uuidService.createRandomAccountId())
+        .thenReturn(ACCOUNT_ID);
+    when(accountRepository.createAccount(new NewAccount(SOME_USER_ID, ACCOUNT_ID, SAVINGS_ACCOUNT_COMMAND)))
+        .thenReturn(Try.success(null));
+
+    val result = accountService.createAccount(SAVINGS_ACCOUNT_COMMAND);
+
+    assertEquals(
+        Either.right(ACCOUNT_ID),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorForUpdateAccount() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
+        .thenReturn(Try.of(() -> Option.of(SAVINGS_ACCOUNT)));
+    when(accountRepository.updateAccount(SAVINGS_ACCOUNT_UPDATE_COMMAND))
+        .thenThrow(SOME_PROCESSING_ERROR);
+
+    val result = accountService.updateAccount(SAVINGS_ACCOUNT_UPDATE_COMMAND);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, SOME_PROCESSING_ERROR)),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnIllegalArgumentErrorWhenCommandIsNullForUpdateAccount() {
+    val result = accountService.updateAccount(null);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT, "Account update command cannot be null")),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorWhenUserIdIsNullForUpdateAccount() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(null);
+
+    val result = accountService.updateAccount(SAVINGS_ACCOUNT_UPDATE_COMMAND);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot compute user")),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorWhenGetAccountIsFailureForUpdateAccount() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
+        .thenReturn(Try.failure(SOME_PROCESSING_ERROR));
+
+    val result = accountService.updateAccount(SAVINGS_ACCOUNT_UPDATE_COMMAND);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot get account with id: " + ACCOUNT_ID)),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnNotFoundErrorWhenAccountIsEmptyForUpdateAccount() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
+        .thenReturn(Try.of(Option::none));
+
+    val result = accountService.updateAccount(SAVINGS_ACCOUNT_UPDATE_COMMAND);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.NOT_FOUND, "Account with id: " + ACCOUNT_ID + " not found")),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorWhenUpdateResultIsFailure() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
+        .thenReturn(Try.of(() -> Option.of(SAVINGS_ACCOUNT)));
+    when(accountRepository.updateAccount(SAVINGS_ACCOUNT_UPDATE_COMMAND))
+        .thenReturn(Try.failure(SOME_PROCESSING_ERROR));
+
+    val result = accountService.updateAccount(SAVINGS_ACCOUNT_UPDATE_COMMAND);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR,
+            "Cannot update account with command: " + SAVINGS_ACCOUNT_UPDATE_COMMAND)),
+        result
+    );
+  }
+
+  @Test
+  void shouldUpdateSavingsAccountSuccessfully() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
+        .thenReturn(Try.of(() -> Option.of(SAVINGS_ACCOUNT)));
+    when(accountRepository.updateAccount(SAVINGS_ACCOUNT_UPDATE_COMMAND))
+        .thenReturn(Try.success(null));
+
+    val result = accountService.updateAccount(SAVINGS_ACCOUNT_UPDATE_COMMAND);
+
+    assertEquals(
+        Either.right(null),
         result
     );
   }
