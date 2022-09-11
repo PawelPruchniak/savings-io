@@ -1,4 +1,4 @@
-package pp.pl.io.savings.dto.request;
+package pp.pl.io.savings.dto.request.update;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -8,9 +8,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     property = "accountType"
 )
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = SavingsAccountRequest.class, name = "SAVINGS")
+    @JsonSubTypes.Type(value = SavingsAccountUpdateRequest.class, name = "SAVINGS")
 })
-public interface AccountRequest {
+public interface AccountUpdateRequest {
+
+  String getAccountId();
 
   String getName();
 

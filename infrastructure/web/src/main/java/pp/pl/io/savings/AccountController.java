@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pp.pl.io.savings.account.AccountService;
-import pp.pl.io.savings.dto.request.AccountRequest;
+import pp.pl.io.savings.dto.request.create.AccountRequest;
 import pp.pl.io.savings.dto.response.AccountDTO;
 import pp.pl.io.savings.mapper.AccountCommandMapper;
 import pp.pl.io.savings.mapper.AccountDtoMapper;

@@ -2,8 +2,8 @@ package pp.pl.io.savings;
 
 import io.vavr.collection.List;
 import pp.pl.io.savings.account.*;
-import pp.pl.io.savings.dto.request.AccountRequest;
-import pp.pl.io.savings.dto.request.SavingsAccountRequest;
+import pp.pl.io.savings.dto.request.create.AccountRequest;
+import pp.pl.io.savings.dto.request.create.SavingsAccountRequest;
 import pp.pl.io.savings.dto.response.AccountDTO;
 import pp.pl.io.savings.dto.response.SavingsAccountDTO;
 import pp.pl.io.savings.dto.response.UserAccountDTO;

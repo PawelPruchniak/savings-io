@@ -7,8 +7,8 @@ import pp.pl.io.savings.account.AccountType;
 import pp.pl.io.savings.account.Currency;
 import pp.pl.io.savings.account.command.AccountCommand;
 import pp.pl.io.savings.account.command.SavingsAccountCommand;
-import pp.pl.io.savings.dto.request.AccountRequest;
-import pp.pl.io.savings.dto.request.SavingsAccountRequest;
+import pp.pl.io.savings.dto.request.create.AccountRequest;
+import pp.pl.io.savings.dto.request.create.SavingsAccountRequest;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AccountCommandMapper {
