@@ -4,6 +4,8 @@ import io.vavr.collection.List;
 import pp.pl.io.savings.account.*;
 import pp.pl.io.savings.account.create.AccountCommand;
 import pp.pl.io.savings.account.create.SavingsAccountCommand;
+import pp.pl.io.savings.account.update.AccountUpdateCommand;
+import pp.pl.io.savings.account.update.SavingsAccountUpdateCommand;
 import pp.pl.io.savings.organisation.UserId;
 
 import java.math.BigDecimal;
@@ -42,11 +44,21 @@ public class ServiceTestData {
       .balance(SAVINGS_ACCOUNT_USD_VALUE)
       .build();
 
+  // Create
   public static final AccountCommand SAVINGS_ACCOUNT_COMMAND = SavingsAccountCommand.builder()
       .name("Savings account")
       .description("Savings account description")
       .currency(Currency.EUR)
       .balance(SAVINGS_ACCOUNT_EUR_VALUE.doubleValue())
+      .build();
+
+  // Update
+  public static final AccountUpdateCommand SAVINGS_ACCOUNT_UPDATE_COMMAND = SavingsAccountUpdateCommand.builder()
+      .accountId(ACCOUNT_ID)
+      .name("Updated savings account")
+      .description("Updated savings account description")
+      .currency(Currency.PLN)
+      .balance(SAVINGS_ACCOUNT_PLN_VALUE.doubleValue())
       .build();
 
 

@@ -122,9 +122,26 @@ public class AccountService {
     try {
       log.debug("Updating account: {}", accountUpdateCommand);
 
-      //todo: implement this method
-      return null;
+      if (accountUpdateCommand == null) {
+        return Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT,
+            "Account update command cannot be null")
+        );
+      }
 
+      val getAccountResult = getAccount(accountUpdateCommand.getAccountId().code);
+      if (getAccountResult.isLeft()) {
+        return Either.left(getAccountResult.getLeft());
+      }
+
+      val updateAccountResult = accountRepository.updateAccount(accountUpdateCommand);
+
+      if (updateAccountResult.isFailure()) {
+        return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR,
+            "Cannot update account with command: " + accountUpdateCommand)
+        );
+      }
+
+      return Either.right(null);
     } catch (final Throwable t) {
       log.warn("Failed updating account", t);
       return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, t));

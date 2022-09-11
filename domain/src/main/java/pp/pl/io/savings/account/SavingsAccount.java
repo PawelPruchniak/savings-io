@@ -12,7 +12,7 @@ public class SavingsAccount implements Account {
 
   @NonNull AccountId accountId;
 
-  @NonNull String name;
+  String name;
 
   String description;
 

@@ -1,0 +1,8 @@
+{
+  "accountId": "00000003-e89b-42d3-a456-556642440000",
+  "name": "Updated savings account",
+  "description": "Updated savings account description",
+  "currency": "USD",
+  "balance": "10.55",
+  "accountType": "SAVINGS"
+}

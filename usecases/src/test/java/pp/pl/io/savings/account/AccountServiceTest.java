@@ -304,4 +304,109 @@ class AccountServiceTest {
         result
     );
   }
+
+  @Test
+  void shouldReturnProcessingErrorForUpdateAccount() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
+        .thenReturn(Try.of(() -> Option.of(SAVINGS_ACCOUNT)));
+    when(accountRepository.updateAccount(SAVINGS_ACCOUNT_UPDATE_COMMAND))
+        .thenThrow(SOME_PROCESSING_ERROR);
+
+    val result = accountService.updateAccount(SAVINGS_ACCOUNT_UPDATE_COMMAND);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, SOME_PROCESSING_ERROR)),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnIllegalArgumentErrorWhenCommandIsNullForUpdateAccount() {
+    val result = accountService.updateAccount(null);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT, "Account update command cannot be null")),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorWhenUserIdIsNullForUpdateAccount() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(null);
+
+    val result = accountService.updateAccount(SAVINGS_ACCOUNT_UPDATE_COMMAND);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot compute user")),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorWhenGetAccountIsFailureForUpdateAccount() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
+        .thenReturn(Try.failure(SOME_PROCESSING_ERROR));
+
+    val result = accountService.updateAccount(SAVINGS_ACCOUNT_UPDATE_COMMAND);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot get account with id: " + ACCOUNT_ID)),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnNotFoundErrorWhenAccountIsEmptyForUpdateAccount() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
+        .thenReturn(Try.of(Option::none));
+
+    val result = accountService.updateAccount(SAVINGS_ACCOUNT_UPDATE_COMMAND);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.NOT_FOUND, "Account with id: " + ACCOUNT_ID + " not found")),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnProcessingErrorWhenUpdateResultIsFailure() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
+        .thenReturn(Try.of(() -> Option.of(SAVINGS_ACCOUNT)));
+    when(accountRepository.updateAccount(SAVINGS_ACCOUNT_UPDATE_COMMAND))
+        .thenReturn(Try.failure(SOME_PROCESSING_ERROR));
+
+    val result = accountService.updateAccount(SAVINGS_ACCOUNT_UPDATE_COMMAND);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR,
+            "Cannot update account with command: " + SAVINGS_ACCOUNT_UPDATE_COMMAND)),
+        result
+    );
+  }
+
+  @Test
+  void shouldUpdateSavingsAccountSuccessfully() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
+        .thenReturn(Try.of(() -> Option.of(SAVINGS_ACCOUNT)));
+    when(accountRepository.updateAccount(SAVINGS_ACCOUNT_UPDATE_COMMAND))
+        .thenReturn(Try.success(null));
+
+    val result = accountService.updateAccount(SAVINGS_ACCOUNT_UPDATE_COMMAND);
+
+    assertEquals(
+        Either.right(null),
+        result
+    );
+  }
 }

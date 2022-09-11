@@ -12,6 +12,8 @@ import pp.pl.io.savings.account.AccountId;
 import pp.pl.io.savings.account.AccountRepository;
 import pp.pl.io.savings.account.AccountType;
 import pp.pl.io.savings.account.create.NewAccount;
+import pp.pl.io.savings.account.update.AccountUpdateCommand;
+import pp.pl.io.savings.account.update.SavingsAccountUpdateCommand;
 import pp.pl.io.savings.extractor.AccountResultSetExtractor;
 import pp.pl.io.savings.organisation.UserId;
 
@@ -39,9 +41,9 @@ public class DbAccountRepository implements AccountRepository {
           "left outer join savings_account sa on a.id = sa.account_id ";
 
   protected static final String ACCOUNT_ID_CODE = "accountId";
-  protected static final String NAME_ID_CODE = "name";
-  protected static final String DESCRIPTION_ID_CODE = "description";
-  protected static final String ACCOUNT_TYPE_ID_CODE = "accountType";
+  protected static final String NAME_CODE = "name";
+  protected static final String DESCRIPTION_CODE = "description";
+  protected static final String ACCOUNT_TYPE_CODE = "accountType";
 
   @Override
   public Try<Option<Account>> fetchAccount(final AccountId accountId, final UserId userId) {
@@ -52,18 +54,18 @@ public class DbAccountRepository implements AccountRepository {
 
       return Option.of(
               List.ofAll(
-                      Objects.requireNonNull(
-                          jdbcTemplate.query(
-                              SELECT_SAVINGS_ACCOUNT + "\n" +
-                                  "where a.id =:" + ACCOUNT_ID_CODE + "\n" +
-                                  "and a.user_id =:" + USER_ID_CODE,
-                              new MapSqlParameterSource()
-                                  .addValue(ACCOUNT_ID_CODE, accountId.code)
-                                  .addValue(USER_ID_CODE, userId.code),
-                              accountResultSetExtractor
-                          )
+                  Objects.requireNonNull(
+                      jdbcTemplate.query(
+                          SELECT_SAVINGS_ACCOUNT + "\n" +
+                              "where a.id =:" + ACCOUNT_ID_CODE + "\n" +
+                              "and a.user_id =:" + USER_ID_CODE,
+                          new MapSqlParameterSource()
+                              .addValue(ACCOUNT_ID_CODE, accountId.code)
+                              .addValue(USER_ID_CODE, userId.code),
+                          accountResultSetExtractor
                       )
                   )
+              )
               )
               .getOrElse(List.empty())
               .headOption();
@@ -108,5 +110,13 @@ public class DbAccountRepository implements AccountRepository {
       return savingsAccountRepository.createSavingsAccount(newAccount);
     }
     throw new IllegalArgumentException("This account type: " + newAccount.accountCommand().getAccountType() + " is not supported");
+  }
+
+  @Override
+  public Try<Void> updateAccount(AccountUpdateCommand accountUpdateCommand) {
+    if (accountUpdateCommand.getAccountType().equals(AccountType.SAVINGS)) {
+      return savingsAccountRepository.updateSavingsAccount((SavingsAccountUpdateCommand) accountUpdateCommand);
+    }
+    throw new IllegalArgumentException("This account type: " + accountUpdateCommand.getAccountType() + " is not supported");
   }
 }
