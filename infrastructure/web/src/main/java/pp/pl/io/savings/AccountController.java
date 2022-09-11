@@ -7,11 +7,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import pp.pl.io.savings.account.AccountId;
 import pp.pl.io.savings.account.AccountService;
 import pp.pl.io.savings.dto.request.create.AccountRequest;
+import pp.pl.io.savings.dto.request.update.AccountUpdateRequest;
 import pp.pl.io.savings.dto.response.AccountDTO;
 import pp.pl.io.savings.mapper.AccountDtoMapper;
 import pp.pl.io.savings.mapper.create.AccountCommandMapper;
+import pp.pl.io.savings.mapper.update.AccountUpdateCommandMapper;
 import pp.pl.io.savings.utils.WebControllerUtils;
 
 @Slf4j
@@ -23,7 +27,7 @@ public class AccountController {
   private final AccountService accountService;
 
   @GetMapping(value = "/{accountId}")
-  public AccountDTO getAccount(@PathVariable String accountId) {
+  public AccountDTO getAccount(@PathVariable final String accountId) {
     log.debug("Getting account: {}", accountId);
 
     val result = accountService.getAccount(accountId)
@@ -40,7 +44,7 @@ public class AccountController {
   }
 
   @DeleteMapping(value = "/{accountId}")
-  public ResponseEntity<String> deleteAccount(@PathVariable String accountId) {
+  public ResponseEntity<String> deleteAccount(@PathVariable final String accountId) {
     log.debug("Deleting account: {}:", accountId);
 
     val result = accountService.deleteAccount(accountId)
@@ -56,7 +60,7 @@ public class AccountController {
   }
 
   @PostMapping()
-  public ResponseEntity<String> createAccount(@RequestBody AccountRequest accountRequest) {
+  public ResponseEntity<String> createAccount(@RequestBody final AccountRequest accountRequest) {
     log.debug("Creating account with request: {}:", accountRequest);
 
     val accountCommand = AccountCommandMapper.toAccountCommand(accountRequest);
@@ -70,5 +74,26 @@ public class AccountController {
     }
 
     return new ResponseEntity<>(result.get().code, HttpStatus.CREATED);
+  }
+
+  @PutMapping()
+  public ResponseEntity<String> updateAccount(@RequestBody final AccountUpdateRequest accountUpdateRequest) {
+    log.debug("Updating account with request: {}:", accountUpdateRequest);
+
+    if (AccountId.isInvalid(accountUpdateRequest.getAccountId())) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "AccountId is invalid");
+    }
+
+    val accountUpdateCommand = AccountUpdateCommandMapper.toAccountUpdateCommand(accountUpdateRequest);
+    val result = accountService.updateAccount(accountUpdateCommand)
+        .mapLeft(WebControllerUtils::composeException)
+        .peekLeft(e -> log.warn("Failed updating account with request: {}, reason: {}", accountUpdateRequest, e.getMessage()))
+        .mapLeft(WebControllerUtils::normalizeError);
+
+    if (result.isLeft()) {
+      throw result.getLeft();
+    }
+
+    return new ResponseEntity<>("Account with id: " + accountUpdateRequest.getAccountId() + " was successfully updated", HttpStatus.OK);
   }
 }

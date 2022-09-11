@@ -12,11 +12,15 @@ public class AccountId {
   public final String code;
 
   public static AccountId of(final String accountId) {
-    if (accountId == null || accountId.length() != 36) {
+    if (isInvalid(accountId)) {
       log.error("AccountId cannot be created from wrong format string");
       throw new IllegalArgumentException();
     }
     return new AccountId(accountId);
+  }
+
+  public static boolean isInvalid(final String accountId) {
+    return accountId == null || accountId.length() != 36;
   }
 
   private AccountId(final String accountId) {

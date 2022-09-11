@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import pp.pl.io.savings.account.create.AccountCommand;
 import pp.pl.io.savings.account.create.NewAccount;
 import pp.pl.io.savings.account.id.UuidService;
+import pp.pl.io.savings.account.update.AccountUpdateCommand;
 import pp.pl.io.savings.exception.Error;
 import pp.pl.io.savings.organisation.SavingsSecurityService;
 
@@ -113,6 +114,19 @@ public class AccountService {
       return Either.right(newAccountId);
     } catch (final Throwable t) {
       log.warn("Failed creating account", t);
+      return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, t));
+    }
+  }
+
+  public Either<Error, Void> updateAccount(final AccountUpdateCommand accountUpdateCommand) {
+    try {
+      log.debug("Updating account: {}", accountUpdateCommand);
+
+      //todo: implement this method
+      return null;
+
+    } catch (final Throwable t) {
+      log.warn("Failed updating account", t);
       return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, t));
     }
   }

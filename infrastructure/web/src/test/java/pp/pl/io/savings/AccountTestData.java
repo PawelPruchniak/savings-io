@@ -44,7 +44,6 @@ public class AccountTestData {
       .currency(Currency.EUR.name())
       .balance(500.76)
       .build();
-
   public static final AccountRequest SAVINGS_ACCOUNT_MINIMUM_REQUEST = SavingsAccountRequest.builder()
       .currency(Currency.USD.name())
       .build();
@@ -57,10 +56,12 @@ public class AccountTestData {
       .currency(Currency.PLN.name())
       .balance(286.66)
       .build();
-
   public static final AccountUpdateRequest SAVINGS_ACCOUNT_MINIMUM_UPDATE_REQUEST = SavingsAccountUpdateRequest.builder()
       .accountId(UPDATED_SAVINGS_ACCOUNT_ID.code)
       .currency(Currency.EUR.name())
+      .build();
+  public static final AccountUpdateRequest SAVINGS_ACCOUNT_INVALID_ID_UPDATE_REQUEST = SavingsAccountUpdateRequest.builder()
+      .accountId("Some invalid id")
       .build();
 
   // User Account

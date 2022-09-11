@@ -140,7 +140,7 @@ class AccountControllerTest {
   }
 
   @Test
-  void shouldReturnProcessingErrorWhenAccountRequestIsNullForCreateAccount() {
+  void shouldReturnProcessingErrorWhenRequestIsNullForCreateAccount() {
     assertThrows(NullPointerException.class, () -> accountController.createAccount(null));
   }
 
@@ -184,5 +184,61 @@ class AccountControllerTest {
     // then
     assertThat(result)
         .isEqualTo(new ResponseEntity<>(CREATED_SAVINGS_ACCOUNT_ID.code, HttpStatus.CREATED));
+  }
+
+  @Test
+  void shouldReturnProcessingErrorWhenRequestIsNullForUpdateAccount() {
+    assertThrows(NullPointerException.class, () -> accountController.updateAccount(null));
+  }
+
+  @Test
+  void shouldReturnBadRequestWhenAccountIdIsInvalidForUpdateAccount() {
+    var exception =
+        assertThrows(ResponseStatusException.class, () -> accountController.updateAccount(SAVINGS_ACCOUNT_INVALID_ID_UPDATE_REQUEST));
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+    assertEquals("AccountId is invalid", exception.getReason());
+  }
+
+  @Test
+  void shouldReturnProcessingErrorForUpdateAccount() {
+    // given
+    when(accountService.updateAccount(any()))
+        .thenReturn(Either.left(ERROR_PROCESSING));
+
+    // when, then
+    var exception =
+        assertThrows(ResponseStatusException.class, () -> accountController.updateAccount(SAVINGS_ACCOUNT_UPDATE_REQUEST));
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatus());
+    assertEquals(ERROR_PROCESSING.getMessage(), exception.getReason());
+    assertEquals(ERROR_PROCESSING.getCause(), exception.getCause());
+  }
+
+  @Test
+  void shouldReturnIllegalArgumentErrorForUpdateAccount() {
+    // given
+    when(accountService.updateAccount(any()))
+        .thenReturn(Either.left(ERROR_ILLEGAL_ARGUMENT));
+
+    // when, then
+    var exception =
+        assertThrows(ResponseStatusException.class, () -> accountController.updateAccount(SAVINGS_ACCOUNT_UPDATE_REQUEST));
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+    assertEquals(ERROR_ILLEGAL_ARGUMENT.getMessage(), exception.getReason());
+    assertEquals(ERROR_ILLEGAL_ARGUMENT.getCause(), exception.getCause());
+  }
+
+  @Test
+  void shouldReturnOkForUpdateAccountSuccessfully() {
+    // given
+    when(accountService.updateAccount(any()))
+        .thenReturn(Either.right(null));
+
+    // when
+    val result = accountController.updateAccount(SAVINGS_ACCOUNT_UPDATE_REQUEST);
+
+    // then
+    assertThat(result)
+        .isEqualTo(new ResponseEntity<>("Account with id: " + UPDATED_SAVINGS_ACCOUNT_ID.code + " was successfully updated",
+            HttpStatus.OK));
   }
 }
