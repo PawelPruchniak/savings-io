@@ -2,8 +2,8 @@ package pp.pl.io.savings;
 
 import io.vavr.collection.List;
 import pp.pl.io.savings.account.*;
-import pp.pl.io.savings.account.command.AccountCommand;
-import pp.pl.io.savings.account.command.SavingsAccountCommand;
+import pp.pl.io.savings.account.create.AccountCommand;
+import pp.pl.io.savings.account.create.SavingsAccountCommand;
 import pp.pl.io.savings.organisation.UserId;
 
 import java.math.BigDecimal;

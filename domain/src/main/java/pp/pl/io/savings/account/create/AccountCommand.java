@@ -1,4 +1,4 @@
-package pp.pl.io.savings.account.command;
+package pp.pl.io.savings.account.create;
 
 import pp.pl.io.savings.account.AccountType;
 

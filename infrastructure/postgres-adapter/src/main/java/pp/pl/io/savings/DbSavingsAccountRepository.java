@@ -9,8 +9,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import pp.pl.io.savings.account.Account;
-import pp.pl.io.savings.account.command.SavingsAccountCommand;
 import pp.pl.io.savings.account.create.NewAccount;
+import pp.pl.io.savings.account.create.SavingsAccountCommand;
 
 import static pp.pl.io.savings.DbAccountRepository.*;
 import static pp.pl.io.savings.DbUserAccountRepository.USER_ID_CODE;

@@ -1,4 +1,4 @@
-package pp.pl.io.savings.mapper;
+package pp.pl.io.savings.mapper.create;
 
 import lombok.val;
 import org.junit.jupiter.api.Test;

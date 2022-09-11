@@ -1,12 +1,12 @@
-package pp.pl.io.savings.mapper;
+package pp.pl.io.savings.mapper.create;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import pp.pl.io.savings.account.AccountType;
 import pp.pl.io.savings.account.Currency;
-import pp.pl.io.savings.account.command.AccountCommand;
-import pp.pl.io.savings.account.command.SavingsAccountCommand;
+import pp.pl.io.savings.account.create.AccountCommand;
+import pp.pl.io.savings.account.create.SavingsAccountCommand;
 import pp.pl.io.savings.dto.request.create.AccountRequest;
 import pp.pl.io.savings.dto.request.create.SavingsAccountRequest;
 

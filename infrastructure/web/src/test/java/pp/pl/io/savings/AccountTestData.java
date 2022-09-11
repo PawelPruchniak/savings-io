@@ -4,6 +4,8 @@ import io.vavr.collection.List;
 import pp.pl.io.savings.account.*;
 import pp.pl.io.savings.dto.request.create.AccountRequest;
 import pp.pl.io.savings.dto.request.create.SavingsAccountRequest;
+import pp.pl.io.savings.dto.request.update.AccountUpdateRequest;
+import pp.pl.io.savings.dto.request.update.SavingsAccountUpdateRequest;
 import pp.pl.io.savings.dto.response.AccountDTO;
 import pp.pl.io.savings.dto.response.SavingsAccountDTO;
 import pp.pl.io.savings.dto.response.UserAccountDTO;
@@ -19,6 +21,7 @@ public class AccountTestData {
   public static final BigDecimal FOUR_DECIMAL_PLACE_VALUE = BigDecimal.valueOf(3.9876);
   public static final AccountId SAVINGS_ACCOUNT_ID = AccountId.of("00000001-e89b-42d3-a456-556642440000");
   public static final AccountId CREATED_SAVINGS_ACCOUNT_ID = AccountId.of("00000002-e89b-42d3-a456-556642440000");
+  public static final AccountId UPDATED_SAVINGS_ACCOUNT_ID = AccountId.of("00000003-e89b-42d3-a456-556642440000");
   public static final Account SAVINGS_ACCOUNT = SavingsAccount.builder()
       .accountId(SAVINGS_ACCOUNT_ID)
       .name("Savings account")
@@ -34,15 +37,30 @@ public class AccountTestData {
       .balance(501.10)
       .build();
 
+  // Create Request
   public static final AccountRequest SAVINGS_ACCOUNT_REQUEST = SavingsAccountRequest.builder()
       .name("Savings account")
       .description("Savings account description")
-      .currency("EUR")
+      .currency(Currency.EUR.name())
       .balance(500.76)
       .build();
 
   public static final AccountRequest SAVINGS_ACCOUNT_MINIMUM_REQUEST = SavingsAccountRequest.builder()
-      .currency("USD")
+      .currency(Currency.USD.name())
+      .build();
+
+  // Update Request
+  public static final AccountUpdateRequest SAVINGS_ACCOUNT_UPDATE_REQUEST = SavingsAccountUpdateRequest.builder()
+      .accountId(UPDATED_SAVINGS_ACCOUNT_ID.code)
+      .name("Updated savings account")
+      .description("Updated savings account description")
+      .currency(Currency.PLN.name())
+      .balance(286.66)
+      .build();
+
+  public static final AccountUpdateRequest SAVINGS_ACCOUNT_MINIMUM_UPDATE_REQUEST = SavingsAccountUpdateRequest.builder()
+      .accountId(UPDATED_SAVINGS_ACCOUNT_ID.code)
+      .currency(Currency.EUR.name())
       .build();
 
   // User Account

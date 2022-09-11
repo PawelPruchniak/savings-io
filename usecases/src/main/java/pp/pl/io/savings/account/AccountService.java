@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
-import pp.pl.io.savings.account.command.AccountCommand;
+import pp.pl.io.savings.account.create.AccountCommand;
 import pp.pl.io.savings.account.create.NewAccount;
 import pp.pl.io.savings.account.id.UuidService;
 import pp.pl.io.savings.exception.Error;
