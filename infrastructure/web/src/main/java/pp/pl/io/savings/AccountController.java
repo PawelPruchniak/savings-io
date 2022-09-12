@@ -81,7 +81,7 @@ public class AccountController {
     log.debug("Updating account with request: {}:", accountUpdateRequest);
 
     if (AccountId.isInvalid(accountUpdateRequest.getAccountId())) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "AccountId is invalid");
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account Id is invalid");
     }
 
     val accountUpdateCommand = AccountUpdateCommandMapper.toAccountUpdateCommand(accountUpdateRequest);

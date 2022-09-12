@@ -4,7 +4,6 @@ import io.vavr.control.Either;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.apache.commons.lang3.StringUtils;
 import pp.pl.io.savings.account.create.AccountCommand;
 import pp.pl.io.savings.account.create.NewAccount;
 import pp.pl.io.savings.account.id.UuidService;
@@ -24,9 +23,9 @@ public class AccountService {
     try {
       log.debug("Getting account: {}", accountIdCode);
 
-      if (StringUtils.isBlank(accountIdCode)) {
+      if (AccountId.isInvalid(accountIdCode)) {
         return Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT,
-            "Account id cannot be blank")
+            "Account Id is invalid")
         );
       }
       val accountId = AccountId.of(accountIdCode);
