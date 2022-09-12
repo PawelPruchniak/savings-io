@@ -48,7 +48,7 @@ class AccountServiceTest {
     val result = accountService.getAccount(null);
 
     assertEquals(
-        Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT, "Account id cannot be blank")),
+        Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT, "Account Id is invalid")),
         result
     );
   }
@@ -58,7 +58,17 @@ class AccountServiceTest {
     val result = accountService.getAccount("");
 
     assertEquals(
-        Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT, "Account id cannot be blank")),
+        Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT, "Account Id is invalid")),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnIllegalArgumentErrorWhenAccountIdIsInvalidForGetAccount() {
+    val result = accountService.getAccount(INVALID_ACCOUNT_ID);
+
+    assertEquals(
+        Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT, "Account Id is invalid")),
         result
     );
   }
@@ -143,7 +153,7 @@ class AccountServiceTest {
     val result = accountService.deleteAccount(null);
 
     assertEquals(
-        Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT, "Account id cannot be blank")),
+        Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT, "Account Id is invalid")),
         result
     );
   }
@@ -153,7 +163,7 @@ class AccountServiceTest {
     val result = accountService.deleteAccount("");
 
     assertEquals(
-        Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT, "Account id cannot be blank")),
+        Either.left(new Error(Error.ErrorCategory.ILLEGAL_ARGUMENT, "Account Id is invalid")),
         result
     );
   }

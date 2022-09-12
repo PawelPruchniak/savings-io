@@ -196,7 +196,7 @@ class AccountControllerTest {
     var exception =
         assertThrows(ResponseStatusException.class, () -> accountController.updateAccount(SAVINGS_ACCOUNT_INVALID_ID_UPDATE_REQUEST));
     assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
-    assertEquals("AccountId is invalid", exception.getReason());
+    assertEquals("Account Id is invalid", exception.getReason());
   }
 
   @Test

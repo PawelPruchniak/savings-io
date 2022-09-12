@@ -22,6 +22,7 @@ public class ServiceTestData {
   public static final BigDecimal SAVINGS_ACCOUNT_USD_VALUE = BigDecimal.valueOf(100.00);
   public static final BigDecimal SAVINGS_ACCOUNT_EUR_VALUE = BigDecimal.valueOf(176.22);
   public static final AccountId ACCOUNT_ID = AccountId.of("00000001-e89b-42d3-a456-556642440000");
+  public static final String INVALID_ACCOUNT_ID = "some account id";
   public static final Account SAVINGS_ACCOUNT = SavingsAccount.builder()
       .accountId(ACCOUNT_ID)
       .name("Savings account")
