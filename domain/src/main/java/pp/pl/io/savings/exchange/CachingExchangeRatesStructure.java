@@ -2,6 +2,8 @@ package pp.pl.io.savings.exchange;
 
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
+import io.vavr.control.Option;
+import io.vavr.control.Try;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import pp.pl.io.savings.organisation.AutoReloadingCache;
@@ -16,11 +18,13 @@ public class CachingExchangeRatesStructure implements AutoReloadingCache, Exchan
 
   private static final long RELOAD_INTERVAL_MILLISECONDS = 3_600_000;
 
+  private final ExchangeRatesService exchangeRatesService;
   private final AtomicReference<ExchangeRatesWithTimestamp> cachedExchangeRatesWithTimestamp;
   private final CountDownLatch exchangeRatesLoadedLatch = new CountDownLatch(1);
   private final Timer timer;
 
-  public CachingExchangeRatesStructure() {
+  public CachingExchangeRatesStructure(final ExchangeRatesService exchangeRatesService) {
+    this.exchangeRatesService = exchangeRatesService;
     this.cachedExchangeRatesWithTimestamp = new AtomicReference<>(
         new ExchangeRatesWithTimestamp(
             LocalDateTime.MIN,
@@ -28,6 +32,16 @@ public class CachingExchangeRatesStructure implements AutoReloadingCache, Exchan
         )
     );
     timer = scheduleAutoReloads(this, RELOAD_INTERVAL_MILLISECONDS, log, "exchange rates");
+  }
+
+  @Override
+  public Try<Option<Double>> getExchangeRatesMap(final ExchangePair exchangePair) {
+    return Try.of(() -> {
+      exchangeRatesLoadedLatch.await();
+      return cachedExchangeRatesWithTimestamp.get()
+          .exchangeRatesMap
+          .get(exchangePair);
+    });
   }
 
   @Override
@@ -42,8 +56,19 @@ public class CachingExchangeRatesStructure implements AutoReloadingCache, Exchan
         return;
       }
 
-      log.debug("CHECKING EXCHANGE RATES UPDATES");
-      //todo: add service for checking exchange rates
+      java.util.Map<ExchangePair, Double> newExchangeRatesMap = new java.util.HashMap<>();
+      for (ExchangePair exchangePair : ExchangePair.values()) {
+        var exchangeRate = exchangeRatesService.getExchangeRate(exchangePair.currencyFrom, exchangePair.currencyTo);
+        if (exchangeRate.isFailure() || exchangeRate.get().isEmpty()) {
+          log.warn("Could not get exchange rate for pair: {} to {}", exchangePair.currencyFrom.name(), exchangePair.currencyTo.name());
+        } else {
+          newExchangeRatesMap.put(exchangePair, exchangeRate.get().get());
+        }
+      }
+
+      cachedExchangeRatesWithTimestamp.set(
+          new ExchangeRatesWithTimestamp(lastChange, HashMap.ofAll(newExchangeRatesMap))
+      );
 
       exchangeRatesLoadedLatch.countDown();
       log.info("Cached new exchange rates, dated: {}", lastChange);
@@ -59,6 +84,6 @@ public class CachingExchangeRatesStructure implements AutoReloadingCache, Exchan
     timer.cancel();
   }
 
-  private record ExchangeRatesWithTimestamp(@NonNull LocalDateTime timestamp, @NonNull Map<String, Double> exchangeRatesMap) {
+  private record ExchangeRatesWithTimestamp(@NonNull LocalDateTime timestamp, @NonNull Map<ExchangePair, Double> exchangeRatesMap) {
   }
 }

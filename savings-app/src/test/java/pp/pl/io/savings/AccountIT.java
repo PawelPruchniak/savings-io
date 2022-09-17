@@ -13,6 +13,7 @@ import pp.pl.io.savings.account.Currency;
 import pp.pl.io.savings.dto.response.AccountDTO;
 import pp.pl.io.savings.dto.response.SavingsAccountDTO;
 import pp.pl.io.savings.dto.response.UserAccountDTO;
+import pp.pl.io.savings.exchange.ExchangeRatesStructure;
 import pp.pl.io.savings.organisation.SavingsSecurityService;
 
 import java.nio.charset.StandardCharsets;
@@ -23,6 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static pp.pl.io.savings.exchange.ExchangePair.USD_PLN;
+import static pp.pl.io.savings.utils.TestExchangeCalculator.calculateExchange;
+import static pp.pl.io.savings.utils.TestExchangeCalculator.roundValue;
 import static pp.pl.io.savings.utils.TestFileReader.fromFile;
 
 class AccountIT extends CommonIT {
@@ -32,6 +36,9 @@ class AccountIT extends CommonIT {
 
   @Autowired
   private SavingsSecurityService savingsSecurityService;
+
+  @Autowired
+  private ExchangeRatesStructure exchangeRatesStructure;
 
   public static final String SAVINGS_ACCOUNT_ID_1 = "00000001-e89b-42d3-a456-556642440000";
   public static final String SAVINGS_ACCOUNT_TO_DELETE_ID = "00000002-e89b-42d3-a456-556642440000";
@@ -60,9 +67,10 @@ class AccountIT extends CommonIT {
         .andReturn();
 
 
+    final Double totalBalance = roundValue(calculateExchange(exchangeRatesStructure, USD_PLN, 527.78) + 21.37 + 21.37 + 21.37);
     final UserAccountDTO expectedResult = UserAccountDTO.builder()
         .currency(Currency.PLN.name())
-        .totalBalance(2497.18)
+        .totalBalance(totalBalance)
         .subAccountsIds(List.of(
             SAVINGS_ACCOUNT_ID_1, SAVINGS_ACCOUNT_TO_DELETE_ID,
             SAVINGS_ACCOUNT_TO_UPDATE_ID, SAVINGS_ACCOUNT_TO_MIN_UPDATE_ID))
