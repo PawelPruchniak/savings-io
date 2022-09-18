@@ -32,7 +32,7 @@ public class UserAccountService {
       var optionUserAccount = userAccountRepository.fetchUserAccount(userId);
       if (optionUserAccount.isFailure()) {
         return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR,
-            "Cannot get user account")
+            "Cannot fetch user account")
         );
       }
 
@@ -45,7 +45,7 @@ public class UserAccountService {
       val accounts = accountRepository.fetchAccounts(userId);
       if (accounts.isFailure()) {
         return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR,
-            "Cannot get related accounts")
+            "Cannot fetch related accounts")
         );
       }
 

@@ -73,7 +73,7 @@ class UserAccountServiceTest {
     val result = userAccountService.getUserAccount();
 
     assertEquals(
-        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot get user account")),
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot fetch user account")),
         result
     );
   }
@@ -105,7 +105,7 @@ class UserAccountServiceTest {
     val result = userAccountService.getUserAccount();
 
     assertEquals(
-        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot get related accounts")),
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot fetch related accounts")),
         result
     );
   }

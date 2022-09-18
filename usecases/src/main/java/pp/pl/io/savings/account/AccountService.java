@@ -40,7 +40,7 @@ public class AccountService {
       val account = accountRepository.fetchAccount(accountId, userId);
       if (account.isFailure()) {
         return Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR,
-            "Cannot get account with id: " + accountId)
+            "Cannot fetch account with id: " + accountId)
         );
       }
 
