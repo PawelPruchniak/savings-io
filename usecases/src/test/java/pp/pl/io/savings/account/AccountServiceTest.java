@@ -86,7 +86,7 @@ class AccountServiceTest {
     val result = accountService.getAccount(ACCOUNT_ID.code);
 
     assertEquals(
-        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot get account with id: " + ACCOUNT_ID)),
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot fetch account with id: " + ACCOUNT_ID)),
         result
     );
   }
@@ -181,7 +181,7 @@ class AccountServiceTest {
     val result = accountService.deleteAccount(ACCOUNT_ID.code);
 
     assertEquals(
-        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot get account with id: " + ACCOUNT_ID)),
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot fetch account with id: " + ACCOUNT_ID)),
         result
     );
   }
@@ -355,7 +355,7 @@ class AccountServiceTest {
     val result = accountService.updateAccount(SAVINGS_ACCOUNT_UPDATE_COMMAND);
 
     assertEquals(
-        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot get account with id: " + ACCOUNT_ID)),
+        Either.left(new Error(Error.ErrorCategory.PROCESSING_ERROR, "Cannot fetch account with id: " + ACCOUNT_ID)),
         result
     );
   }
