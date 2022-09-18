@@ -9,14 +9,15 @@ import pp.pl.io.savings.account.UserAccountService;
 import pp.pl.io.savings.account.balance.BalanceService;
 import pp.pl.io.savings.account.balance.CurrencyService;
 import pp.pl.io.savings.account.id.UuidService;
+import pp.pl.io.savings.exchange.ExchangeRatesStructure;
 import pp.pl.io.savings.organisation.SavingsSecurityService;
 
 @Configuration
 public class UsecaseConfiguration {
 
   @Bean
-  CurrencyService currencyService() {
-    return new CurrencyService();
+  CurrencyService currencyService(final ExchangeRatesStructure exchangeRatesStructure) {
+    return new CurrencyService(exchangeRatesStructure);
   }
 
   @Bean

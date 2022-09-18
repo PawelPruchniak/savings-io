@@ -4,12 +4,20 @@ import io.vavr.collection.List;
 import org.junit.jupiter.api.Test;
 import pp.pl.io.savings.account.Currency;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static pp.pl.io.savings.ServiceTestData.*;
+import static pp.pl.io.savings.account.balance.ExchangeRateTestData.*;
 
 class BalanceServiceTest {
 
-  private final BalanceService balanceService = new BalanceService(new CurrencyService());
+  private final BalanceService balanceService =
+      new BalanceService(
+          new CurrencyService(
+              new TestExchangeRatesStructure(EXCHANGE_PAIR_VALUE_MAP)
+          )
+      );
 
   @Test
   void shouldCalculatePLNBalanceWithOnePLNSavingsAccount() {
@@ -22,7 +30,7 @@ class BalanceServiceTest {
   @Test
   void shouldCalculatePLNBalanceWithOneUSDSavingsAccount() {
     assertEquals(
-        SAVINGS_ACCOUNT_USD_VALUE.multiply(CurrencyService.ExchangeRatePicker.USD_PLN.exchangeRate),
+        SAVINGS_ACCOUNT_USD_VALUE.multiply(BigDecimal.valueOf(USD_PLN_VALUE)),
         balanceService.calculateTotalBalance(List.of(SAVINGS_ACCOUNT_USD), Currency.PLN)
     );
   }
@@ -38,7 +46,7 @@ class BalanceServiceTest {
   @Test
   void shouldCalculateUSDBalanceWithOnePLNSavingsAccount() {
     assertEquals(
-        SAVINGS_ACCOUNT_PLN_VALUE.multiply(CurrencyService.ExchangeRatePicker.PLN_USD.exchangeRate),
+        SAVINGS_ACCOUNT_PLN_VALUE.multiply(BigDecimal.valueOf(PLN_USD_VALUE)),
         balanceService.calculateTotalBalance(List.of(SAVINGS_ACCOUNT_PLN), Currency.USD)
     );
   }
@@ -47,7 +55,7 @@ class BalanceServiceTest {
   void shouldCalculatePLNBalanceWithFewSavingsAccounts() {
     assertEquals(
         SAVINGS_ACCOUNT_PLN_VALUE.add(
-            SAVINGS_ACCOUNT_USD_VALUE.multiply(CurrencyService.ExchangeRatePicker.USD_PLN.exchangeRate)),
+            SAVINGS_ACCOUNT_USD_VALUE.multiply(BigDecimal.valueOf(USD_PLN_VALUE))),
         balanceService.calculateTotalBalance(List.of(SAVINGS_ACCOUNT_PLN, SAVINGS_ACCOUNT_USD), Currency.PLN)
     );
   }
