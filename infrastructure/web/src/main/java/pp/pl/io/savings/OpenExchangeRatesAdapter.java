@@ -1,4 +1,4 @@
-package pp.pl.io.savings.exchange;
+package pp.pl.io.savings;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,6 +6,7 @@ import io.vavr.control.Option;
 import io.vavr.control.Try;
 import lombok.extern.slf4j.Slf4j;
 import pp.pl.io.savings.account.Currency;
+import pp.pl.io.savings.exchange.ExchangeRatesAdapter;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -24,7 +25,7 @@ import static java.time.temporal.ChronoUnit.SECONDS;
  * @see <a href="https://github.com/fawazahmed0/currency-api">Currency-Api</a>
  */
 @Slf4j
-public class OpenExchangeRatesService implements ExchangeRatesService {
+public class OpenExchangeRatesAdapter implements ExchangeRatesAdapter {
 
   private static final String REQUEST_PREFIX = "https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/";
   private static final String REQUEST_SUFFIX = ".json";
@@ -33,7 +34,7 @@ public class OpenExchangeRatesService implements ExchangeRatesService {
   @Override
   public Try<Option<Double>> getExchangeRate(final Currency currencyFrom, final Currency currencyTo) {
     return Try.of(() -> {
-          log.debug("Getting exchange rate for {} to {}", currencyFrom.name(), currencyTo.name());
+      log.debug("Getting exchange rate for {} to {}", currencyFrom.name(), currencyTo.name());
 
           HttpRequest httpRequest = createHttpRequest(currencyFrom, currencyTo);
 

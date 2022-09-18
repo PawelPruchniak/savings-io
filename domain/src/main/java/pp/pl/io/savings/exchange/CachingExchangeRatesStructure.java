@@ -18,13 +18,13 @@ public class CachingExchangeRatesStructure implements AutoReloadingCache, Exchan
 
   private static final long RELOAD_INTERVAL_MILLISECONDS = 3_600_000;
 
-  private final ExchangeRatesService exchangeRatesService;
+  private final ExchangeRatesAdapter exchangeRatesAdapter;
   private final AtomicReference<ExchangeRatesWithTimestamp> cachedExchangeRatesWithTimestamp;
   private final CountDownLatch exchangeRatesLoadedLatch = new CountDownLatch(1);
   private final Timer timer;
 
-  public CachingExchangeRatesStructure(final ExchangeRatesService exchangeRatesService) {
-    this.exchangeRatesService = exchangeRatesService;
+  public CachingExchangeRatesStructure(final ExchangeRatesAdapter exchangeRatesAdapter) {
+    this.exchangeRatesAdapter = exchangeRatesAdapter;
     this.cachedExchangeRatesWithTimestamp = new AtomicReference<>(
         new ExchangeRatesWithTimestamp(
             LocalDateTime.MIN,
@@ -56,9 +56,9 @@ public class CachingExchangeRatesStructure implements AutoReloadingCache, Exchan
         return;
       }
 
-      java.util.Map<ExchangePair, Double> newExchangeRatesMap = new java.util.HashMap<>();
+      java.util.Map<ExchangePair, Double> newExchangeRatesMap = new java.util.EnumMap<>(ExchangePair.class);
       for (ExchangePair exchangePair : ExchangePair.values()) {
-        var exchangeRate = exchangeRatesService.getExchangeRate(exchangePair.currencyFrom, exchangePair.currencyTo);
+        var exchangeRate = exchangeRatesAdapter.getExchangeRate(exchangePair.currencyFrom, exchangePair.currencyTo);
         if (exchangeRate.isFailure() || exchangeRate.get().isEmpty()) {
           log.warn("Could not get exchange rate for pair: {} to {}", exchangePair.currencyFrom.name(), exchangePair.currencyTo.name());
         } else {
