@@ -22,12 +22,6 @@ public class SavingsAccount implements Account {
   @NonNull
   BigDecimal balance = BigDecimal.ZERO;
 
-
-  @Override
-  public BigDecimal getValue() {
-    return balance;
-  }
-
   @Override
   public AccountType getAccountType() {
     return AccountType.SAVINGS;

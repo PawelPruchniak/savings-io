@@ -47,4 +47,14 @@ public class CurrencyService {
     return exchangeRatesStructure.getExchangeRatesMap(exchangePair);
   }
 
+  public BigDecimal recalculateStocksValue(final BigDecimal quantity,
+                                           final String stockCode,
+                                           final Currency currencyTo) {
+    log.debug("Recalculating stocks: {}, amount: {}, to {}", stockCode, quantity, currencyTo);
+
+    //todo: Implement this method for Investment Account,
+    // maybe join this two methods after created Asset Class for all asset types
+    return BigDecimal.ZERO;
+  }
+
 }

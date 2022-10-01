@@ -25,24 +25,37 @@ public class AccountResultSetExtractor implements ResultSetExtractor<List<Accoun
   }
 
   @SneakyThrows
-  private Account extractAccount(ResultSet rs) {
+  private Account extractAccount(final ResultSet rs) {
     var accountType = rs.getString("a_account_type");
 
-    if (accountType.equals(AccountType.SAVINGS.name())) {
-      return extractSavingsAccount(rs);
-    }
-
-    throw new IllegalArgumentException("Unknown account type: " + accountType);
+    return switch (accountType) {
+      case "SAVINGS" -> extractSavingsAccount(rs);
+      case "INVESTMENT" -> extractInvestmentAccount(rs);
+      default -> throw new IllegalArgumentException("Unknown account type: " + accountType);
+    };
   }
 
   @SneakyThrows
-  private SavingsAccount extractSavingsAccount(ResultSet rs) {
+  private SavingsAccount extractSavingsAccount(final ResultSet rs) {
     return SavingsAccount.builder()
         .accountId(AccountId.of(rs.getString("a_account_id")))
         .name(rs.getString("a_name"))
         .description(rs.getString("a_description"))
         .currency(Currency.valueOf(rs.getString("sa_currency")))
         .balance(rs.getBigDecimal("sa_balance"))
+        .build();
+  }
+
+  @SneakyThrows
+  private InvestmentAccount extractInvestmentAccount(final ResultSet rs) {
+    return InvestmentAccount.builder()
+        .accountId(AccountId.of(rs.getString("a_account_id")))
+        .name(rs.getString("a_name"))
+        .description(rs.getString("a_description"))
+        .asset(rs.getString("ia_asset"))
+        .assetQuantity(rs.getBigDecimal("ia_asset_quantity"))
+        .currencyInvested(Currency.valueOf(rs.getString("ia_currency_invested")))
+        .amountInvested(rs.getBigDecimal("ia_amount_invested"))
         .build();
   }
 }

@@ -6,8 +6,7 @@ import pp.pl.io.savings.account.Currency;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static pp.pl.io.savings.AccountTestData.SAVINGS_ACCOUNT;
-import static pp.pl.io.savings.AccountTestData.SAVINGS_ACCOUNT_ID;
+import static pp.pl.io.savings.AccountTestData.*;
 
 class AccountDtoMapperTest {
 
@@ -27,6 +26,23 @@ class AccountDtoMapperTest {
         .hasFieldOrPropertyWithValue("currency", Currency.PLN.name())
         .hasFieldOrPropertyWithValue("balance", 501.10)
         .hasFieldOrPropertyWithValue("accountType", "SAVINGS");
+  }
+
+  @Test
+  void shouldMapInvestmentAccountGPWCorrectly() {
+    val accountDTO = AccountDtoMapper.toAccountDTO(INVESTMENT_ACCOUNT);
+
+    assertThat(accountDTO)
+        .hasFieldOrPropertyWithValue("accountId", INVESTMENT_ACCOUNT_ID.code)
+        .hasFieldOrPropertyWithValue("name", "Investment account")
+        .hasFieldOrPropertyWithValue("description", "Some description")
+        .hasFieldOrPropertyWithValue("asset", "GPW")
+        .hasFieldOrPropertyWithValue("assetQuantity", 20.0)
+        .hasFieldOrPropertyWithValue("currencyInvested", Currency.PLN.name())
+        .hasFieldOrPropertyWithValue("amountInvested", 3.99)
+        .hasFieldOrPropertyWithValue("investmentResultValue", 0.0)
+        .hasFieldOrPropertyWithValue("investmentResultPercentage", 0.0)
+        .hasFieldOrPropertyWithValue("accountType", "INVESTMENT");
   }
 
 }

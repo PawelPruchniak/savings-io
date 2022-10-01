@@ -83,6 +83,19 @@ class AccountControllerTest {
   }
 
   @Test
+  void shouldReturnInvestmentAccountDTOSuccessfully() {
+    // given
+    when(accountService.getAccount(INVESTMENT_ACCOUNT_ID.code))
+        .thenReturn(Either.right(INVESTMENT_ACCOUNT));
+
+    // when
+    val result = accountController.getAccount(INVESTMENT_ACCOUNT_ID.code);
+
+    // then
+    assertThat(result).isEqualTo(INVESTMENT_ACCOUNT_DTO);
+  }
+
+  @Test
   void shouldReturnProcessingErrorForDeleteAccount() {
     // given
     when(accountService.deleteAccount(any()))

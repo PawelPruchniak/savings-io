@@ -11,6 +11,7 @@ import static pp.pl.io.savings.account.balance.ExchangeRateTestData.*;
 class CurrencyServiceTest {
 
   private static final BigDecimal SOME_VALUE = BigDecimal.valueOf(250.59);
+  private static final BigDecimal SOME_STOCKS_QUANTITY = BigDecimal.valueOf(20);
   private final CurrencyService currencyService = new CurrencyService(
       new TestExchangeRatesStructure(EXCHANGE_PAIR_VALUE_MAP)
   );
@@ -83,4 +84,35 @@ class CurrencyServiceTest {
     );
   }
 
+  //todo: Add some tests for stocks calculation
+
+  @Test
+  void shouldRecalculateStocksToEurSuccessfully() {
+    assertEquals(
+        BigDecimal.ZERO,
+        currencyService.recalculateStocksValue(
+            SOME_STOCKS_QUANTITY, "GPW", Currency.EUR
+        )
+    );
+  }
+
+  @Test
+  void shouldRecalculateStocksToPlnSuccessfully() {
+    assertEquals(
+        BigDecimal.ZERO,
+        currencyService.recalculateStocksValue(
+            SOME_STOCKS_QUANTITY, "GPW", Currency.PLN
+        )
+    );
+  }
+
+  @Test
+  void shouldRecalculateStocksToUsdSuccessfully() {
+    assertEquals(
+        BigDecimal.ZERO,
+        currencyService.recalculateStocksValue(
+            SOME_STOCKS_QUANTITY, "GPW", Currency.USD
+        )
+    );
+  }
 }
