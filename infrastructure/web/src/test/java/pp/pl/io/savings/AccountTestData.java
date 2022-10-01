@@ -45,6 +45,7 @@ public class AccountTestData {
       .balance(500.76)
       .build();
   public static final AccountRequest SAVINGS_ACCOUNT_MINIMUM_REQUEST = SavingsAccountRequest.builder()
+      .name("Minimal savings account")
       .currency(Currency.USD.name())
       .build();
 
@@ -57,6 +58,7 @@ public class AccountTestData {
       .balance(286.66)
       .build();
   public static final AccountUpdateRequest SAVINGS_ACCOUNT_MINIMUM_UPDATE_REQUEST = SavingsAccountUpdateRequest.builder()
+      .name("Minimal savings account")
       .accountId(UPDATED_SAVINGS_ACCOUNT_ID.code)
       .currency(Currency.EUR.name())
       .build();

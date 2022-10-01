@@ -12,7 +12,7 @@ import pp.pl.io.savings.account.Currency;
 @EqualsAndHashCode
 public class SavingsAccountCommand implements AccountCommand {
 
-  String name;
+  @NonNull String name;
   String description;
   @NonNull Currency currency;
   @NonNull Double balance;

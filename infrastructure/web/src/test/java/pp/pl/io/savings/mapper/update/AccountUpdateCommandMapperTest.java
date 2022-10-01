@@ -34,6 +34,7 @@ class AccountUpdateCommandMapperTest {
     val accountCommand = AccountUpdateCommandMapper.toAccountUpdateCommand(SAVINGS_ACCOUNT_MINIMUM_UPDATE_REQUEST);
 
     assertThat(accountCommand)
+        .hasFieldOrPropertyWithValue("name", "Minimal savings account")
         .hasFieldOrPropertyWithValue("accountId", UPDATED_SAVINGS_ACCOUNT_ID)
         .hasFieldOrPropertyWithValue("currency", Currency.EUR)
         .hasFieldOrPropertyWithValue("balance", 0.0)
