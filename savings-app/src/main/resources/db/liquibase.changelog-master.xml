@@ -10,4 +10,5 @@
   <include file="db/changelog/liquibase.changelog-003-user-account.xml"/>
   <include file="db/changelog/liquibase.changelog-004-account.xml"/>
   <include file="db/changelog/liquibase.changelog-005-savings-account.xml"/>
+  <include file="db/changelog/liquibase.changelog-006-investment-account.xml"/>
 </databaseChangeLog>
