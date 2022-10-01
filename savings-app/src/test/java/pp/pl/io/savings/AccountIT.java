@@ -169,6 +169,7 @@ class AccountIT extends CommonIT {
 
     final AccountDTO getExpectedResult = SavingsAccountDTO.builder()
         .accountId(createdAccountId)
+        .name("Minimal savings account")
         .currency(Currency.EUR.name())
         .balance(0.0)
         .build();
@@ -235,6 +236,7 @@ class AccountIT extends CommonIT {
 
     final AccountDTO getExpectedResult = SavingsAccountDTO.builder()
         .accountId(SAVINGS_ACCOUNT_TO_MIN_UPDATE_ID)
+        .name("Changed minimal savings account")
         .currency(Currency.EUR.name())
         .balance(0.0)
         .build();

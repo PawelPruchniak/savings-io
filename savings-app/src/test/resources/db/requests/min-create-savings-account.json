@@ -1,4 +1,5 @@
 {
+  "name": "Minimal savings account",
   "currency": "EUR",
   "accountType": "SAVINGS"
 }

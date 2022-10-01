@@ -14,7 +14,7 @@ import pp.pl.io.savings.account.Currency;
 public class SavingsAccountUpdateCommand implements AccountUpdateCommand {
 
   @NonNull AccountId accountId;
-  String name;
+  @NonNull String name;
   String description;
   @NonNull Currency currency;
   @NonNull Double balance;

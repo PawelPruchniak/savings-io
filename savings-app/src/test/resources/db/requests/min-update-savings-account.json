@@ -1,5 +1,6 @@
 {
   "accountId": "00000004-e89b-42d3-a456-556642440000",
+  "name": "Changed minimal savings account",
   "currency": "EUR",
   "accountType": "SAVINGS"
 }
