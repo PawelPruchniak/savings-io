@@ -6,7 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.EnumUtils;
-import pp.pl.io.savings.account.Currency;
+import pp.pl.io.savings.account.asset.Asset;
+import pp.pl.io.savings.account.asset.Currency;
 import pp.pl.io.savings.exchange.ExchangePair;
 import pp.pl.io.savings.exchange.ExchangeRatesStructure;
 
@@ -19,42 +20,37 @@ public class CurrencyService {
   private final ExchangeRatesStructure exchangeRatesStructure;
 
   public BigDecimal recalculateValue(final BigDecimal value,
-                                     final Currency currencyFrom,
+                                     final Asset assetFrom,
                                      final Currency currencyTo) {
-    log.debug("Recalculating value from {} to {}, with base value: {}", currencyFrom.name(), currencyTo.name(), value);
+    log.debug("Recalculating value from: {} with type: {} to: {}, with base value: {}", assetFrom.getCode(),
+        assetFrom.getType(), currencyTo.getCode(), value);
 
-    if (currencyFrom.equals(currencyTo)) {
+    if (assetFrom.equals(currencyTo)) {
       return value;
     }
 
-    if (!EnumUtils.isValidEnum(ExchangePair.class, currencyFrom.name() + "_" + currencyTo.name())) {
-      log.warn("Could not recalculate value for {} to {}, because that exchange pair doesn't exists",
-          currencyFrom.name(), currencyTo.name());
+    if (!EnumUtils.isValidEnum(ExchangePair.class, assetFrom.getCode() + "_" + currencyTo.getCode())) {
+      log.error("Could not recalculate value for {} to {}, because that exchange pair doesn't exists",
+          assetFrom.getCode(), currencyTo.getCode());
       return value;
     }
 
-    val exchangeRate = getExchangeRate(currencyFrom, currencyTo);
+    val exchangeRate = getExchangeRate(assetFrom, currencyTo);
     if (exchangeRate.isFailure() || exchangeRate.get().isEmpty()) {
-      log.warn("Could not get exchange rate for {} to {}, from structure", currencyFrom.name(), currencyTo.name());
+      log.warn("Could not get exchange rate for {} to {}, from structure", assetFrom.getCode(), currencyTo.getCode());
       return value;
     }
 
     return value.multiply(BigDecimal.valueOf(exchangeRate.get().get()));
   }
 
-  private Try<Option<Double>> getExchangeRate(Currency currencyFrom, Currency currencyTo) {
-    val exchangePair = ExchangePair.valueOf(currencyFrom.name() + "_" + currencyTo.name());
+  private Try<Option<Double>> getExchangeRate(final Asset assetFrom, final Currency currencyTo) {
+    final ExchangePair exchangePair = ExchangePair.valueOf(composeExchangeRateName(assetFrom, currencyTo));
     return exchangeRatesStructure.getExchangeRatesMap(exchangePair);
   }
 
-  public BigDecimal recalculateStocksValue(final BigDecimal quantity,
-                                           final String stockCode,
-                                           final Currency currencyTo) {
-    log.debug("Recalculating stocks: {}, amount: {}, to {}", stockCode, quantity, currencyTo);
-
-    //todo: Implement this method for Investment Account,
-    // maybe join this two methods after created Asset Class for all asset types
-    return BigDecimal.ZERO;
+  private String composeExchangeRateName(final Asset assetFrom, final Currency currencyTo) {
+    return assetFrom.getCode() + "_" + currencyTo.getCode();
   }
 
 }

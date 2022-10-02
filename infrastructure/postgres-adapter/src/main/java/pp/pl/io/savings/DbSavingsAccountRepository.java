@@ -72,7 +72,7 @@ public class DbSavingsAccountRepository {
                   "values (:accountId, :currency, :balance)",
               new MapSqlParameterSource()
                   .addValue(ACCOUNT_ID_CODE, newSavingsAccount.newAccountId().code)
-                  .addValue(CURRENCY_CODE, createCommand.getCurrency().name())
+                  .addValue(CURRENCY_CODE, createCommand.getCurrency().getCode())
                   .addValue(BALANCE_CODE, createCommand.getBalance())
           );
         }
@@ -102,7 +102,7 @@ public class DbSavingsAccountRepository {
                   "    balance =:" + BALANCE_CODE + " " +
                   "where account_id =:" + ACCOUNT_ID_CODE,
               new MapSqlParameterSource()
-                  .addValue(CURRENCY_CODE, updateCommand.getCurrency().name())
+                  .addValue(CURRENCY_CODE, updateCommand.getCurrency().getCode())
                   .addValue(BALANCE_CODE, updateCommand.getBalance())
                   .addValue(ACCOUNT_ID_CODE, updateCommand.getAccountId().code)
           );

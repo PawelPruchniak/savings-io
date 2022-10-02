@@ -1,7 +1,8 @@
 package pp.pl.io.savings.account.balance;
 
 import org.junit.jupiter.api.Test;
-import pp.pl.io.savings.account.Currency;
+import pp.pl.io.savings.account.asset.Currency;
+import pp.pl.io.savings.account.asset.Stocks;
 
 import java.math.BigDecimal;
 
@@ -84,35 +85,27 @@ class CurrencyServiceTest {
     );
   }
 
-  //todo: Add some tests for stocks calculation
-
   @Test
   void shouldRecalculateStocksToEurSuccessfully() {
     assertEquals(
-        BigDecimal.ZERO,
-        currencyService.recalculateStocksValue(
-            SOME_STOCKS_QUANTITY, "GPW", Currency.EUR
-        )
+        SOME_STOCKS_QUANTITY.multiply(BigDecimal.valueOf(GPW_EUR_VALUE)),
+        currencyService.recalculateValue(SOME_STOCKS_QUANTITY, Stocks.GPW, Currency.EUR)
     );
   }
 
   @Test
   void shouldRecalculateStocksToPlnSuccessfully() {
     assertEquals(
-        BigDecimal.ZERO,
-        currencyService.recalculateStocksValue(
-            SOME_STOCKS_QUANTITY, "GPW", Currency.PLN
-        )
+        SOME_STOCKS_QUANTITY.multiply(BigDecimal.valueOf(GPW_PLN_VALUE)),
+        currencyService.recalculateValue(SOME_STOCKS_QUANTITY, Stocks.GPW, Currency.PLN)
     );
   }
 
   @Test
   void shouldRecalculateStocksToUsdSuccessfully() {
     assertEquals(
-        BigDecimal.ZERO,
-        currencyService.recalculateStocksValue(
-            SOME_STOCKS_QUANTITY, "GPW", Currency.USD
-        )
+        SOME_STOCKS_QUANTITY.multiply(BigDecimal.valueOf(GPW_USD_VALUE)),
+        currencyService.recalculateValue(SOME_STOCKS_QUANTITY, Stocks.GPW, Currency.USD)
     );
   }
 }

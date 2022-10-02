@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.Value;
 import pp.pl.io.savings.account.AccountType;
-import pp.pl.io.savings.account.Currency;
+import pp.pl.io.savings.account.asset.Currency;
 
 @Value
 @Builder

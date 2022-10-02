@@ -5,7 +5,12 @@ import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
-import pp.pl.io.savings.account.*;
+import pp.pl.io.savings.account.Account;
+import pp.pl.io.savings.account.AccountId;
+import pp.pl.io.savings.account.InvestmentAccount;
+import pp.pl.io.savings.account.SavingsAccount;
+import pp.pl.io.savings.account.asset.Currency;
+import pp.pl.io.savings.account.asset.Stocks;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -41,7 +46,7 @@ public class AccountResultSetExtractor implements ResultSetExtractor<List<Accoun
         .accountId(AccountId.of(rs.getString("a_account_id")))
         .name(rs.getString("a_name"))
         .description(rs.getString("a_description"))
-        .currency(Currency.valueOf(rs.getString("sa_currency")))
+        .currency(Currency.of(rs.getString("sa_currency")))
         .balance(rs.getBigDecimal("sa_balance"))
         .build();
   }
@@ -52,9 +57,9 @@ public class AccountResultSetExtractor implements ResultSetExtractor<List<Accoun
         .accountId(AccountId.of(rs.getString("a_account_id")))
         .name(rs.getString("a_name"))
         .description(rs.getString("a_description"))
-        .asset(rs.getString("ia_asset"))
+        .asset(Stocks.of(rs.getString("ia_asset")))
         .assetQuantity(rs.getBigDecimal("ia_asset_quantity"))
-        .currencyInvested(Currency.valueOf(rs.getString("ia_currency_invested")))
+        .currencyInvested(Currency.of(rs.getString("ia_currency_invested")))
         .amountInvested(rs.getBigDecimal("ia_amount_invested"))
         .build();
   }

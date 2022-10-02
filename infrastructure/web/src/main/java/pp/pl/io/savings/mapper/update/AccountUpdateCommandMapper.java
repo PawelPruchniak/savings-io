@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import pp.pl.io.savings.account.AccountId;
 import pp.pl.io.savings.account.AccountType;
-import pp.pl.io.savings.account.Currency;
+import pp.pl.io.savings.account.asset.Currency;
 import pp.pl.io.savings.account.update.AccountUpdateCommand;
 import pp.pl.io.savings.account.update.SavingsAccountUpdateCommand;
 import pp.pl.io.savings.dto.request.update.AccountUpdateRequest;
@@ -28,7 +28,7 @@ public class AccountUpdateCommandMapper {
         .accountId(AccountId.of(savingsAccountRequest.getAccountId()))
         .name(savingsAccountRequest.getName())
         .description(savingsAccountRequest.getDescription())
-        .currency(Currency.valueOf(savingsAccountRequest.getCurrency()))
+        .currency(Currency.of(savingsAccountRequest.getCurrency()))
         .balance(savingsAccountRequest.getBalance() != null ? savingsAccountRequest.getBalance() : DEFAULT_BALANCE_VALUE)
         .build();
   }

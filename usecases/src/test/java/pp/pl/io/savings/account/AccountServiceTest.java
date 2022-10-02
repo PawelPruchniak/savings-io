@@ -9,6 +9,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import pp.pl.io.savings.account.asset.Currency;
+import pp.pl.io.savings.account.balance.BalanceService;
 import pp.pl.io.savings.account.create.NewAccount;
 import pp.pl.io.savings.account.id.UuidService;
 import pp.pl.io.savings.exception.Error;
@@ -27,6 +29,8 @@ class AccountServiceTest {
   private SavingsSecurityService savingsSecurityService;
   @Mock
   private UuidService uuidService;
+  @Mock
+  private BalanceService balanceService;
   @InjectMocks
   private AccountService accountService;
 
@@ -127,6 +131,24 @@ class AccountServiceTest {
 
     assertEquals(
         Either.right(SAVINGS_ACCOUNT),
+        result
+    );
+  }
+
+  @Test
+  void shouldReturnInvestmentAccountSuccessfully() {
+    when(savingsSecurityService.getUserId())
+        .thenReturn(SOME_USER_ID);
+    when(accountRepository.fetchAccount(ACCOUNT_ID, SOME_USER_ID))
+        .thenReturn(Try.of(() -> Option.of(INVESTMENT_ACCOUNT_GPW_PLN)));
+    when(balanceService.calculateBalance(INVESTMENT_ACCOUNT_GPW_PLN, Currency.PLN))
+        .thenReturn(INVESTMENT_ACCOUNT_PLN_INVEST_RESULT);
+
+    val result = accountService.getAccount(ACCOUNT_ID.code);
+
+    //todo: change this test
+    assertEquals(
+        Either.right(INVESTMENT_ACCOUNT_GPW_PLN_RECALCULATED),
         result
     );
   }
@@ -245,6 +267,8 @@ class AccountServiceTest {
     );
   }
 
+  //todo: create test for delete Investment Account
+
   @Test
   void shouldReturnIllegalArgumentErrorWhenAccountCommandIsNullForCreateAccount() {
     val result = accountService.createAccount(null);
@@ -314,6 +338,8 @@ class AccountServiceTest {
         result
     );
   }
+
+  //todo: create test for create Investment Account
 
   @Test
   void shouldReturnProcessingErrorForUpdateAccount() {
@@ -419,4 +445,6 @@ class AccountServiceTest {
         result
     );
   }
+
+  //todo: create test for update Investment Account
 }
