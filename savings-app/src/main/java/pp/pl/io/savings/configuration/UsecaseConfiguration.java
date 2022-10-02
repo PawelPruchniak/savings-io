@@ -41,7 +41,8 @@ public class UsecaseConfiguration {
   @Bean
   AccountService accountService(final AccountRepository accountRepository,
                                 final SavingsSecurityService savingsSecurityService,
-                                final UuidService uuidService) {
-    return new AccountService(accountRepository, savingsSecurityService, uuidService);
+                                final UuidService uuidService,
+                                final BalanceService balanceService) {
+    return new AccountService(accountRepository, savingsSecurityService, uuidService, balanceService);
   }
 }

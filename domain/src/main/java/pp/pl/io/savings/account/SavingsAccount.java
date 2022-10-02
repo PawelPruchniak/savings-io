@@ -3,6 +3,7 @@ package pp.pl.io.savings.account;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
+import pp.pl.io.savings.account.asset.Currency;
 
 import java.math.BigDecimal;
 

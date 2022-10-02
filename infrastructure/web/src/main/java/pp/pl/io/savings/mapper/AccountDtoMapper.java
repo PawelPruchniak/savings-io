@@ -25,7 +25,7 @@ public class AccountDtoMapper {
         .accountId(savingsAccount.getAccountId().code)
         .name(savingsAccount.getName())
         .description(savingsAccount.getDescription())
-        .currency(savingsAccount.getCurrency().name())
+        .currency(savingsAccount.getCurrency().getCode())
         .balance(DoubleMapper.roundDouble(savingsAccount.getBalance()))
         .build();
   }
@@ -35,9 +35,9 @@ public class AccountDtoMapper {
         .accountId(investmentAccount.getAccountId().code)
         .name(investmentAccount.getName())
         .description(investmentAccount.getDescription())
-        .asset(investmentAccount.getAsset())
+        .asset(investmentAccount.getAsset().getCode())
         .assetQuantity(investmentAccount.getAssetQuantity().doubleValue())
-        .currencyInvested(investmentAccount.getCurrencyInvested().name())
+        .currencyInvested(investmentAccount.getCurrencyInvested().getCode())
         .amountInvested(DoubleMapper.roundDouble(investmentAccount.getAmountInvested()))
         .investmentResultValue(DoubleMapper.roundDouble(investmentAccount.getInvestmentResultValue()))
         .investmentResultPercentage(DoubleMapper.roundDouble(investmentAccount.getInvestmentResultPercentage()))

@@ -2,7 +2,8 @@ package pp.pl.io.savings.mapper;
 
 import lombok.val;
 import org.junit.jupiter.api.Test;
-import pp.pl.io.savings.account.Currency;
+import pp.pl.io.savings.account.asset.Currency;
+import pp.pl.io.savings.account.asset.Stocks;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -23,7 +24,7 @@ class AccountDtoMapperTest {
         .hasFieldOrPropertyWithValue("accountId", SAVINGS_ACCOUNT_ID.code)
         .hasFieldOrPropertyWithValue("name", "Savings account")
         .hasFieldOrPropertyWithValue("description", "Some description")
-        .hasFieldOrPropertyWithValue("currency", Currency.PLN.name())
+        .hasFieldOrPropertyWithValue("currency", Currency.PLN.getCode())
         .hasFieldOrPropertyWithValue("balance", 501.10)
         .hasFieldOrPropertyWithValue("accountType", "SAVINGS");
   }
@@ -36,10 +37,11 @@ class AccountDtoMapperTest {
         .hasFieldOrPropertyWithValue("accountId", INVESTMENT_ACCOUNT_ID.code)
         .hasFieldOrPropertyWithValue("name", "Investment account")
         .hasFieldOrPropertyWithValue("description", "Some description")
-        .hasFieldOrPropertyWithValue("asset", "GPW")
+        .hasFieldOrPropertyWithValue("asset", Stocks.GPW.getCode())
         .hasFieldOrPropertyWithValue("assetQuantity", 20.0)
-        .hasFieldOrPropertyWithValue("currencyInvested", Currency.PLN.name())
+        .hasFieldOrPropertyWithValue("currencyInvested", Currency.PLN.getCode())
         .hasFieldOrPropertyWithValue("amountInvested", 3.99)
+        //todo: change this investmentResultValue
         .hasFieldOrPropertyWithValue("investmentResultValue", 0.0)
         .hasFieldOrPropertyWithValue("investmentResultPercentage", 0.0)
         .hasFieldOrPropertyWithValue("accountType", "INVESTMENT");

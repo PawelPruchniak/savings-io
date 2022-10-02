@@ -3,7 +3,7 @@ package pp.pl.io.savings.mapper.create;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import pp.pl.io.savings.account.AccountType;
-import pp.pl.io.savings.account.Currency;
+import pp.pl.io.savings.account.asset.Currency;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
