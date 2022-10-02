@@ -2,7 +2,7 @@ package pp.pl.io.savings.organisation;
 
 import io.vavr.collection.Set;
 
-public interface SavingsSecurityService {
+public interface SecurityService {
 
   UserId getUserId();
 

@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import pp.pl.io.savings.account.balance.BalanceService;
 import pp.pl.io.savings.exception.Error;
-import pp.pl.io.savings.organisation.SavingsSecurityService;
+import pp.pl.io.savings.organisation.SecurityService;
 
 @Slf4j
 @AllArgsConstructor
@@ -16,7 +16,7 @@ public class UserAccountService {
   private final UserAccountRepository userAccountRepository;
   private final AccountRepository accountRepository;
   private final BalanceService balanceService;
-  private final SavingsSecurityService savingsSecurityService;
+  private final SecurityService savingsSecurityService;
 
   public Either<Error, UserAccount> getUserAccount() {
     try {

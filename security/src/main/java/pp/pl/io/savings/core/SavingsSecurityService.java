@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import pp.pl.io.savings.organisation.SavingsSecurityService;
+import pp.pl.io.savings.organisation.SecurityService;
 import pp.pl.io.savings.organisation.UserId;
 import pp.pl.io.savings.organisation.UserRepository;
 import pp.pl.io.savings.organisation.UserRole;
@@ -16,7 +16,7 @@ import pp.pl.io.savings.organisation.UserRole;
 import java.util.Optional;
 
 @AllArgsConstructor
-public class SavingsSecurityServiceImplementation implements SavingsSecurityService {
+public class SavingsSecurityService implements SecurityService {
 
   private final UserRepository userRepository;
 

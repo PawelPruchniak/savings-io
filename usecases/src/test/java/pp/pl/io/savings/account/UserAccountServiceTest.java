@@ -15,7 +15,7 @@ import pp.pl.io.savings.account.balance.BalanceService;
 import pp.pl.io.savings.account.balance.CurrencyService;
 import pp.pl.io.savings.account.balance.TestExchangeRatesStructure;
 import pp.pl.io.savings.exception.Error;
-import pp.pl.io.savings.organisation.SavingsSecurityService;
+import pp.pl.io.savings.organisation.SecurityService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -33,7 +33,7 @@ class UserAccountServiceTest {
   @Spy
   private final BalanceService balanceService = new BalanceService(currencyService);
   @Mock
-  SavingsSecurityService savingsSecurityService;
+  SecurityService savingsSecurityService;
   @InjectMocks
   UserAccountService userAccountService;
 

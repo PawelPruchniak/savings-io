@@ -14,7 +14,7 @@ import pp.pl.io.savings.account.balance.BalanceService;
 import pp.pl.io.savings.account.create.NewAccount;
 import pp.pl.io.savings.account.id.UuidService;
 import pp.pl.io.savings.exception.Error;
-import pp.pl.io.savings.organisation.SavingsSecurityService;
+import pp.pl.io.savings.organisation.SecurityService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -26,7 +26,7 @@ class AccountServiceTest {
   @Mock
   private AccountRepository accountRepository;
   @Mock
-  private SavingsSecurityService savingsSecurityService;
+  private SecurityService savingsSecurityService;
   @Mock
   private UuidService uuidService;
   @Mock

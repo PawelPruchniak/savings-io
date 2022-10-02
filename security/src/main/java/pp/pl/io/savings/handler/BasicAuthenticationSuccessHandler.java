@@ -16,6 +16,8 @@ import java.util.stream.Stream;
 @Configuration
 public class BasicAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
+  //todo: delete this class
+
   private static final String MAIN_PAGE_URL = "/api/user-account";
 
   @Override

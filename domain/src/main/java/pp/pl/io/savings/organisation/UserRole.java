@@ -1,9 +1,8 @@
 package pp.pl.io.savings.organisation;
 
-import lombok.Getter;
 import org.apache.commons.lang3.Validate;
 
-public record UserRole(@Getter String code) {
+public record UserRole(String code) {
 
   public static UserRole of(final String code) {
     return new UserRole(code);

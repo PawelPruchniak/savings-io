@@ -6,8 +6,8 @@ import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
 
-@Builder
 @Value
+@Builder
 public class UserWithRoles {
 
   @NonNull

@@ -51,6 +51,23 @@
 
     <!-- Other dependencies -->
     <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-api</artifactId>
+      <version>0.11.5</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if Gson is preferred -->
+      <version>0.11.5</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-gson</artifactId> <!-- or jjwt-gson if Gson is preferred -->
+      <version>0.11.5</version>
+    </dependency>
+    <dependency>
       <groupId>com.github.ulisesbocchio</groupId>
       <artifactId>jasypt-spring-boot-starter</artifactId>
       <version>${jasypt.version}</version>

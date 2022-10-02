@@ -15,7 +15,7 @@ import pp.pl.io.savings.dto.response.InvestmentAccountDTO;
 import pp.pl.io.savings.dto.response.SavingsAccountDTO;
 import pp.pl.io.savings.dto.response.UserAccountDTO;
 import pp.pl.io.savings.exchange.ExchangeRatesStructure;
-import pp.pl.io.savings.organisation.SavingsSecurityService;
+import pp.pl.io.savings.organisation.SecurityService;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -36,7 +36,7 @@ class AccountIT extends CommonIT {
   @Autowired
   private MockMvc mockMvc;
   @Autowired
-  private SavingsSecurityService savingsSecurityService;
+  private SecurityService savingsSecurityService;
   @Autowired
   private ExchangeRatesStructure exchangeRatesStructure;
 

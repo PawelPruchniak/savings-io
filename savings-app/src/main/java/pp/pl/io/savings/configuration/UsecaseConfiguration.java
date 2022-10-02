@@ -10,7 +10,7 @@ import pp.pl.io.savings.account.balance.BalanceService;
 import pp.pl.io.savings.account.balance.CurrencyService;
 import pp.pl.io.savings.account.id.UuidService;
 import pp.pl.io.savings.exchange.ExchangeRatesStructure;
-import pp.pl.io.savings.organisation.SavingsSecurityService;
+import pp.pl.io.savings.organisation.SecurityService;
 
 @Configuration
 public class UsecaseConfiguration {
@@ -29,7 +29,7 @@ public class UsecaseConfiguration {
   UserAccountService userAccountService(final UserAccountRepository userAccountRepository,
                                         final AccountRepository accountRepository,
                                         final BalanceService balanceService,
-                                        final SavingsSecurityService savingsSecurityService) {
+                                        final SecurityService savingsSecurityService) {
     return new UserAccountService(userAccountRepository, accountRepository, balanceService, savingsSecurityService);
   }
 
@@ -40,7 +40,7 @@ public class UsecaseConfiguration {
 
   @Bean
   AccountService accountService(final AccountRepository accountRepository,
-                                final SavingsSecurityService savingsSecurityService,
+                                final SecurityService savingsSecurityService,
                                 final UuidService uuidService,
                                 final BalanceService balanceService) {
     return new AccountService(accountRepository, savingsSecurityService, uuidService, balanceService);

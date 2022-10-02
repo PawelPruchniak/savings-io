@@ -24,13 +24,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class SavingsSecurityServiceImplementationTest {
+class SavingsSecurityServiceTest {
 
   @Mock
   UserRepository userRepository;
 
   @InjectMocks
-  private SavingsSecurityServiceImplementation savingsSecurityService;
+  private SavingsSecurityService savingsSecurityService;
 
   private static final UserDetails USER_DETAILS = User.builder()
       .username("some-user-email@gmail.com")

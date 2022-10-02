@@ -10,7 +10,7 @@ import pp.pl.io.savings.account.create.NewAccount;
 import pp.pl.io.savings.account.id.UuidService;
 import pp.pl.io.savings.account.update.AccountUpdateCommand;
 import pp.pl.io.savings.exception.Error;
-import pp.pl.io.savings.organisation.SavingsSecurityService;
+import pp.pl.io.savings.organisation.SecurityService;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -20,7 +20,7 @@ import java.math.RoundingMode;
 public class AccountService {
 
   private final AccountRepository accountRepository;
-  private final SavingsSecurityService savingsSecurityService;
+  private final SecurityService savingsSecurityService;
   private final UuidService uuidService;
   private final BalanceService balanceService;
 
