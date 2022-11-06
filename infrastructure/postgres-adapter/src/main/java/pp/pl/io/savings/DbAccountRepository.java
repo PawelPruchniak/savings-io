@@ -33,12 +33,18 @@ public class DbAccountRepository implements AccountRepository {
     this.savingsAccountRepository = new DbSavingsAccountRepository(jdbcTemplate);
   }
 
-  private static final String SELECT_SAVINGS_ACCOUNT =
+  private static final String SELECT_ACCOUNTS =
       "select a.id as a_account_id, a.name as a_name, a.description as a_description, " +
           "a.account_type as a_account_type, " +
-          "sa.currency as sa_currency, sa.balance as sa_balance " +
+
+          "sa.currency as sa_currency, sa.balance as sa_balance, " +
+
+          "ia.asset as ia_asset, ia.asset_quantity as ia_asset_quantity, " +
+          "ia.currency_invested as ia_currency_invested, ia.amount_invested as ia_amount_invested " +
+
           "from account a " +
-          "left outer join savings_account sa on a.id = sa.account_id ";
+          "left outer join savings_account sa on a.id = sa.account_id " +
+          "left outer join investment_account ia on a.id = ia.account_id";
 
   protected static final String ACCOUNT_ID_CODE = "accountId";
   protected static final String NAME_CODE = "name";
@@ -48,24 +54,24 @@ public class DbAccountRepository implements AccountRepository {
   @Override
   public Try<Option<Account>> fetchAccount(final AccountId accountId, final UserId userId) {
     return Try.of(() -> {
-      log.debug("Fetching account with id: {} for user with id: {}", accountId, userId);
-      Validate.notNull(accountId);
-      Validate.notNull(userId);
+          log.debug("Fetching account with id: {} for user with id: {}", accountId, userId);
+          Validate.notNull(accountId);
+          Validate.notNull(userId);
 
-      return Option.of(
-              List.ofAll(
-                  Objects.requireNonNull(
-                      jdbcTemplate.query(
-                          SELECT_SAVINGS_ACCOUNT + "\n" +
-                              "where a.id =:" + ACCOUNT_ID_CODE + "\n" +
-                              "and a.user_id =:" + USER_ID_CODE,
-                          new MapSqlParameterSource()
-                              .addValue(ACCOUNT_ID_CODE, accountId.code)
-                              .addValue(USER_ID_CODE, userId.code),
-                          accountResultSetExtractor
+          return Option.of(
+                  List.ofAll(
+                      Objects.requireNonNull(
+                          jdbcTemplate.query(
+                              SELECT_ACCOUNTS + "\n" +
+                                  "where a.id =:" + ACCOUNT_ID_CODE + "\n" +
+                                  "and a.user_id =:" + USER_ID_CODE,
+                              new MapSqlParameterSource()
+                                  .addValue(ACCOUNT_ID_CODE, accountId.code)
+                                  .addValue(USER_ID_CODE, userId.code),
+                              accountResultSetExtractor
+                          )
                       )
                   )
-              )
               )
               .getOrElse(List.empty())
               .headOption();
@@ -83,7 +89,7 @@ public class DbAccountRepository implements AccountRepository {
               List.ofAll(
                   Objects.requireNonNull(
                       jdbcTemplate.query(
-                          SELECT_SAVINGS_ACCOUNT + "\n" +
+                          SELECT_ACCOUNTS + "\n" +
                               "where a.user_id =:" + USER_ID_CODE,
                           new MapSqlParameterSource()
                               .addValue(USER_ID_CODE, userId.code),

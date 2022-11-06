@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+  <changeSet id="006-001" author="ppruchniak">
+    <comment>Investment Account table</comment>
+    <createTable tableName="investment_account" tablespace="${data-tablespace}">
+      <column name="account_id" type="VARCHAR(256)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="asset" type="VARCHAR(64)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="asset_quantity" type="INT" defaultOnNull="true" defaultValueNumeric="0">
+        <constraints nullable="false"/>
+      </column>
+      <column name="currency_invested" type="VARCHAR(64)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="amount_invested" type="FLOAT(2)" defaultOnNull="true" defaultValueNumeric="0.00">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <createIndex tableName="investment_account"
+                 indexName="investment_account_account_id_idx"
+                 tablespace="${index-tablespace}">
+      <column name="account_id"/>
+    </createIndex>
+    <addPrimaryKey tableName="investment_account"
+                   columnNames="account_id"
+                   constraintName="investment_account_account_id_pk"/>
+    <addForeignKeyConstraint baseTableName="investment_account"
+                             baseColumnNames="currency_invested"
+                             constraintName="investment_account_currency_fk"
+                             referencedTableName="currency"
+                             referencedColumnNames="code"
+                             deferrable="false"
+                             initiallyDeferred="false"
+                             onDelete="RESTRICT"
+                             onUpdate="RESTRICT"
+                             validate="true"/>
+  </changeSet>
+  <changeSet id="005-002" author="ppruchniak">
+    <comment>Add INVESTMENT account type</comment>
+    <insert tableName="account_type">
+      <column name="code" value="INVESTMENT"/>
+    </insert>
+  </changeSet>
+
+</databaseChangeLog>

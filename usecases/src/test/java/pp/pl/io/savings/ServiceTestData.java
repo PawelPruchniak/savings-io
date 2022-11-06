@@ -21,6 +21,8 @@ public class ServiceTestData {
   public static final BigDecimal SAVINGS_ACCOUNT_PLN_VALUE = BigDecimal.valueOf(111.11);
   public static final BigDecimal SAVINGS_ACCOUNT_USD_VALUE = BigDecimal.valueOf(100.00);
   public static final BigDecimal SAVINGS_ACCOUNT_EUR_VALUE = BigDecimal.valueOf(176.22);
+  public static final BigDecimal INVESTMENT_ACCOUNT_GPW_QUANTITY = BigDecimal.valueOf(20);
+  public static final BigDecimal INVESTMENT_ACCOUNT_PLN_INVEST = BigDecimal.valueOf(602.22);
   public static final AccountId ACCOUNT_ID = AccountId.of("00000001-e89b-42d3-a456-556642440000");
   public static final String INVALID_ACCOUNT_ID = "some account id";
   public static final Account SAVINGS_ACCOUNT = SavingsAccount.builder()
@@ -43,6 +45,15 @@ public class ServiceTestData {
       .description("Some description")
       .currency(Currency.USD)
       .balance(SAVINGS_ACCOUNT_USD_VALUE)
+      .build();
+  public static final Account INVESTMENT_ACCOUNT_STOCKS = InvestmentAccount.builder()
+      .accountId(ACCOUNT_ID)
+      .name("Investment account")
+      .description("Some description")
+      .asset("GPW")
+      .assetQuantity(INVESTMENT_ACCOUNT_GPW_QUANTITY)
+      .currencyInvested(Currency.PLN)
+      .amountInvested(INVESTMENT_ACCOUNT_PLN_INVEST)
       .build();
 
   // Create

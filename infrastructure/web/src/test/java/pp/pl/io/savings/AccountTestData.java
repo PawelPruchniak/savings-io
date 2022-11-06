@@ -7,6 +7,7 @@ import pp.pl.io.savings.dto.request.create.SavingsAccountRequest;
 import pp.pl.io.savings.dto.request.update.AccountUpdateRequest;
 import pp.pl.io.savings.dto.request.update.SavingsAccountUpdateRequest;
 import pp.pl.io.savings.dto.response.AccountDTO;
+import pp.pl.io.savings.dto.response.InvestmentAccountDTO;
 import pp.pl.io.savings.dto.response.SavingsAccountDTO;
 import pp.pl.io.savings.dto.response.UserAccountDTO;
 import pp.pl.io.savings.exception.Error;
@@ -22,32 +23,54 @@ public class AccountTestData {
   public static final AccountId SAVINGS_ACCOUNT_ID = AccountId.of("00000001-e89b-42d3-a456-556642440000");
   public static final AccountId CREATED_SAVINGS_ACCOUNT_ID = AccountId.of("00000002-e89b-42d3-a456-556642440000");
   public static final AccountId UPDATED_SAVINGS_ACCOUNT_ID = AccountId.of("00000003-e89b-42d3-a456-556642440000");
+  public static final AccountId INVESTMENT_ACCOUNT_ID = AccountId.of("00000004-e89b-42d3-a456-556642440000");
   public static final Account SAVINGS_ACCOUNT = SavingsAccount.builder()
-      .accountId(SAVINGS_ACCOUNT_ID)
-      .name("Savings account")
-      .description("Some description")
-      .currency(Currency.PLN)
-      .balance(ONE_DECIMAL_PLACE_VALUE)
-      .build();
+          .accountId(SAVINGS_ACCOUNT_ID)
+          .name("Savings account")
+          .description("Some description")
+          .currency(Currency.PLN)
+          .balance(ONE_DECIMAL_PLACE_VALUE)
+          .build();
   public static final AccountDTO SAVINGS_ACCOUNT_DTO = SavingsAccountDTO.builder()
-      .accountId(SAVINGS_ACCOUNT_ID.code)
-      .name("Savings account")
-      .description("Some description")
-      .currency(Currency.PLN.name())
-      .balance(501.10)
-      .build();
+          .accountId(SAVINGS_ACCOUNT_ID.code)
+          .name("Savings account")
+          .description("Some description")
+          .currency(Currency.PLN.name())
+          .balance(501.10)
+          .build();
+
+  public static final Account INVESTMENT_ACCOUNT = InvestmentAccount.builder()
+          .accountId(INVESTMENT_ACCOUNT_ID)
+          .name("Investment account")
+          .description("Some description")
+          .asset("GPW")
+          .assetQuantity(BigDecimal.valueOf(20.0))
+          .currencyInvested(Currency.PLN)
+          .amountInvested(FOUR_DECIMAL_PLACE_VALUE)
+          .build();
+  public static final AccountDTO INVESTMENT_ACCOUNT_DTO = InvestmentAccountDTO.builder()
+          .accountId(INVESTMENT_ACCOUNT_ID.code)
+          .name("Investment account")
+          .description("Some description")
+          .asset("GPW")
+          .assetQuantity(20.0)
+          .currencyInvested(Currency.PLN.name())
+          .amountInvested(3.99)
+          .investmentResultValue(0.0)
+          .investmentResultPercentage(0.0)
+          .build();
 
   // Create Request
   public static final AccountRequest SAVINGS_ACCOUNT_REQUEST = SavingsAccountRequest.builder()
-      .name("Savings account")
-      .description("Savings account description")
-      .currency(Currency.EUR.name())
-      .balance(500.76)
-      .build();
+          .name("Savings account")
+          .description("Savings account description")
+          .currency(Currency.EUR.name())
+          .balance(500.76)
+          .build();
   public static final AccountRequest SAVINGS_ACCOUNT_MINIMUM_REQUEST = SavingsAccountRequest.builder()
-      .name("Minimal savings account")
-      .currency(Currency.USD.name())
-      .build();
+          .name("Minimal savings account")
+          .currency(Currency.USD.name())
+          .build();
 
   // Update Request
   public static final AccountUpdateRequest SAVINGS_ACCOUNT_UPDATE_REQUEST = SavingsAccountUpdateRequest.builder()

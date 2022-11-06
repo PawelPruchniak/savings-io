@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import pp.pl.io.savings.account.Currency;
 import pp.pl.io.savings.dto.response.AccountDTO;
+import pp.pl.io.savings.dto.response.InvestmentAccountDTO;
 import pp.pl.io.savings.dto.response.SavingsAccountDTO;
 import pp.pl.io.savings.dto.response.UserAccountDTO;
 import pp.pl.io.savings.exchange.ExchangeRatesStructure;
@@ -63,7 +64,8 @@ class AccountIT extends CommonIT {
         .totalBalance(totalBalance)
         .subAccountsIds(List.of(
             SAVINGS_ACCOUNT_ID_1, SAVINGS_ACCOUNT_TO_DELETE_ID,
-            SAVINGS_ACCOUNT_TO_UPDATE_ID, SAVINGS_ACCOUNT_TO_MIN_UPDATE_ID))
+            SAVINGS_ACCOUNT_TO_UPDATE_ID, SAVINGS_ACCOUNT_TO_MIN_UPDATE_ID,
+            INVESTMENT_ACCOUNT_ID_1))
         .build();
 
     assertThat(result.getResponse().getContentAsString(StandardCharsets.UTF_8))
@@ -245,5 +247,32 @@ class AccountIT extends CommonIT {
         .isEqualTo("Account with id: " + SAVINGS_ACCOUNT_TO_MIN_UPDATE_ID + " was successfully updated");
     assertThat(getResult.getResponse().getContentAsString(StandardCharsets.UTF_8))
         .isEqualToIgnoringWhitespace(OBJECT_MAPPER.writeValueAsString(getExpectedResult));
+  }
+
+  @Test
+  @Order(9)
+  void getInvestmentAccountTest() throws Exception {
+    final ResultActions resultActions = mockMvc.perform(get("/api/account/" + INVESTMENT_ACCOUNT_ID_1));
+
+    final MvcResult result = resultActions
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+        .andReturn();
+
+
+    final AccountDTO expectedResult = InvestmentAccountDTO.builder()
+        .accountId(INVESTMENT_ACCOUNT_ID_1)
+        .name("Investment account - GPW")
+        .description("investment account description")
+        .asset("GPW")
+        .assetQuantity(20.0)
+        .currencyInvested(Currency.PLN.name())
+        .amountInvested(626.25)
+        .investmentResultValue(0.0)
+        .investmentResultPercentage(0.0)
+        .build();
+
+    assertThat(result.getResponse().getContentAsString(StandardCharsets.UTF_8))
+        .isEqualToIgnoringWhitespace(OBJECT_MAPPER.writeValueAsString(expectedResult));
   }
 }

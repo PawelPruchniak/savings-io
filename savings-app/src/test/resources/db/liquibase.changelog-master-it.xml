@@ -31,4 +31,8 @@
     <sqlFile path="db/scripts/savings-account-for-min-update.sql"/>
   </changeSet>
 
+  <changeSet id="investment-account.sql" author="savings-integration-tests">
+    <sqlFile path="db/scripts/investment-account.sql"/>
+  </changeSet>
+
 </databaseChangeLog>
