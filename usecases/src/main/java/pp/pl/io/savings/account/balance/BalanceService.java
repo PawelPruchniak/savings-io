@@ -3,9 +3,9 @@ package pp.pl.io.savings.account.balance;
 import io.vavr.collection.List;
 import lombok.AllArgsConstructor;
 import pp.pl.io.savings.account.Account;
-import pp.pl.io.savings.account.Currency;
 import pp.pl.io.savings.account.InvestmentAccount;
 import pp.pl.io.savings.account.SavingsAccount;
+import pp.pl.io.savings.account.asset.Currency;
 
 import java.math.BigDecimal;
 
@@ -21,7 +21,7 @@ public class BalanceService {
         .getOrElse(BigDecimal.ZERO);
   }
 
-  private BigDecimal calculateBalance(final Account account, final Currency mainCurrency) {
+  public BigDecimal calculateBalance(final Account account, final Currency mainCurrency) {
     return switch (account.getAccountType()) {
       case SAVINGS -> calculateSavingsBalance((SavingsAccount) account, mainCurrency);
       case INVESTMENT -> calculateInvestmentBalance((InvestmentAccount) account, mainCurrency);
@@ -33,6 +33,6 @@ public class BalanceService {
   }
 
   private BigDecimal calculateInvestmentBalance(final InvestmentAccount investmentAccount, final Currency mainCurrency) {
-    return currencyService.recalculateStocksValue(investmentAccount.getAssetQuantity(), investmentAccount.getAsset(), mainCurrency);
+    return currencyService.recalculateValue(investmentAccount.getAssetQuantity(), investmentAccount.getAsset(), mainCurrency);
   }
 }

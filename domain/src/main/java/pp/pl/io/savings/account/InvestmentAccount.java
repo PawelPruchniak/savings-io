@@ -3,11 +3,13 @@ package pp.pl.io.savings.account;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
+import pp.pl.io.savings.account.asset.Asset;
+import pp.pl.io.savings.account.asset.Currency;
 
 import java.math.BigDecimal;
 
 @Value
-@Builder
+@Builder(toBuilder = true)
 public class InvestmentAccount implements Account {
 
   @NonNull AccountId accountId;
@@ -16,15 +18,13 @@ public class InvestmentAccount implements Account {
 
   String description;
 
-  @NonNull String asset;
+  @NonNull Asset asset;
 
-  @Builder.Default
-  @NonNull BigDecimal assetQuantity = BigDecimal.ZERO;
+  @NonNull BigDecimal assetQuantity;
 
   @NonNull Currency currencyInvested;
 
-  @Builder.Default
-  @NonNull BigDecimal amountInvested = BigDecimal.ZERO;
+  @NonNull BigDecimal amountInvested;
 
   @Builder.Default
   @NonNull BigDecimal investmentResultValue = BigDecimal.ZERO;

@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import pp.pl.io.savings.account.AccountType;
-import pp.pl.io.savings.account.Currency;
+import pp.pl.io.savings.account.asset.Currency;
 import pp.pl.io.savings.account.create.AccountCommand;
 import pp.pl.io.savings.account.create.SavingsAccountCommand;
 import pp.pl.io.savings.dto.request.create.AccountRequest;
@@ -26,7 +26,7 @@ public class AccountCommandMapper {
     return SavingsAccountCommand.builder()
         .name(savingsAccountRequest.getName())
         .description(savingsAccountRequest.getDescription())
-        .currency(Currency.valueOf(savingsAccountRequest.getCurrency()))
+        .currency(Currency.of(savingsAccountRequest.getCurrency()))
         .balance(savingsAccountRequest.getBalance() != null ? savingsAccountRequest.getBalance() : DEFAULT_BALANCE_VALUE)
         .build();
   }

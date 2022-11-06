@@ -8,9 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.Validate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import pp.pl.io.savings.account.Currency;
 import pp.pl.io.savings.account.UserAccount;
 import pp.pl.io.savings.account.UserAccountRepository;
+import pp.pl.io.savings.account.asset.Currency;
 import pp.pl.io.savings.organisation.UserId;
 
 import java.math.BigDecimal;
@@ -37,7 +37,7 @@ public class DbUserAccountRepository implements UserAccountRepository {
                           new MapSqlParameterSource()
                               .addValue(USER_ID_CODE, userId.code),
                           (rs, i) -> UserAccount.builder()
-                              .currency(Currency.valueOf(rs.getString("main_currency")))
+                              .currency(Currency.of(rs.getString("main_currency")))
                               .totalBalance(BigDecimal.ZERO)
                               .build()
                       )

@@ -9,7 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import pp.pl.io.savings.account.Currency;
+import pp.pl.io.savings.account.asset.Currency;
 import pp.pl.io.savings.dto.response.AccountDTO;
 import pp.pl.io.savings.dto.response.InvestmentAccountDTO;
 import pp.pl.io.savings.dto.response.SavingsAccountDTO;
@@ -60,7 +60,7 @@ class AccountIT extends CommonIT {
 
     final Double totalBalance = roundValue(calculateExchange(exchangeRatesStructure, USD_PLN, 527.78) + 21.37 + 21.37 + 21.37);
     final UserAccountDTO expectedResult = UserAccountDTO.builder()
-        .currency(Currency.PLN.name())
+        .currency(Currency.PLN.getCode())
         .totalBalance(totalBalance)
         .subAccountsIds(List.of(
             SAVINGS_ACCOUNT_ID_1, SAVINGS_ACCOUNT_TO_DELETE_ID,
@@ -87,7 +87,7 @@ class AccountIT extends CommonIT {
         .accountId(SAVINGS_ACCOUNT_ID_1)
         .name("first bank account")
         .description("savings account description")
-        .currency(Currency.USD.name())
+        .currency(Currency.USD.getCode())
         .balance(527.78)
         .build();
 
@@ -138,7 +138,7 @@ class AccountIT extends CommonIT {
         .accountId(createdAccountId)
         .name("Savings account")
         .description("Savings account description")
-        .currency(Currency.PLN.name())
+        .currency(Currency.PLN.getCode())
         .balance(250.55)
         .build();
 
@@ -172,7 +172,7 @@ class AccountIT extends CommonIT {
     final AccountDTO getExpectedResult = SavingsAccountDTO.builder()
         .accountId(createdAccountId)
         .name("Minimal savings account")
-        .currency(Currency.EUR.name())
+        .currency(Currency.EUR.getCode())
         .balance(0.0)
         .build();
 
@@ -206,7 +206,7 @@ class AccountIT extends CommonIT {
         .accountId(SAVINGS_ACCOUNT_TO_UPDATE_ID)
         .name("Updated savings account")
         .description("Updated savings account description")
-        .currency(Currency.USD.name())
+        .currency(Currency.USD.getCode())
         .balance(10.55)
         .build();
 
@@ -239,7 +239,7 @@ class AccountIT extends CommonIT {
     final AccountDTO getExpectedResult = SavingsAccountDTO.builder()
         .accountId(SAVINGS_ACCOUNT_TO_MIN_UPDATE_ID)
         .name("Changed minimal savings account")
-        .currency(Currency.EUR.name())
+        .currency(Currency.EUR.getCode())
         .balance(0.0)
         .build();
 
@@ -266,10 +266,11 @@ class AccountIT extends CommonIT {
         .description("investment account description")
         .asset("GPW")
         .assetQuantity(20.0)
-        .currencyInvested(Currency.PLN.name())
+        .currencyInvested(Currency.PLN.getCode())
         .amountInvested(626.25)
-        .investmentResultValue(0.0)
-        .investmentResultPercentage(0.0)
+        //todo: change this investmentResultValue when getting real investmentResultValue
+        .investmentResultValue(-626.25)
+        .investmentResultPercentage(-100.0)
         .build();
 
     assertThat(result.getResponse().getContentAsString(StandardCharsets.UTF_8))
