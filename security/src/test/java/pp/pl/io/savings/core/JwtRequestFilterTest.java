@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -38,6 +39,7 @@ class JwtRequestFilterTest {
   @BeforeEach
   void clearAuthContext() {
     log.info("setting auth to null");
+    SecurityContextHolder.setContext(new SecurityContextImpl());
     SecurityContextHolder.getContext().setAuthentication(null);
   }
 
