@@ -2,7 +2,6 @@ package pp.pl.io.savings.core;
 
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +21,6 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@Slf4j
 @ExtendWith(MockitoExtension.class)
 class JwtRequestFilterTest {
 
@@ -38,9 +36,7 @@ class JwtRequestFilterTest {
 
   @BeforeEach
   void clearAuthContext() {
-    log.info("setting auth to null");
     SecurityContextHolder.setContext(new SecurityContextImpl());
-    SecurityContextHolder.getContext().setAuthentication(null);
   }
 
   @Test
@@ -88,8 +84,6 @@ class JwtRequestFilterTest {
   }
 
   private boolean userIsAuthenticated() {
-    var auth = SecurityContextHolder.getContext().getAuthentication();
-    log.info("auth [" + auth + "]");
-    return auth != null;
+    return SecurityContextHolder.getContext().getAuthentication() != null;
   }
 }
