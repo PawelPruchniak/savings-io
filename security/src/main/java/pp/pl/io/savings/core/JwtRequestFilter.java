@@ -59,6 +59,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         SecurityContextHolder
             .getContext()
             .setAuthentication(authToken);
+        log.debug("User [" + userDetails.getUsername() + "] successfully authenticated via JWT");
       } else {
         log.warn("Token is not valid");
       }

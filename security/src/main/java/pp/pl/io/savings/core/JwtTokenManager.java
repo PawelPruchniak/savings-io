@@ -23,6 +23,7 @@ public class JwtTokenManager implements Serializable {
   private final Key secretKey;
 
   public String generateToken(final String username) {
+    //todo: maybe refactor to Try<>
     return Jwts
         .builder()
         .setClaims(new HashMap<>())
@@ -49,6 +50,7 @@ public class JwtTokenManager implements Serializable {
   }
 
   public String getUsernameFromToken(final String token) {
+    //todo: maybe refactor to Try<>
     return Jwts.parserBuilder()
         .setSigningKey(secretKey)
         .build()
