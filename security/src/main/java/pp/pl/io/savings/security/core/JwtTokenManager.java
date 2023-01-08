@@ -2,6 +2,7 @@ package pp.pl.io.savings.security.core;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import io.vavr.control.Try;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,13 +50,12 @@ public class JwtTokenManager implements Serializable {
     }
   }
 
-  public String getUsernameFromToken(final String token) {
-    //todo: maybe refactor to Try<>
-    return Jwts.parserBuilder()
+  public Try<String> getUsernameFromToken(final String token) {
+    return Try.of(() -> Jwts.parserBuilder()
         .setSigningKey(secretKey)
         .build()
         .parseClaimsJws(token)
         .getBody()
-        .getSubject();
+        .getSubject());
   }
 }

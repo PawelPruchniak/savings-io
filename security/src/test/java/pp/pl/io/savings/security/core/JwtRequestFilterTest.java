@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.User;
@@ -54,6 +55,31 @@ class JwtRequestFilterTest {
 
     assertDoesNotThrow(() -> jwtRequestFilter.doFilterInternal(httpServletRequest, httpServletResponse, filterChain));
     assertFalse(userIsAuthenticated());
+    verify(userDetailsService, never()).loadUserByUsername(anyString());
+  }
+
+  @Test
+  void shouldFilterRequestWithAuthHeaderAndNotAuthenticateBecauseOfInvalidToken() {
+    final String jwtToken = jwtTokenManager.generateToken(SOME_USERNAME);
+    when(httpServletRequest.getHeader("Authorization"))
+        .thenReturn("Bearer " + jwtToken + "invalid");
+
+    assertDoesNotThrow(() -> jwtRequestFilter.doFilterInternal(httpServletRequest, httpServletResponse, filterChain));
+    assertFalse(userIsAuthenticated());
+    verify(userDetailsService, never()).loadUserByUsername(anyString());
+  }
+
+  @Test
+  void shouldFilterRequestWithAuthHeaderAndNotAuthenticateBecauseAlreadyAuthenticated() {
+    final String jwtToken = jwtTokenManager.generateToken(SOME_USERNAME);
+    when(httpServletRequest.getHeader("Authorization"))
+        .thenReturn("Bearer " + jwtToken);
+    final UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(SOME_USERNAME, null,
+        Collections.emptySet());
+    SecurityContextHolder.getContext().setAuthentication(authToken);
+
+    assertDoesNotThrow(() -> jwtRequestFilter.doFilterInternal(httpServletRequest, httpServletResponse, filterChain));
+    assertTrue(userIsAuthenticated());
     verify(userDetailsService, never()).loadUserByUsername(anyString());
   }
 

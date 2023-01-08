@@ -1,7 +1,6 @@
 package pp.pl.io.savings.security.core;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.vavr.control.Option;
+import io.vavr.control.Try;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -46,9 +45,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
   private void authorizeUserWithToken(final HttpServletRequest request,
                                       final String jwtToken) {
-    final Option<String> username = getUsernameFromToken(jwtToken);
+    final Try<String> username = getUsernameFromToken(jwtToken);
 
-    if (username.isDefined() && userIsNotAuthenticated()) {
+    if (username.isSuccess() && userIsNotAuthenticated()) {
 
       final UserDetails userDetails = userDetailsService.loadUserByUsername(username.get());
 
@@ -70,16 +69,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     return SecurityContextHolder.getContext().getAuthentication() == null;
   }
 
-  private Option<String> getUsernameFromToken(final String jwtToken) {
-    try {
-      return Option.of(jwtTokenManager.getUsernameFromToken(jwtToken));
-    } catch (IllegalArgumentException e) {
-      log.error("Unable to get JWT Token");
-    } catch (ExpiredJwtException e) {
-      log.error("JWT Token has expired");
-    }
-
-    return Option.none();
+  private Try<String> getUsernameFromToken(final String jwtToken) {
+    return jwtTokenManager.getUsernameFromToken(jwtToken);
   }
 
 }

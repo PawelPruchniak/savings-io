@@ -2,6 +2,7 @@ package pp.pl.io.savings.security.core;
 
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import io.vavr.control.Try;
 import org.junit.jupiter.api.Test;
 
 import javax.crypto.SecretKey;
@@ -23,11 +24,20 @@ class JwtTokenManagerTest {
   }
 
   @Test
+  void shouldNotGetUsernameFromToken() {
+    final String jwtToken = jwtTokenManager.generateToken(SOME_USERNAME);
+    final Try<String> username = jwtTokenManager.getUsernameFromToken(jwtToken + "invalid");
+
+    assertTrue(username.isFailure());
+  }
+
+  @Test
   void shouldGetUsernameFromToken() {
     final String jwtToken = jwtTokenManager.generateToken(SOME_USERNAME);
-    final String usernameFromToken = jwtTokenManager.getUsernameFromToken(jwtToken);
+    final Try<String> username = jwtTokenManager.getUsernameFromToken(jwtToken);
 
-    assertEquals(SOME_USERNAME, usernameFromToken);
+    assertTrue(username.isSuccess());
+    assertEquals(SOME_USERNAME, username.get());
   }
 
   @Test
