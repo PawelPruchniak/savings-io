@@ -12,8 +12,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import pp.pl.io.savings.organisation.UserRole;
-import pp.pl.io.savings.utils.TestDbExtension;
+import pp.pl.io.savings.domain.organisation.UserRole;
+import pp.pl.io.savings.web.utils.TestDbExtension;
 
 
 @Testcontainers

@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
-import pp.pl.io.savings.organisation.SecurityService;
+import pp.pl.io.savings.domain.organisation.SecurityService;
 
 @Configuration
 @EnableWebSecurity

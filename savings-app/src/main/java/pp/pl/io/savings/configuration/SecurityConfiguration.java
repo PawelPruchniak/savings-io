@@ -22,9 +22,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import pp.pl.io.savings.core.*;
-import pp.pl.io.savings.organisation.SecurityService;
-import pp.pl.io.savings.organisation.UserRepository;
+import pp.pl.io.savings.domain.organisation.SecurityService;
+import pp.pl.io.savings.domain.organisation.UserRepository;
+import pp.pl.io.savings.security.core.*;
 
 import javax.crypto.SecretKey;
 import javax.sql.DataSource;
@@ -93,7 +93,6 @@ public class SecurityConfiguration {
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-    // Add a filter to validate the tokens with every request
     http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
