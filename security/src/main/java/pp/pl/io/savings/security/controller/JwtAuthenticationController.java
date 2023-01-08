@@ -1,6 +1,8 @@
 package pp.pl.io.savings.security.controller;
 
+import io.vavr.collection.List;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ import pp.pl.io.savings.security.core.JwtTokenManager;
 
 import java.io.Serializable;
 
+@Slf4j
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/security")
@@ -35,15 +38,21 @@ public class JwtAuthenticationController {
   @GetMapping(value = "/authenticate")
   public ResponseEntity<JwtDTO> createAuthenticationToken(@RequestParam("username") final String username,
                                                           @RequestParam("password") final String password) {
-    if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
+    // Replace pattern-breaking characters
+    final String secureUsername = username.replaceAll("[\n\r\t]", "_");
+    final String securePassword = password.replaceAll("[\n\r\t]", "_");
+    log.debug("Trying to authenticate User [" + secureUsername + "]");
+    if (StringUtils.isBlank(secureUsername) || StringUtils.isBlank(securePassword)) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Username and password cannot be blank");
     }
 
-    authenticate(username, password);
+    authenticate(secureUsername, securePassword);
 
-    final UserDetails userDetails = jwtInMemoryUserDetailsService.loadUserByUsername(username);
+    final UserDetails userDetails = jwtInMemoryUserDetailsService.loadUserByUsername(secureUsername);
     final String token = jwtTokenManager.generateToken(userDetails.getUsername());
 
+    log.debug("User [" + secureUsername + "] successfully authenticated with Authorities [" +
+        List.ofAll(userDetails.getAuthorities()).mkString(", ") + "]");
     return ResponseEntity.ok(new JwtDTO(token));
   }
 
