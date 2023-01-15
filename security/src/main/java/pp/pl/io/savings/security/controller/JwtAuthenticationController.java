@@ -14,13 +14,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import pp.pl.io.savings.security.core.JwtTokenManager;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Slf4j
 @AllArgsConstructor
@@ -33,18 +34,16 @@ public class JwtAuthenticationController {
   private final JwtTokenManager jwtTokenManager;
   private final UserDetailsService jwtInMemoryUserDetailsService;
 
-
-  //todo: change @RequestParam to @RequestBody
   @GetMapping(value = "/authenticate")
-  public ResponseEntity<JwtDTO> createAuthenticationToken(@RequestParam("username") final String username,
-                                                          @RequestParam("password") final String password) {
-    // Replace pattern-breaking characters
-    final String secureUsername = username.replaceAll("[\n\r\t]", "_");
-    final String securePassword = password.replaceAll("[\n\r\t]", "_");
-    log.debug("Trying to authenticate User [" + secureUsername + "]");
-    if (StringUtils.isBlank(secureUsername) || StringUtils.isBlank(securePassword)) {
+  public ResponseEntity<JwtDTO> createAuthenticationToken(@RequestBody final LoginRequest loginRequest) {
+    log.debug("Trying to authenticate user...");
+
+    if (Objects.isNull(loginRequest) || StringUtils.isBlank(loginRequest.username()) || StringUtils.isBlank(loginRequest.password())) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Username and password cannot be blank");
     }
+
+    final String secureUsername = loginRequest.username().replaceAll("[\n\r\t]", "_");
+    final String securePassword = loginRequest.password().replaceAll("[\n\r\t]", "_");
 
     authenticate(secureUsername, securePassword);
 
@@ -67,5 +66,8 @@ public class JwtAuthenticationController {
   }
 
   private record JwtDTO(String jwtToken) implements Serializable {
+  }
+
+  private record LoginRequest(String username, String password) implements Serializable {
   }
 }
