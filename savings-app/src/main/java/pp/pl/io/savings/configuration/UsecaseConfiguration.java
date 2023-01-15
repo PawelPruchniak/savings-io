@@ -2,15 +2,15 @@ package pp.pl.io.savings.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import pp.pl.io.savings.account.AccountRepository;
-import pp.pl.io.savings.account.AccountService;
-import pp.pl.io.savings.account.UserAccountRepository;
-import pp.pl.io.savings.account.UserAccountService;
-import pp.pl.io.savings.account.balance.BalanceService;
-import pp.pl.io.savings.account.balance.CurrencyService;
-import pp.pl.io.savings.account.id.UuidService;
-import pp.pl.io.savings.exchange.ExchangeRatesStructure;
-import pp.pl.io.savings.organisation.SavingsSecurityService;
+import pp.pl.io.savings.domain.account.AccountRepository;
+import pp.pl.io.savings.domain.account.UserAccountRepository;
+import pp.pl.io.savings.domain.exchange.ExchangeRatesStructure;
+import pp.pl.io.savings.domain.organisation.SecurityService;
+import pp.pl.io.savings.usecases.account.usecases.AccountService;
+import pp.pl.io.savings.usecases.account.usecases.UserAccountService;
+import pp.pl.io.savings.usecases.account.usecases.balance.BalanceService;
+import pp.pl.io.savings.usecases.account.usecases.balance.CurrencyService;
+import pp.pl.io.savings.usecases.account.usecases.id.UuidService;
 
 @Configuration
 public class UsecaseConfiguration {
@@ -29,7 +29,7 @@ public class UsecaseConfiguration {
   UserAccountService userAccountService(final UserAccountRepository userAccountRepository,
                                         final AccountRepository accountRepository,
                                         final BalanceService balanceService,
-                                        final SavingsSecurityService savingsSecurityService) {
+                                        final SecurityService savingsSecurityService) {
     return new UserAccountService(userAccountRepository, accountRepository, balanceService, savingsSecurityService);
   }
 
@@ -40,7 +40,7 @@ public class UsecaseConfiguration {
 
   @Bean
   AccountService accountService(final AccountRepository accountRepository,
-                                final SavingsSecurityService savingsSecurityService,
+                                final SecurityService savingsSecurityService,
                                 final UuidService uuidService,
                                 final BalanceService balanceService) {
     return new AccountService(accountRepository, savingsSecurityService, uuidService, balanceService);

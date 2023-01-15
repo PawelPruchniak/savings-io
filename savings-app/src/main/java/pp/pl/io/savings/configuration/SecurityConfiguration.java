@@ -1,35 +1,30 @@
 package pp.pl.io.savings.configuration;
 
-import lombok.AllArgsConstructor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import pp.pl.io.savings.core.DbUserRepository;
-import pp.pl.io.savings.core.SavingsJdbcUserDetailsManager;
-import pp.pl.io.savings.core.SavingsSecurityServiceImplementation;
-import pp.pl.io.savings.handler.BasicAuthenticationSuccessHandler;
-import pp.pl.io.savings.organisation.SavingsSecurityService;
-import pp.pl.io.savings.organisation.UserRepository;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import pp.pl.io.savings.domain.organisation.SecurityService;
+import pp.pl.io.savings.domain.organisation.UserRepository;
+import pp.pl.io.savings.security.core.*;
 
+import javax.crypto.SecretKey;
 import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
 @Profile("!integration-tests")
 public class SecurityConfiguration {
 
@@ -39,8 +34,13 @@ public class SecurityConfiguration {
   }
 
   @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-    return authenticationConfiguration.getAuthenticationManager();
+  public AuthenticationManager authenticationManager(HttpSecurity http, UserDetailsService userDetailService)
+      throws Exception {
+    return http.getSharedObject(AuthenticationManagerBuilder.class)
+        .userDetailsService(userDetailService)
+        .passwordEncoder(new BCryptPasswordEncoder())
+        .and()
+        .build();
   }
 
   @Bean
@@ -49,24 +49,45 @@ public class SecurityConfiguration {
   }
 
   @Bean
-  public SavingsSecurityService savingsSecurityService(UserRepository userRepository) {
-    return new SavingsSecurityServiceImplementation(userRepository);
+  public SecurityService savingsSecurityService(final UserRepository userRepository) {
+    return new SavingsSecurityService(userRepository);
   }
 
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
-        .logout()
-        .invalidateHttpSession(true)
-        .deleteCookies("JSESSIONID");
+  SecretKey secretKey() {
+    return Keys.secretKeyFor(SignatureAlgorithm.HS512);
+  }
 
+  @Bean
+  public JwtTokenManager jwtTokenManager(final SecretKey secretKey) {
+    return new JwtTokenManager(secretKey);
+  }
+
+  @Bean
+  public JwtRequestFilter jwtRequestFilter(final UserDetailsService userDetailsService, final JwtTokenManager jwtTokenManager) {
+    return new JwtRequestFilter(userDetailsService, jwtTokenManager);
+  }
+
+  @Bean
+  public JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint() {
+    return new JwtAuthenticationEntryPoint();
+  }
+
+  @Bean
+  public SecurityFilterChain filterChain(final HttpSecurity http, final JwtRequestFilter jwtRequestFilter) throws Exception {
     http
         .authorizeRequests()
-        .mvcMatchers("/login**").permitAll()
-        .anyRequest().authenticated()
+        .mvcMatchers("/api/security/**").permitAll()
+        .anyRequest()
+        .authenticated()
         .and()
-        .formLogin()
-        .successHandler(new BasicAuthenticationSuccessHandler());
+        .exceptionHandling()
+        .authenticationEntryPoint(jwtAuthenticationEntryPoint())
+        .and()
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+    http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
@@ -75,17 +96,5 @@ public class SecurityConfiguration {
   public WebSecurityCustomizer webSecurityCustomizer() {
     return web ->
         web.debug(false).ignoring().mvcMatchers("/css/**", "webjars/**");
-  }
-
-  @Bean
-  @ConditionalOnProperty(prefix = "pp.pl.io.savings", name = "authentication.test-user", havingValue = "true")
-  public InMemoryUserDetailsManager userDetailsService() {
-    PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    UserDetails user = User.builder()
-        .username("some-test-user@gmail.com")
-        .password(encoder.encode("test_password"))
-        .roles("USER")
-        .build();
-    return new InMemoryUserDetailsManager(user);
   }
 }

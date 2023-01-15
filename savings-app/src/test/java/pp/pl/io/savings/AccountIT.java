@@ -9,13 +9,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import pp.pl.io.savings.account.asset.Currency;
-import pp.pl.io.savings.dto.response.AccountDTO;
-import pp.pl.io.savings.dto.response.InvestmentAccountDTO;
-import pp.pl.io.savings.dto.response.SavingsAccountDTO;
-import pp.pl.io.savings.dto.response.UserAccountDTO;
-import pp.pl.io.savings.exchange.ExchangeRatesStructure;
-import pp.pl.io.savings.organisation.SavingsSecurityService;
+import pp.pl.io.savings.domain.account.asset.Currency;
+import pp.pl.io.savings.domain.exchange.ExchangeRatesStructure;
+import pp.pl.io.savings.domain.organisation.SecurityService;
+import pp.pl.io.savings.web.dto.response.AccountDTO;
+import pp.pl.io.savings.web.dto.response.InvestmentAccountDTO;
+import pp.pl.io.savings.web.dto.response.SavingsAccountDTO;
+import pp.pl.io.savings.web.dto.response.UserAccountDTO;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -26,17 +26,17 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static pp.pl.io.savings.AccountTestData.*;
-import static pp.pl.io.savings.exchange.ExchangePair.USD_PLN;
-import static pp.pl.io.savings.utils.TestExchangeCalculator.calculateExchange;
-import static pp.pl.io.savings.utils.TestExchangeCalculator.roundValue;
-import static pp.pl.io.savings.utils.TestFileReader.fromFile;
+import static pp.pl.io.savings.domain.exchange.ExchangePair.USD_PLN;
+import static pp.pl.io.savings.web.utils.TestExchangeCalculator.calculateExchange;
+import static pp.pl.io.savings.web.utils.TestExchangeCalculator.roundValue;
+import static pp.pl.io.savings.web.utils.TestFileReader.fromFile;
 
 class AccountIT extends CommonIT {
 
   @Autowired
   private MockMvc mockMvc;
   @Autowired
-  private SavingsSecurityService savingsSecurityService;
+  private SecurityService savingsSecurityService;
   @Autowired
   private ExchangeRatesStructure exchangeRatesStructure;
 

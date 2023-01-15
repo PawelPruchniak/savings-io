@@ -3,15 +3,15 @@ package pp.pl.io.savings.security;
 import io.vavr.collection.Set;
 import lombok.Value;
 import org.springframework.stereotype.Component;
-import pp.pl.io.savings.organisation.SavingsSecurityService;
-import pp.pl.io.savings.organisation.UserId;
-import pp.pl.io.savings.organisation.UserRole;
+import pp.pl.io.savings.domain.organisation.SecurityService;
+import pp.pl.io.savings.domain.organisation.UserId;
+import pp.pl.io.savings.domain.organisation.UserRole;
 
 import static pp.pl.io.savings.CommonIT.*;
 
 @Component
 @Value
-public class TestSavingsApplicationService implements SavingsSecurityService {
+public class TestSavingsApplicationService implements SecurityService {
 
   @Override
   public UserId getUserId() {
