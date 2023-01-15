@@ -31,8 +31,8 @@ import java.util.Objects;
 public class JwtAuthenticationController {
 
   private final AuthenticationManager authenticationManager;
+  private final UserDetailsService userDetailsService;
   private final JwtTokenManager jwtTokenManager;
-  private final UserDetailsService jwtInMemoryUserDetailsService;
 
   @GetMapping(value = "/authenticate")
   public ResponseEntity<JwtDTO> createAuthenticationToken(@RequestBody final LoginRequest loginRequest) {
@@ -47,7 +47,7 @@ public class JwtAuthenticationController {
 
     authenticate(secureUsername, securePassword);
 
-    final UserDetails userDetails = jwtInMemoryUserDetailsService.loadUserByUsername(secureUsername);
+    final UserDetails userDetails = userDetailsService.loadUserByUsername(secureUsername);
     final String token = jwtTokenManager.generateToken(userDetails.getUsername());
 
     log.debug("User [" + secureUsername + "] successfully authenticated with Authorities [" +
@@ -65,9 +65,9 @@ public class JwtAuthenticationController {
     }
   }
 
-  private record JwtDTO(String jwtToken) implements Serializable {
+  protected record JwtDTO(String jwtToken) implements Serializable {
   }
 
-  private record LoginRequest(String username, String password) implements Serializable {
+  protected record LoginRequest(String username, String password) implements Serializable {
   }
 }
