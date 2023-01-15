@@ -2,7 +2,6 @@ package pp.pl.io.savings.configuration;
 
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -13,13 +12,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import pp.pl.io.savings.domain.organisation.SecurityService;
@@ -102,18 +96,5 @@ public class SecurityConfiguration {
   public WebSecurityCustomizer webSecurityCustomizer() {
     return web ->
         web.debug(false).ignoring().mvcMatchers("/css/**", "webjars/**");
-  }
-
-  @Bean
-  @ConditionalOnProperty(prefix = "pp.pl.io.savings", name = "authentication.test-user", havingValue = "true")
-  public InMemoryUserDetailsManager userDetailsService() {
-    //todo: delete this
-    PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    UserDetails user = User.builder()
-        .username("some-test-user@gmail.com")
-        .password(encoder.encode("test_password"))
-        .roles("USER")
-        .build();
-    return new InMemoryUserDetailsManager(user);
   }
 }
