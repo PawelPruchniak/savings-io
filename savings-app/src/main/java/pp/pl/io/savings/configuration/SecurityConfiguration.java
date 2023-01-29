@@ -85,7 +85,10 @@ public class SecurityConfiguration {
         .authenticationEntryPoint(jwtAuthenticationEntryPoint())
         .and()
         .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        //todo: change this csrf disable
+//        .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+        .and().csrf().disable();
 
     http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
