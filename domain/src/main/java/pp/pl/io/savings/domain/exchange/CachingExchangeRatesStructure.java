@@ -19,13 +19,13 @@ public class CachingExchangeRatesStructure implements AutoReloadingCache, Exchan
 
   private static final long RELOAD_INTERVAL_MILLISECONDS = 3_600_000;
 
-  private final CurrencyExchangeRatesAdapter currencyExchangeRatesAdapter;
+  private final CurrencyExchangeRates currencyExchangeRates;
   private final AtomicReference<ExchangeRatesWithTimestamp> cachedExchangeRatesWithTimestamp;
   private final CountDownLatch exchangeRatesLoadedLatch = new CountDownLatch(1);
   private final Timer timer;
 
-  public CachingExchangeRatesStructure(final CurrencyExchangeRatesAdapter currencyExchangeRatesAdapter) {
-    this.currencyExchangeRatesAdapter = currencyExchangeRatesAdapter;
+  public CachingExchangeRatesStructure(final CurrencyExchangeRates currencyExchangeRates) {
+    this.currencyExchangeRates = currencyExchangeRates;
     this.cachedExchangeRatesWithTimestamp = new AtomicReference<>(
         new ExchangeRatesWithTimestamp(
             LocalDateTime.MIN,
@@ -85,7 +85,7 @@ public class CachingExchangeRatesStructure implements AutoReloadingCache, Exchan
     //todo: add fetching exchangeRate for stocks exchange pair
 
     if (exchangePair.type.equals(ExchangePairType.CURRENCY)) {
-      return currencyExchangeRatesAdapter.fetchExchangeRate(exchangePair.assetFrom, exchangePair.assetTo);
+      return currencyExchangeRates.fetchExchangeRate(exchangePair.assetFrom, exchangePair.assetTo);
     }
 
     log.warn("Unrecognised exchange pair type: {}, setting exchange rate to 0.0", exchangePair.type);

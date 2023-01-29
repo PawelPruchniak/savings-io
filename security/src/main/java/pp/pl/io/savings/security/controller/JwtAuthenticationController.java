@@ -13,7 +13,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +22,8 @@ import pp.pl.io.savings.security.core.JwtTokenManager;
 
 import java.io.Serializable;
 import java.util.Objects;
+
+import static pp.pl.io.savings.security.core.JwtTokenManager.JWT_TOKEN_VALIDITY;
 
 @Slf4j
 @AllArgsConstructor
@@ -34,7 +36,7 @@ public class JwtAuthenticationController {
   private final UserDetailsService userDetailsService;
   private final JwtTokenManager jwtTokenManager;
 
-  @GetMapping(value = "/authenticate")
+  @PostMapping(value = "/authenticate")
   public ResponseEntity<JwtDTO> createAuthenticationToken(@RequestBody final LoginRequest loginRequest) {
     log.debug("Trying to authenticate user...");
 
@@ -52,7 +54,7 @@ public class JwtAuthenticationController {
 
     log.debug("User [" + secureUsername + "] successfully authenticated with Authorities [" +
         List.ofAll(userDetails.getAuthorities()).mkString(", ") + "]");
-    return ResponseEntity.ok(new JwtDTO(token));
+    return ResponseEntity.ok(new JwtDTO(token, JWT_TOKEN_VALIDITY));
   }
 
   private void authenticate(String username, String password) throws DisabledException, BadCredentialsException {
@@ -65,7 +67,7 @@ public class JwtAuthenticationController {
     }
   }
 
-  protected record JwtDTO(String jwtToken) implements Serializable {
+  protected record JwtDTO(String jwtToken, long expirationInSeconds) implements Serializable {
   }
 
   protected record LoginRequest(String username, String password) implements Serializable {

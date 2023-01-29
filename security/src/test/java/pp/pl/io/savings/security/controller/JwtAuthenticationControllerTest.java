@@ -137,7 +137,7 @@ class JwtAuthenticationControllerTest {
         .thenReturn(jwtToken);
 
     val result = jwtAuthenticationController.createAuthenticationToken(LOGIN_REQUEST);
-    val expectedResult = ResponseEntity.ok(new JwtAuthenticationController.JwtDTO(jwtToken));
+    val expectedResult = ResponseEntity.ok(new JwtAuthenticationController.JwtDTO(jwtToken, JwtTokenManager.JWT_TOKEN_VALIDITY));
 
     assertEquals(expectedResult, result);
   }

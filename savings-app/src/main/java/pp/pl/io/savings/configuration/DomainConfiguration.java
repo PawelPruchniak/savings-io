@@ -3,20 +3,20 @@ package pp.pl.io.savings.configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import pp.pl.io.savings.domain.exchange.CachingExchangeRatesStructure;
-import pp.pl.io.savings.domain.exchange.CurrencyExchangeRatesAdapter;
+import pp.pl.io.savings.domain.exchange.CurrencyExchangeRates;
 import pp.pl.io.savings.domain.exchange.ExchangeRatesStructure;
-import pp.pl.io.savings.web.OpenCurrencyExchangeRatesAdapter;
+import pp.pl.io.savings.web.OpenCurrencyExchangeRates;
 
 @Configuration
 public class DomainConfiguration {
 
   @Bean
-  CurrencyExchangeRatesAdapter currencyExchangeRatesAdapter() {
-    return new OpenCurrencyExchangeRatesAdapter();
+  CurrencyExchangeRates currencyExchangeRates() {
+    return new OpenCurrencyExchangeRates();
   }
 
   @Bean(destroyMethod = "tearDown")
-  ExchangeRatesStructure exchangeRatesStructure(final CurrencyExchangeRatesAdapter currencyExchangeRatesAdapter) {
-    return new CachingExchangeRatesStructure(currencyExchangeRatesAdapter);
+  ExchangeRatesStructure exchangeRatesStructure(final CurrencyExchangeRates currencyExchangeRates) {
+    return new CachingExchangeRatesStructure(currencyExchangeRates);
   }
 }
