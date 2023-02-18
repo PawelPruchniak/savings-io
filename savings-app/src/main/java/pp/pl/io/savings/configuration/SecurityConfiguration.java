@@ -17,6 +17,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
+import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 import pp.pl.io.savings.domain.organisation.SecurityService;
 import pp.pl.io.savings.domain.organisation.UserRepository;
 import pp.pl.io.savings.security.core.*;
@@ -76,18 +78,24 @@ public class SecurityConfiguration {
 
   @Bean
   public SecurityFilterChain filterChain(final HttpSecurity http, final JwtRequestFilter jwtRequestFilter) throws Exception {
+    final XorCsrfTokenRequestAttributeHandler delegate = new XorCsrfTokenRequestAttributeHandler();
+    delegate.setCsrfRequestAttributeName("_csrf");
+    final CsrfTokenRequestHandler csrfTokenRequestHandler = delegate::handle;
+
     http
-        .authorizeRequests()
-        .mvcMatchers("/api/security/**").permitAll()
-        .anyRequest()
-        .authenticated()
-        .and()
+        .authorizeHttpRequests((authorize) -> authorize
+            .requestMatchers("/api/security/**").permitAll()
+            .anyRequest().authenticated()
+        )
         .exceptionHandling()
         .authenticationEntryPoint(jwtAuthenticationEntryPoint())
         .and()
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+        .and().csrf(csrf -> csrf
+            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+            .csrfTokenRequestHandler(csrfTokenRequestHandler)
+        );
 
     http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -97,6 +105,6 @@ public class SecurityConfiguration {
   @Bean
   public WebSecurityCustomizer webSecurityCustomizer() {
     return web ->
-        web.debug(false).ignoring().mvcMatchers("/css/**", "webjars/**");
+        web.debug(false).ignoring().requestMatchers("/css/**", "webjars/**");
   }
 }

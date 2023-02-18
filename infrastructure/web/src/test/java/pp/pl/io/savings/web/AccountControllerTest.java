@@ -36,7 +36,7 @@ class AccountControllerTest {
     // when, then
     var exception =
         assertThrows(ResponseStatusException.class, () -> accountController.getAccount(null));
-    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatus());
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatusCode());
     assertEquals(ERROR_PROCESSING.getMessage(), exception.getReason());
     assertEquals(ERROR_PROCESSING.getCause(), exception.getCause());
   }
@@ -50,7 +50,7 @@ class AccountControllerTest {
     // when, then
     var exception =
         assertThrows(ResponseStatusException.class, () -> accountController.getAccount(SAVINGS_ACCOUNT_ID.code));
-    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     assertEquals(ERROR_ILLEGAL_ARGUMENT.getMessage(), exception.getReason());
     assertEquals(ERROR_ILLEGAL_ARGUMENT.getCause(), exception.getCause());
   }
@@ -64,7 +64,7 @@ class AccountControllerTest {
     // when, then
     var exception =
         assertThrows(ResponseStatusException.class, () -> accountController.getAccount(SAVINGS_ACCOUNT_ID.code));
-    assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
+    assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     assertEquals(ERROR_NOT_FOUND.getMessage(), exception.getReason());
     assertEquals(ERROR_NOT_FOUND.getCause(), exception.getCause());
   }
@@ -104,7 +104,7 @@ class AccountControllerTest {
     // when, then
     var exception =
         assertThrows(ResponseStatusException.class, () -> accountController.deleteAccount(null));
-    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatus());
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatusCode());
     assertEquals(ERROR_PROCESSING.getMessage(), exception.getReason());
     assertEquals(ERROR_PROCESSING.getCause(), exception.getCause());
   }
@@ -118,7 +118,7 @@ class AccountControllerTest {
     // when, then
     var exception =
         assertThrows(ResponseStatusException.class, () -> accountController.deleteAccount(SAVINGS_ACCOUNT_ID.code));
-    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     assertEquals(ERROR_ILLEGAL_ARGUMENT.getMessage(), exception.getReason());
     assertEquals(ERROR_ILLEGAL_ARGUMENT.getCause(), exception.getCause());
   }
@@ -132,7 +132,7 @@ class AccountControllerTest {
     // when, then
     var exception =
         assertThrows(ResponseStatusException.class, () -> accountController.deleteAccount(SAVINGS_ACCOUNT_ID.code));
-    assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
+    assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     assertEquals(ERROR_NOT_FOUND.getMessage(), exception.getReason());
     assertEquals(ERROR_NOT_FOUND.getCause(), exception.getCause());
   }
@@ -166,7 +166,7 @@ class AccountControllerTest {
     // when, then
     var exception =
         assertThrows(ResponseStatusException.class, () -> accountController.createAccount(SAVINGS_ACCOUNT_REQUEST));
-    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatus());
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatusCode());
     assertEquals(ERROR_PROCESSING.getMessage(), exception.getReason());
     assertEquals(ERROR_PROCESSING.getCause(), exception.getCause());
   }
@@ -180,7 +180,7 @@ class AccountControllerTest {
     // when, then
     var exception =
         assertThrows(ResponseStatusException.class, () -> accountController.createAccount(SAVINGS_ACCOUNT_REQUEST));
-    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     assertEquals(ERROR_ILLEGAL_ARGUMENT.getMessage(), exception.getReason());
     assertEquals(ERROR_ILLEGAL_ARGUMENT.getCause(), exception.getCause());
   }
@@ -208,7 +208,7 @@ class AccountControllerTest {
   void shouldReturnBadRequestWhenAccountIdIsInvalidForUpdateAccount() {
     var exception =
         assertThrows(ResponseStatusException.class, () -> accountController.updateAccount(SAVINGS_ACCOUNT_INVALID_ID_UPDATE_REQUEST));
-    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     assertEquals("Account Id is invalid", exception.getReason());
   }
 
@@ -221,7 +221,7 @@ class AccountControllerTest {
     // when, then
     var exception =
         assertThrows(ResponseStatusException.class, () -> accountController.updateAccount(SAVINGS_ACCOUNT_UPDATE_REQUEST));
-    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatus());
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatusCode());
     assertEquals(ERROR_PROCESSING.getMessage(), exception.getReason());
     assertEquals(ERROR_PROCESSING.getCause(), exception.getCause());
   }
@@ -235,7 +235,7 @@ class AccountControllerTest {
     // when, then
     var exception =
         assertThrows(ResponseStatusException.class, () -> accountController.updateAccount(SAVINGS_ACCOUNT_UPDATE_REQUEST));
-    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     assertEquals(ERROR_ILLEGAL_ARGUMENT.getMessage(), exception.getReason());
     assertEquals(ERROR_ILLEGAL_ARGUMENT.getCause(), exception.getCause());
   }

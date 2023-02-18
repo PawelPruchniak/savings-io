@@ -63,7 +63,7 @@ class JwtAuthenticationControllerTest {
   @MethodSource("invalidLoginRequest")
   void shouldThrowIfLoginRequestIsInvalid(final JwtAuthenticationController.LoginRequest loginRequest) {
     val exception = assertThrows(ResponseStatusException.class, () -> jwtAuthenticationController.createAuthenticationToken(loginRequest));
-    assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatus());
+    assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusCode());
     assertEquals("Username and password cannot be blank", exception.getReason());
   }
 
