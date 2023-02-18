@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.7.1</version>
+    <version>3.0.2</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
@@ -31,9 +31,9 @@
     <minimal.maven.version>3.6.3</minimal.maven.version>
 
     <vavr.version>0.10.4</vavr.version>
-    <liquibase.version>4.13.0</liquibase.version>
-    <jasypt.version>3.0.4</jasypt.version>
-    <testcontainers.version>1.17.3</testcontainers.version>
+    <liquibase.version>4.19.0</liquibase.version>
+    <jasypt.version>3.0.5</jasypt.version>
+    <testcontainers.version>1.17.6</testcontainers.version>
 
     <jacoco.version>0.8.8</jacoco.version>
     <aggregate.report.dir>coverage-report/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>

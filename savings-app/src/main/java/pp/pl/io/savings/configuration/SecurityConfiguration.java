@@ -77,8 +77,8 @@ public class SecurityConfiguration {
   @Bean
   public SecurityFilterChain filterChain(final HttpSecurity http, final JwtRequestFilter jwtRequestFilter) throws Exception {
     http
-        .authorizeRequests()
-        .mvcMatchers("/api/security/**").permitAll()
+        .authorizeHttpRequests()
+        .requestMatchers("/api/security/**").permitAll()
         .anyRequest()
         .authenticated()
         .and()
@@ -97,6 +97,6 @@ public class SecurityConfiguration {
   @Bean
   public WebSecurityCustomizer webSecurityCustomizer() {
     return web ->
-        web.debug(false).ignoring().mvcMatchers("/css/**", "webjars/**");
+        web.debug(false).ignoring().requestMatchers("/css/**", "webjars/**");
   }
 }

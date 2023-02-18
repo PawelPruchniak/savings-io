@@ -80,7 +80,7 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>42.4.1</version>
+      <version>42.5.4</version>
     </dependency>
 
     <!-- Test dependencies -->
@@ -128,12 +128,6 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>com.github.ulisesbocchio</groupId>
-        <artifactId>jasypt-maven-plugin</artifactId>
-        <version>${jasypt.version}</version>
       </plugin>
 
       <plugin>
