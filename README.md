@@ -12,5 +12,11 @@ dev branch
 [![CodeQL](https://github.com/PawelPruchniak/savings-io/actions/workflows/codeql-analysis.yml/badge.svg?branch=dev)](https://github.com/PawelPruchniak/savings-io/actions/workflows/codeql-analysis.yml)
 
 ---
+
+### Frontend: [@savings-io-frontend](https://github.com/PawelPruchniak/savings-io-frontend)
+
+---
+
 ## Authors
+
 - [@Pawel.Pruchniak](https://github.com/PawelPruchniak)
