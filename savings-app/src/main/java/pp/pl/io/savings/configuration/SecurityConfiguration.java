@@ -93,6 +93,7 @@ public class SecurityConfiguration {
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and().csrf(csrf -> csrf
+            .ignoringRequestMatchers("/api/security/**")
             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
             .csrfTokenRequestHandler(csrfTokenRequestHandler)
         );
