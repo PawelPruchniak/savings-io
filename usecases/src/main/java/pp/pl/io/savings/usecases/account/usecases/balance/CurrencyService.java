@@ -37,7 +37,8 @@ public class CurrencyService {
 
     val exchangeRate = getExchangeRate(assetFrom, currencyTo);
     if (exchangeRate.isFailure() || exchangeRate.get().isEmpty()) {
-      log.warn("Could not get exchange rate for {} to {}, from structure", assetFrom.getCode(), currencyTo.getCode());
+      log.warn("Could not get exchange rate for {} to {}, from structure. Returning as with exchange rate 1:1", assetFrom.getCode(),
+        currencyTo.getCode());
       return value;
     }
 
