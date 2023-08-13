@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import pp.pl.io.savings.domain.organisation.SecurityService;
 
@@ -22,7 +23,10 @@ public class TestSecurityConfiguration implements WebSecurityCustomizer {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.csrf().disable().authorizeRequests().anyRequest().permitAll();
+    http
+      .csrf(AbstractHttpConfigurer::disable)
+      .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.anyRequest().permitAll());
+
     return http.build();
   }
 

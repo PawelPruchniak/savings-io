@@ -7,13 +7,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -32,18 +33,19 @@ import javax.sql.DataSource;
 public class SecurityConfiguration {
 
   @Bean
-  public UserDetailsService userDetailsService(DataSource dataSource) {
+  public UserDetailsService userDetailsService(final DataSource dataSource) {
     return new SavingsJdbcUserDetailsManager(dataSource);
   }
 
   @Bean
-  public AuthenticationManager authenticationManager(HttpSecurity http, UserDetailsService userDetailService)
-      throws Exception {
-    return http.getSharedObject(AuthenticationManagerBuilder.class)
-        .userDetailsService(userDetailService)
-        .passwordEncoder(new BCryptPasswordEncoder())
-        .and()
-        .build();
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  public AuthenticationManager authenticationManager(final AuthenticationConfiguration authenticationConfiguration)
+    throws Exception {
+    return authenticationConfiguration.getAuthenticationManager();
   }
 
   @Bean
@@ -79,24 +81,21 @@ public class SecurityConfiguration {
   @Bean
   public SecurityFilterChain filterChain(final HttpSecurity http, final JwtRequestFilter jwtRequestFilter) throws Exception {
     final XorCsrfTokenRequestAttributeHandler delegate = new XorCsrfTokenRequestAttributeHandler();
-    delegate.setCsrfRequestAttributeName("_csrf");
+    delegate.setCsrfRequestAttributeName(null);
     final CsrfTokenRequestHandler csrfTokenRequestHandler = delegate::handle;
 
     http
-        .authorizeHttpRequests((authorize) -> authorize
-            .requestMatchers("/api/security/**").permitAll()
-            .anyRequest().authenticated()
-        )
-        .exceptionHandling()
-        .authenticationEntryPoint(jwtAuthenticationEntryPoint())
-        .and()
-        .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and().csrf(csrf -> csrf
-            .ignoringRequestMatchers("/api/security/**")
-            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-            .csrfTokenRequestHandler(csrfTokenRequestHandler)
-        );
+      .authorizeHttpRequests(authorize -> authorize
+        .requestMatchers("/api/security/**").permitAll()
+        .anyRequest().authenticated()
+      )
+      .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(jwtAuthenticationEntryPoint()))
+      .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+      .csrf(csrf -> csrf
+        .ignoringRequestMatchers("/api/security/**")
+        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+        .csrfTokenRequestHandler(csrfTokenRequestHandler)
+      );
 
     http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -106,6 +105,6 @@ public class SecurityConfiguration {
   @Bean
   public WebSecurityCustomizer webSecurityCustomizer() {
     return web ->
-        web.debug(false).ignoring().requestMatchers("/css/**", "webjars/**");
+      web.debug(false).ignoring().requestMatchers("/css/**", "webjars/**");
   }
 }

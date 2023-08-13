@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.0.2</version>
+    <version>3.1.1</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
@@ -31,14 +31,18 @@
     <minimal.maven.version>3.6.3</minimal.maven.version>
 
     <vavr.version>0.10.4</vavr.version>
-    <liquibase.version>4.19.0</liquibase.version>
+    <liquibase.version>4.23.0</liquibase.version>
     <jasypt.version>3.0.5</jasypt.version>
     <io-jsonwebtoken.version>0.11.5</io-jsonwebtoken.version>
-    <testcontainers.version>1.17.6</testcontainers.version>
+    <testcontainers.version>1.18.3</testcontainers.version>
+    <checkstyle.version>10.12.2</checkstyle.version>
 
-    <jacoco.version>0.8.8</jacoco.version>
+    <jacoco.version>0.8.10</jacoco.version>
     <aggregate.report.dir>coverage-report/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
     <failsafe.jacoco.args/>
+
+    <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
+    <maven-checkstyle-plugin.version>3.3.0</maven-checkstyle-plugin.version>
 
     <sonar.organization>pawelpruchniak</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -51,7 +55,7 @@
         <!-- Required with version placeholders: https://maven.apache.org/maven-ci-friendly.html#Install_.2F_Deploy -->
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>flatten-maven-plugin</artifactId>
-        <version>1.2.7</version>
+        <version>${flatten-maven-plugin.version}</version>
         <configuration/>
         <executions>
           <!-- enable flattening -->
@@ -101,10 +105,11 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>3.1.2</version>
+        <version>${maven-checkstyle-plugin.version}</version>
         <configuration>
           <configLocation>checkstyle.xml</configLocation>
-          <encoding>UTF-8</encoding>
+          <inputEncoding>UTF-8</inputEncoding>
+          <outputEncoding>UTF-8</outputEncoding>
           <consoleOutput>true</consoleOutput>
           <failsOnError>true</failsOnError>
           <includeTestSourceDirectory>true</includeTestSourceDirectory>
@@ -117,7 +122,7 @@
           <dependency>
             <groupId>com.puppycrawl.tools</groupId>
             <artifactId>checkstyle</artifactId>
-            <version>10.3.1</version>
+            <version>${checkstyle.version}</version>
           </dependency>
         </dependencies>
         <executions>
